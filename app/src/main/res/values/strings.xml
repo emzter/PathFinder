@@ -1,0 +1,26 @@
+<resources>
+    <string name="app_name">PathFinder</string>
+    <string name="AppTitle">PathFinder</string>
+    <string name="login">Log In</string>
+    <string name="email">E-Mail Address</string>
+    <string name="password">Password</string>
+    <string name="AuthenticatingText">Authenticating…</string>
+    <string name="auth_failed">Login Failed</string>
+    <string name="email_error">Enter a valid email address</string>
+    <string name="password_error">Between 8 and 12 alphanumeric characters</string>
+    <string name="action_logout">Log Out</string>
+    <string name="last_name">Last Name</string>
+    <string name="name">Name</string>
+    <string name="registration">Registration</string>
+    <string name="register">Register</string>
+    <string name="password_again">Password Again</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="register_link">Not have an account? Register now.</string>
+    <string name="no_name_enter_error">Please enter your name.</string>
+    <string name="no_lastname_enter_error">Please enter your last name</string>
+    <string name="confirm_password_error">Your password do not match.</string>
+    <string name="something_went_wrong">Something went wrong.</string>
+    <string name="registering">Registering…</string>
+    <string name="email_already_used">Your e-mail is already used.</string>
+    <string name="connection_error">Can\'t connect to the server.</string>
+</resources>
