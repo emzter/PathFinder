@@ -11,15 +11,14 @@ import com.emz.pathfinder.StartActivity;
 
 import static android.support.v4.content.ContextCompat.startActivity;
 
-/**
- * Created by AeMzAKuN on 18/10/2559.
- */
-
 public class Utils {
 
     public static final String URL_STORAGE_REFERENCE = "gs://mechat-515c9.appspot.com";
     public static final String FOLDER_STORAGE_IMG = "images";
     public static final String FOLDER_STORAGE_PROFILE_IMG = "images/profile-img/";
+
+    public static final String LOGIN_URL = "http://192.168.1.2/dist/home/login.php";
+    public static final String REGISTER_URL = "http://192.168.1.2/dist/home/register.php";
 
     @NonNull
     public static String convertString(EditText editText) {

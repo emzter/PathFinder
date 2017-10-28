@@ -21,6 +21,8 @@ import java.util.Objects;
 import static com.emz.pathfinder.Utils.Ui.createProgressDialog;
 import static com.emz.pathfinder.Utils.Ui.createSnackbar;
 import static com.emz.pathfinder.Utils.Ui.dismissProgressDialog;
+import static com.emz.pathfinder.Utils.Utils.LOGIN_URL;
+import static com.emz.pathfinder.Utils.Utils.REGISTER_URL;
 import static com.emz.pathfinder.Utils.Utils.convertString;
 
 public class SignUpActivity extends AppCompatActivity implements View.OnClickListener {
@@ -37,9 +39,6 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
     private boolean valid;
 
     private static final String TAG = "SignUpActivity";
-
-    private final String LOGIN_URL = "http://192.168.1.2/dist/home/login.php";
-    private final String REGISTER_URL = "http://192.168.1.2/dist/home/register.php";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

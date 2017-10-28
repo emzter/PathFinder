@@ -23,6 +23,7 @@ import java.util.Objects;
 import static com.emz.pathfinder.Utils.Ui.createProgressDialog;
 import static com.emz.pathfinder.Utils.Ui.createSnackbar;
 import static com.emz.pathfinder.Utils.Ui.dismissProgressDialog;
+import static com.emz.pathfinder.Utils.Utils.LOGIN_URL;
 import static com.emz.pathfinder.Utils.Utils.convertString;
 
 public class StartActivity extends AppCompatActivity implements View.OnClickListener {
@@ -39,8 +40,6 @@ public class StartActivity extends AppCompatActivity implements View.OnClickList
     private static final String TAG = "LoginActivity";
     private static final int REQUEST_SIGNUP = 0;
     private static final int RC_SIGN_IN = 9001;
-
-    private final String LOGIN_URL = "http://192.168.1.2/dist/home/login.php";
 
     private UserHelper usrHelper;
 
