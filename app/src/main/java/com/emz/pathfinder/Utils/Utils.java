@@ -17,8 +17,8 @@ public class Utils {
     public static final String FOLDER_STORAGE_IMG = "images";
     public static final String FOLDER_STORAGE_PROFILE_IMG = "images/profile-img/";
 
-    public static final String LOGIN_URL = "http://192.168.1.2/dist/home/login.php";
-    public static final String REGISTER_URL = "http://192.168.1.2/dist/home/register.php";
+    public static final String LOGIN_URL = "http://pathfinder.webstarterz.com/dist/home/login.php";
+    public static final String REGISTER_URL = "http://pathfinder.webstarterz.com/dist/home/register.php";
 
     @NonNull
     public static String convertString(EditText editText) {
