@@ -21,8 +21,7 @@ import java.util.Objects;
 import static com.emz.pathfinder.Utils.Ui.createProgressDialog;
 import static com.emz.pathfinder.Utils.Ui.createSnackbar;
 import static com.emz.pathfinder.Utils.Ui.dismissProgressDialog;
-import static com.emz.pathfinder.Utils.Utils.LOGIN_URL;
-import static com.emz.pathfinder.Utils.Utils.REGISTER_URL;
+import static com.emz.pathfinder.Utils.Utils.AUTH_URL;
 import static com.emz.pathfinder.Utils.Utils.convertString;
 
 public class SignUpActivity extends AppCompatActivity implements View.OnClickListener {
@@ -90,7 +89,8 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void registerUser(String name, String lastname, String email, String pass) {
-        Velocity.post(REGISTER_URL)
+        Velocity.post(AUTH_URL)
+                .withFormData("status","register")
                 .withFormData("email",email)
                 .withFormData("name",name)
                 .withFormData("lastname",lastname)
@@ -100,6 +100,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                     public void onVelocitySuccess(Velocity.Response response) {
                         if(Objects.equals(response.body, "Pass")){
                             Log.d(TAG, response.body);
+                            dismissProgressDialog();
                             onRegisterSuccess();
                         }else if(Objects.equals(response.body, "EMailUsed")){
                             Log.w(TAG, response.body);
@@ -118,11 +119,12 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void onRegisterSuccess() {
+        createProgressDialog(this, getString(R.string.AuthenticatingText));
         authUser(email, pass);
     }
 
     private void authUser(String email, String password) {
-        Velocity.post(LOGIN_URL).withFormData("email", email).withFormData("password", password).connect(new Velocity.ResponseListener() {
+        Velocity.post(AUTH_URL).withFormData("status","login").withFormData("email", email).withFormData("password", password).connect(new Velocity.ResponseListener() {
             @Override
             public void onVelocitySuccess(Velocity.Response response) {
                 if(!Objects.equals(response.body, "Failed")){

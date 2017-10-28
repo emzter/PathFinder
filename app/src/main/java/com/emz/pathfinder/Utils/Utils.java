@@ -13,12 +13,7 @@ import static android.support.v4.content.ContextCompat.startActivity;
 
 public class Utils {
 
-    public static final String URL_STORAGE_REFERENCE = "gs://mechat-515c9.appspot.com";
-    public static final String FOLDER_STORAGE_IMG = "images";
-    public static final String FOLDER_STORAGE_PROFILE_IMG = "images/profile-img/";
-
-    public static final String LOGIN_URL = "http://pathfinder.webstarterz.com/dist/home/login.php";
-    public static final String REGISTER_URL = "http://pathfinder.webstarterz.com/dist/home/register.php";
+    public static final String AUTH_URL = "http://pathfinder.webstarterz.com/dist/home/auth.php";
 
     @NonNull
     public static String convertString(EditText editText) {

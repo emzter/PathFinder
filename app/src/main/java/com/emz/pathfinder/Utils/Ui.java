@@ -7,12 +7,8 @@ import android.view.View;
 
 import com.emz.pathfinder.R;
 
-/**
- * Created by EMZ on 27/10/2560.
- */
-
 public class Ui {
-    static ProgressDialog progressDialog;
+    private static ProgressDialog progressDialog;
 
     public static void createProgressDialog(Context context, int theme, String string) {
         progressDialog = new ProgressDialog(context, theme);

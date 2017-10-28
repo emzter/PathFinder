@@ -3,17 +3,13 @@ package com.emz.pathfinder.Utils;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-/**
- * Created by EMZ on 27/10/2560.
- */
-
 public class UserHelper {
-    Context context;
-    SharedPreferences sharedPrefs;
-    SharedPreferences.Editor editor;
+    private Context context;
+    private SharedPreferences sharedPrefs;
+    private SharedPreferences.Editor editor;
 
-    static String prefsName = "CUser";
-    static int prefsMode = 0;
+    private static String prefsName = "CUser";
+    private static int prefsMode = 0;
 
     public UserHelper(Context context){
         this.context = context;

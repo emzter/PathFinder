@@ -23,11 +23,12 @@ import java.util.Objects;
 import static com.emz.pathfinder.Utils.Ui.createProgressDialog;
 import static com.emz.pathfinder.Utils.Ui.createSnackbar;
 import static com.emz.pathfinder.Utils.Ui.dismissProgressDialog;
-import static com.emz.pathfinder.Utils.Utils.LOGIN_URL;
+import static com.emz.pathfinder.Utils.Utils.AUTH_URL;
 import static com.emz.pathfinder.Utils.Utils.convertString;
 
 public class StartActivity extends AppCompatActivity implements View.OnClickListener {
 
+    private static final int ACTIVITY_CONSTANT = 0;
     private LinearLayout loginBox;
     private ImageView appLogo;
     private Animation animTranslate;
@@ -77,7 +78,14 @@ public class StartActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void signup() {
-        startActivity(new Intent(StartActivity.this, SignUpActivity.class));
+        startActivityForResult(new Intent(StartActivity.this, SignUpActivity.class), ACTIVITY_CONSTANT);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == ACTIVITY_CONSTANT) {
+            this.finish();
+        }
     }
 
     private void login() {
@@ -95,7 +103,7 @@ public class StartActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void authUser(String email, String password) {
-        Velocity.post(LOGIN_URL).withFormData("email", email).withFormData("password", password).connect(new Velocity.ResponseListener() {
+        Velocity.post(AUTH_URL).withFormData("status","login").withFormData("email", email).withFormData("password", password).connect(new Velocity.ResponseListener() {
             @Override
             public void onVelocitySuccess(Velocity.Response response) {
                 if(!Objects.equals(response.body, "Failed")){
@@ -108,6 +116,7 @@ public class StartActivity extends AppCompatActivity implements View.OnClickList
             @Override
             public void onVelocityFailed(Velocity.Response response) {
                 Log.w(TAG, response.toString());
+                onLoginFailed();
             }
         });
     }
