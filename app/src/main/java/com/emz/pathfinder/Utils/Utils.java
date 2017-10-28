@@ -14,6 +14,7 @@ import static android.support.v4.content.ContextCompat.startActivity;
 public class Utils {
 
     public static final String AUTH_URL = "http://pathfinder.webstarterz.com/dist/home/auth.php";
+    public static final String USER_URL = "http://pathfinder.webstarterz.com/dist/home/users.php";
 
     @NonNull
     public static String convertString(EditText editText) {

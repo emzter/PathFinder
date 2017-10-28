@@ -3,52 +3,35 @@ package com.emz.pathfinder.Models;
 public class UserModel {
     private int id;
     private String guid;
-    private String name;
-    private String lastname;
     private String email;
-    private String group;
+    private String user_group;
     private String status;
-    private String birthdate;
+    private String first_name;
+    private String last_name;
     private int sex;
+    private String birthdate;
     private String address;
     private String subdistrict;
     private String district;
     private String postcode;
+    private String province;
     private String telephone;
 
-
-    public UserModel(int id) {
-        this.id = id;
-    }
-
-    public UserModel(int id, String email) {
-        this.id = id;
-        this.email = email;
-    }
-
-    public UserModel(int id, String guid, String email, String group, String status) {
+    public UserModel(int id, String guid, String email, String user_group, String status, String first_name, String last_name, int sex, String birthdate, String address, String subdistrict, String district, String postcode, String province, String telephone) {
         this.id = id;
         this.guid = guid;
-        this.name = name;
         this.email = email;
-        this.group = group;
+        this.user_group = user_group;
         this.status = status;
-    }
-
-    public UserModel(int id, String guid, String name, String lastname, String email, String group, String status, String birthdate, int sex, String address, String subdistrict, String district, String postcode, String telephone) {
-        this.id = id;
-        this.guid = guid;
-        this.name = name;
-        this.lastname = lastname;
-        this.email = email;
-        this.group = group;
-        this.status = status;
-        this.birthdate = birthdate;
+        this.first_name = first_name;
+        this.last_name = last_name;
         this.sex = sex;
+        this.birthdate = birthdate;
         this.address = address;
         this.subdistrict = subdistrict;
         this.district = district;
         this.postcode = postcode;
+        this.province = province;
         this.telephone = telephone;
     }
 
@@ -68,14 +51,6 @@ public class UserModel {
         this.guid = guid;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public String getEmail() {
         return email;
     }
@@ -84,12 +59,12 @@ public class UserModel {
         this.email = email;
     }
 
-    public String getGroup() {
-        return group;
+    public String getUser_group() {
+        return user_group;
     }
 
-    public void setGroup(String group) {
-        this.group = group;
+    public void setUser_group(String user_group) {
+        this.user_group = user_group;
     }
 
     public String getStatus() {
@@ -100,20 +75,20 @@ public class UserModel {
         this.status = status;
     }
 
-    public String getLastname() {
-        return lastname;
+    public String getFirst_name() {
+        return first_name;
     }
 
-    public void setLastname(String lastname) {
-        this.lastname = lastname;
+    public void setFirst_name(String first_name) {
+        this.first_name = first_name;
     }
 
-    public String getBirthdate() {
-        return birthdate;
+    public String getLast_name() {
+        return last_name;
     }
 
-    public void setBirthdate(String birthdate) {
-        this.birthdate = birthdate;
+    public void setLast_name(String last_name) {
+        this.last_name = last_name;
     }
 
     public int getSex() {
@@ -122,6 +97,14 @@ public class UserModel {
 
     public void setSex(int sex) {
         this.sex = sex;
+    }
+
+    public String getBirthdate() {
+        return birthdate;
+    }
+
+    public void setBirthdate(String birthdate) {
+        this.birthdate = birthdate;
     }
 
     public String getAddress() {
@@ -154,6 +137,14 @@ public class UserModel {
 
     public void setPostcode(String postcode) {
         this.postcode = postcode;
+    }
+
+    public String getProvince() {
+        return province;
+    }
+
+    public void setProvince(String province) {
+        this.province = province;
     }
 
     public String getTelephone() {
