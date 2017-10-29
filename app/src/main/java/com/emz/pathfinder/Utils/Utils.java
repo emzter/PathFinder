@@ -15,6 +15,7 @@ public class Utils {
 
     public static final String AUTH_URL = "http://pathfinder.webstarterz.com/dist/home/auth.php";
     public static final String USER_URL = "http://pathfinder.webstarterz.com/dist/home/users.php";
+    public static final String JOBS_URL = "http://pathfinder.webstarterz.com/dist/home/jobs.php";
     public static final String PROFILEPIC_URL = "http://pathfinder.webstarterz.com/uploads/profile_image/";
 
     @NonNull

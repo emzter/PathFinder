@@ -5,6 +5,7 @@
 
     <group
         android:id="@+id/menu_top"
+        android:layout_height="wrap_content"
         android:checkableBehavior="single">
         <item
             android:id="@+id/nav_home"
@@ -33,15 +34,15 @@
                 <item
                     android:id="@+id/nav_recommend"
                     android:icon="@drawable/ic_menu_share"
-                    android:title="Recommended"/>
+                    android:title="Featured" />
                 <item
                     android:id="@+id/nav_categories"
                     android:icon="@drawable/ic_menu_share"
-                    android:title="Categories"/>
+                    android:title="Categories" />
                 <item
                     android:id="@+id/nav_employer"
                     android:icon="@drawable/ic_menu_share"
-                    android:title="Employer"/>
+                    android:title="Employer" />
             </menu>
         </item>
     </group>
@@ -52,13 +53,11 @@
 
         <item
             android:id="@+id/nav_settings"
-            android:title="@string/action_settings" >
-        </item>
+            android:title="@string/action_settings"></item>
 
         <item
             android:id="@+id/nav_logout"
-            android:title="@string/action_logout" >
-        </item>
+            android:title="@string/action_logout"></item>
     </group>
 
 </menu>
