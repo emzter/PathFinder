@@ -68,10 +68,10 @@
 
     <ImageView
         android:id="@+id/appLogo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="240dp"
+        android:layout_height="80dp"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:src="@mipmap/ic_launcher_round"
+        android:src="@drawable/bannerwhite"
         android:contentDescription="@string/app_name" />
 </RelativeLayout>

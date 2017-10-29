@@ -1,6 +1,8 @@
 package com.emz.pathfinder;
 
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -18,6 +20,8 @@ import android.widget.ProgressBar;
 import android.widget.SearchView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.emz.pathfinder.Models.UserModel;
 import com.emz.pathfinder.Utils.Auth;
 import com.emz.pathfinder.Utils.UserHelper;
@@ -25,7 +29,13 @@ import com.rw.velocity.Velocity;
 
 import org.json.JSONObject;
 
+import java.io.File;
+
+import de.hdodenhof.circleimageview.CircleImageView;
+
+import static com.emz.pathfinder.R.drawable.defaultprofilepicture;
 import static com.emz.pathfinder.Utils.Utils.AUTH_URL;
+import static com.emz.pathfinder.Utils.Utils.PROFILEPIC_URL;
 import static com.emz.pathfinder.Utils.Utils.USER_URL;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -37,10 +47,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private TextView navNameText, navEMailText;
     private ProgressBar progressBar;
+    private CircleImageView navProPic;
 
     private UserHelper usrHelper;
     private UserModel users;
-    private JSONObject json;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +60,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         usrHelper = new UserHelper(this);
 
         authCheck();
+        bindView();
 
         Log.d("TEST", usrHelper.getUserId());
 
@@ -66,7 +77,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     public void onVelocitySuccess(Velocity.Response response) {
                         Log.e("TEST", response.body);
                         users = response.deserialize(UserModel.class);
-                        bindView();
+                        setupView();
                     }
 
                     @Override
@@ -132,16 +143,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         View navHeaderView = navigationView.getHeaderView(0);
 
+        navProPic = navHeaderView.findViewById(R.id.navProfilePic);
         navEMailText = navHeaderView.findViewById(R.id.navEmailText);
         navNameText = navHeaderView.findViewById(R.id.navNameText);
-
-        setupView();
     }
 
     private void setupView() {
         String fullname = users.getFirst_name()+" "+users.getLast_name();
         navEMailText.setText(users.getEmail());
         navNameText.setText(fullname);
+        Glide.with(navProPic.getContext()).load(PROFILEPIC_URL+users.getGuid()+".jpg").apply(RequestOptions.centerCropTransform().error(R.drawable.defaultprofilepicture)).into(navProPic);
         progressBar.setVisibility(View.GONE);
     }
 }

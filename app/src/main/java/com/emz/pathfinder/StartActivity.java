@@ -93,7 +93,7 @@ public class StartActivity extends AppCompatActivity implements View.OnClickList
         convertLoginInfo();
 
         if (!validate()) {
-            onLoginFailed();
+            onLoginFailed(0);
             return;
         }
 
@@ -110,14 +110,14 @@ public class StartActivity extends AppCompatActivity implements View.OnClickList
                 if(!Objects.equals(response.body, "Failed")){
                     onLoginSuccess(response.body);
                 }else{
-                    onLoginFailed();
+                    onLoginFailed(0);
                 }
             }
 
             @Override
             public void onVelocityFailed(Velocity.Response response) {
                 Log.w(TAG, response.toString());
-                onLoginFailed();
+                onLoginFailed(1);
             }
         });
     }
@@ -128,13 +128,18 @@ public class StartActivity extends AppCompatActivity implements View.OnClickList
         if(usrHelper.getLoginStatus()){
             startMainActivity();
         }else{
-            onLoginFailed();
+            onLoginFailed(0);
         }
     }
 
-    private void onLoginFailed() {
+    private void onLoginFailed(int stage) {
         View view = findViewById(R.id.signin_root_view);
-        createSnackbar(view, getString(R.string.auth_failed));
+        if(stage == 0){
+            createSnackbar(view, getString(R.string.auth_failed));
+        }else if(stage == 1){
+            createSnackbar(view, getString(R.string.connection_error));
+        }
+
         loginButton.setEnabled(true);
         dismissProgressDialog();
     }

@@ -15,18 +15,10 @@ public class Utils {
 
     public static final String AUTH_URL = "http://pathfinder.webstarterz.com/dist/home/auth.php";
     public static final String USER_URL = "http://pathfinder.webstarterz.com/dist/home/users.php";
+    public static final String PROFILEPIC_URL = "http://pathfinder.webstarterz.com/uploads/profile_image/";
 
     @NonNull
     public static String convertString(EditText editText) {
         return editText.getText().toString();
-    }
-
-    public static boolean verifyConnectivity(Context context) {
-        boolean connection;
-        ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        connection = connectivityManager.getActiveNetworkInfo() != null
-                && connectivityManager.getActiveNetworkInfo().isAvailable()
-                && connectivityManager.getActiveNetworkInfo().isConnected();
-        return connection;
     }
 }
