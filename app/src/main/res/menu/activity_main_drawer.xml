@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group
+        android:id="@+id/menu_top"
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_home"
+            android:icon="@drawable/ic_home_black_24dp"
+            android:title="@string/home" />
+        <item
+            android:id="@+id/nav_profile"
+            android:icon="@drawable/ic_home_black_24dp"
+            android:title="@string/profile" />
+        <item
+            android:id="@+id/nav_fav"
+            android:icon="@drawable/ic_home_black_24dp"
+            android:title="@string/fav" />
+        <item
+            android:id="@+id/nav_notifications"
+            android:icon="@drawable/ic_home_black_24dp"
+            android:title="@string/notifications" />
+    </group>
+
+    <group
+        android:id="@+id/menu_middle"
+        android:checkableBehavior="none">
+
+        <item android:title="@string/job_portal">
+            <menu>
+                <item
+                    android:id="@+id/nav_recommend"
+                    android:icon="@drawable/ic_menu_share"
+                    android:title="Recommended"/>
+                <item
+                    android:id="@+id/nav_categories"
+                    android:icon="@drawable/ic_menu_share"
+                    android:title="Categories"/>
+                <item
+                    android:id="@+id/nav_employer"
+                    android:icon="@drawable/ic_menu_share"
+                    android:title="Employer"/>
+            </menu>
+        </item>
+    </group>
+
+    <group
+        android:id="@+id/menu_bottom"
+        android:checkableBehavior="none">
+
+        <item
+            android:id="@+id/nav_settings"
+            android:title="@string/action_settings" >
+        </item>
+
+        <item
+            android:id="@+id/nav_logout"
+            android:title="@string/action_logout" >
+        </item>
+    </group>
+
+</menu>
