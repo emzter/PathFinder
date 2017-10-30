@@ -44,7 +44,7 @@ public class FeaturedJobAdapter extends RecyclerView.Adapter<FeaturedJobAdapter.
         Employer emp = empList.get(job.getCompany_id()-1);
         holder.jobTitle.setText(job.getName());
 //        holder.employerName.setText(emp.getName());
-        Glide.with(context).load(EMPPIC_URL+emp.getLogo()).apply(RequestOptions.centerCropTransform().error(R.drawable.defaultprofilepicture)).into(holder.employerLogo);
+        Glide.with(context).load(EMPPIC_URL+emp.getLogo()).apply(RequestOptions.centerInsideTransform().error(R.drawable.defaultprofilepicture)).into(holder.employerLogo);
     }
 
     @Override

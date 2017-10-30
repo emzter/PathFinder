@@ -10,4 +10,6 @@
     <dimen name="emp_logo_height">80dp</dimen>
     <dimen name="card_margin">5dp</dimen>
     <dimen name="card_radius">2dp</dimen>
+    <dimen name="overflow_width">20dp</dimen>
+    <dimen name="overflow_height">30dp</dimen>
 </resources>
