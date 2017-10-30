@@ -1,12 +1,14 @@
 package com.emz.pathfinder.Adapters;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.support.v7.view.menu.MenuView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -15,6 +17,7 @@ import com.emz.pathfinder.Models.Categories;
 import com.emz.pathfinder.Models.Employer;
 import com.emz.pathfinder.Models.Jobs;
 import com.emz.pathfinder.R;
+import com.emz.pathfinder.Utils.FontManager;
 
 import java.util.List;
 
@@ -41,6 +44,8 @@ public class FeaturedJobAdapter extends RecyclerView.Adapter<FeaturedJobAdapter.
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
+        Typeface iconFont = FontManager.getTypeface(context, FontManager.FONTAWESOME);
+        FontManager.markAsIconContainer(holder.card_action, iconFont);
         Jobs job = jobList.get(position);
         Employer emp = empList.get(job.getCompany_id()-1);
         holder.jobTitle.setText(job.getName());
@@ -54,15 +59,17 @@ public class FeaturedJobAdapter extends RecyclerView.Adapter<FeaturedJobAdapter.
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        ImageView employerLogo, overflow;
+        LinearLayout card_action;
+        ImageView employerLogo;
         TextView jobTitle, employerName;
         public MyViewHolder(View itemView) {
             super(itemView);
 
+            card_action = itemView.findViewById(R.id.card_action);
+
             employerLogo = itemView.findViewById(R.id.employer_logo);
-            overflow = itemView.findViewById(R.id.overflow);
-            jobTitle = itemView.findViewById(R.id.job_title);
-            employerName = itemView.findViewById(R.id.employer_name);
+            jobTitle = itemView.findViewById(R.id.jobTitle);
+            employerName = itemView.findViewById(R.id.empName);
         }
     }
 }
