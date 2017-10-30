@@ -1,6 +1,6 @@
 package com.emz.pathfinder.Models;
 
-public class UserModel {
+public class Users {
     private int id;
     private String guid;
     private String email;
@@ -17,7 +17,7 @@ public class UserModel {
     private String province;
     private String telephone;
 
-    public UserModel(int id, String guid, String email, String user_group, String status, String first_name, String last_name, int sex, String birthdate, String address, String subdistrict, String district, String postcode, String province, String telephone) {
+    public Users(int id, String guid, String email, String user_group, String status, String first_name, String last_name, int sex, String birthdate, String address, String subdistrict, String district, String postcode, String province, String telephone) {
         this.id = id;
         this.guid = guid;
         this.email = email;

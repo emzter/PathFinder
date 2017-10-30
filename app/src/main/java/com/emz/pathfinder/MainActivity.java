@@ -1,9 +1,6 @@
 package com.emz.pathfinder;
 
-import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
-import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -14,44 +11,37 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.text.Layout;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Adapter;
-import android.widget.HorizontalScrollView;
 import android.widget.ProgressBar;
-import android.widget.SearchView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.doodle.android.chips.ChipsView;
 import com.emz.pathfinder.Adapters.CategoryChipsAdapter;
+import com.emz.pathfinder.Adapters.FeaturedJobAdapter;
 import com.emz.pathfinder.Models.Categories;
-import com.emz.pathfinder.Models.UserModel;
-import com.emz.pathfinder.Utils.Auth;
+import com.emz.pathfinder.Models.Employer;
+import com.emz.pathfinder.Models.Jobs;
+import com.emz.pathfinder.Models.Users;
 import com.emz.pathfinder.Utils.UserHelper;
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 import com.rw.velocity.Velocity;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.File;
-import java.lang.reflect.Array;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-import static com.emz.pathfinder.R.drawable.defaultprofilepicture;
-import static com.emz.pathfinder.Utils.Utils.AUTH_URL;
 import static com.emz.pathfinder.Utils.Utils.JOBS_URL;
 import static com.emz.pathfinder.Utils.Utils.PROFILEPIC_URL;
 import static com.emz.pathfinder.Utils.Utils.USER_URL;
@@ -66,31 +56,24 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private TextView navNameText, navEMailText;
     private ProgressBar progressBar;
     private CircleImageView navProPic;
-    private View mChipView;
 
     private RecyclerView mRecyclerView;
-    private CategoryChipsAdapter mAdapter;
+    private FeaturedJobAdapter mAdapter;
 
-    JSONArray jsonObject;
+    private List<Employer> empList;
 
     private UserHelper usrHelper;
-    private UserModel users;
-    private List<Categories> catList;
+    private Users users;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        loadCategories();
         usrHelper = new UserHelper(this);
+        empList = new ArrayList<>();
 
         authCheck();
         bindView();
-
-        Log.d("TEST", usrHelper.getUserId());
-
-        loadUser(usrHelper.getUserId());
     }
 
     private void loadUser(String userId) {
@@ -101,15 +84,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 .connect(new Velocity.ResponseListener() {
                     @Override
                     public void onVelocitySuccess(Velocity.Response response) {
-                        users = response.deserialize(UserModel.class);
+                        users = response.deserialize(Users.class);
                         setupView();
                     }
 
                     @Override
                     public void onVelocityFailed(Velocity.Response response) {
-                        Log.e("TEST", "CANT CONNECT");
+                        noConnection();
+                        Log.e("TEST", String.valueOf(R.string.no_internet_connection));
                     }
                 });
+    }
+
+    private void noConnection() {
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
@@ -142,6 +129,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private void authCheck(){
         if(!usrHelper.getLoginStatus()){
             onActionLogoutClicked();
+        }else{
+            loadUser(usrHelper.getUserId());
         }
     }
 
@@ -155,17 +144,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private void bindView(){
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        catList = new ArrayList<>();
-
-        mRecyclerView = findViewById(R.id.catRecyclerView);
-        mRecyclerView.setHasFixedSize(true);
-
-        mAdapter = new CategoryChipsAdapter(this, catList);
-        mRecyclerView.setAdapter(mAdapter);
-
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
-        mRecyclerView.setLayoutManager(layoutManager);
 
         drawer = findViewById(R.id.drawer_layout);
         toggler = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -182,35 +160,73 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         navProPic = navHeaderView.findViewById(R.id.navProfilePic);
         navEMailText = navHeaderView.findViewById(R.id.navEmailText);
         navNameText = navHeaderView.findViewById(R.id.navNameText);
+
+        loadAllEmp();
     }
 
-    private void loadCategories(){
+    private void loadFeaturedJobs(){
         Velocity.get(JOBS_URL)
-                .withPathParam("status","loadallcat")
+                .withPathParam("status","loadfeaturedjob")
                 .connect(new Velocity.ResponseListener() {
                     @Override
                     public void onVelocitySuccess(Velocity.Response response) {
-                        try {
-                            jsonObject = new JSONArray(response.body);
+                        List<Jobs> jobList = new ArrayList<>();
 
-                            for(int i = 0; i < jsonObject.length(); i++) {
-                                JSONObject currentObj = jsonObject.getJSONObject(i);
-                                int id = Integer.parseInt(currentObj.getString("id"));
-                                String parent_id = currentObj.getString("parent_id");
-                                String name = currentObj.getString("name");
-                                String icon = currentObj.getString("icon");
-                                catList.add(new Categories(id, parent_id, name, icon));
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
+                        Gson gson = new Gson();
+                        JsonParser parser = new JsonParser();
+                        JsonArray jsonArray = parser.parse(response.body).getAsJsonArray();
+
+                        for(int i = 0; i < jsonArray.size(); i++) {
+                            JsonElement mJson = jsonArray.get(i);
+                            Jobs job = gson.fromJson(mJson, Jobs.class);
+                            jobList.add(job);
+                        }
+
+                        addAdapter(jobList);
+                    }
+
+                    @Override
+                    public void onVelocityFailed(Velocity.Response response) {
+                        Log.e("LOADJOB", String.valueOf(R.string.no_internet_connection));
+                    }
+                });
+    }
+
+    private void loadAllEmp(){
+        Velocity.get(JOBS_URL)
+                .withPathParam("status","loadallemp")
+                .connect(new Velocity.ResponseListener() {
+                    @Override
+                    public void onVelocitySuccess(Velocity.Response response) {
+
+
+                        Gson gson = new Gson();
+                        JsonParser parser = new JsonParser();
+                        JsonArray jsonArray = parser.parse(response.body).getAsJsonArray();
+
+                        for(int i = 0; i < jsonArray.size(); i++) {
+                            JsonElement mJson = jsonArray.get(i);
+                            Employer employer = gson.fromJson(mJson, Employer.class);
+                            empList.add(employer);
                         }
                     }
 
                     @Override
                     public void onVelocityFailed(Velocity.Response response) {
-
+                        Log.e("LOADJOB", String.valueOf(R.string.no_internet_connection));
                     }
                 });
+    }
+
+    private void addAdapter(List<Jobs> jobList){
+        mRecyclerView = findViewById(R.id.catRecyclerView);
+        mRecyclerView.setHasFixedSize(true);
+
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        mRecyclerView.setLayoutManager(layoutManager);
+
+        mAdapter = new FeaturedJobAdapter(this, jobList, empList);
+        mRecyclerView.setAdapter(mAdapter);
     }
 
     private void setupView() {
@@ -219,7 +235,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         navNameText.setText(fullname);
         Glide.with(navProPic.getContext()).load(PROFILEPIC_URL+users.getGuid()+".jpg").apply(RequestOptions.centerCropTransform().error(R.drawable.defaultprofilepicture)).into(navProPic);
 
-//        View chip = getLayoutInflater().inflate(R.layout.item_job_categories, mChipView, false);
+        loadFeaturedJobs();
 
         progressBar.setVisibility(View.GONE);
     }

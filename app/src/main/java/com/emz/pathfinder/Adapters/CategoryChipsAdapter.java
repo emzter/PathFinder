@@ -45,6 +45,8 @@ public class CategoryChipsAdapter extends RecyclerView.Adapter<CategoryChipsAdap
 
         public MyViewHolder(View itemView) {
             super(itemView);
+
+            chipText = itemView.findViewById(R.id.chipText);
         }
     }
 }

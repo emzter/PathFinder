@@ -1,21 +1,14 @@
 package com.emz.pathfinder.Utils;
 
 import android.content.Context;
-import com.emz.pathfinder.Models.UserModel;
+import com.emz.pathfinder.Models.Users;
 import com.rw.velocity.Velocity;
-import java.util.Objects;
+
 import static com.emz.pathfinder.Utils.Utils.AUTH_URL;
 
 public class Auth {
 
-    private UserModel users;
-    private UserHelper usrHelper;
-
     private String json;
-
-    public Auth(Context context){
-        usrHelper = new UserHelper(context);
-    }
 
     public String userLoader(int id){
         String uid = String.valueOf(id);
