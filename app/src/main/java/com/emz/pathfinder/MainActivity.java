@@ -8,13 +8,17 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -52,6 +56,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private DrawerLayout drawer;
     private ActionBarDrawerToggle toggler;
     private NavigationView navigationView;
+    private LinearLayout mainLayout;
 
     private TextView navNameText, navEMailText;
     private ProgressBar progressBar;
@@ -72,8 +77,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         usrHelper = new UserHelper(this);
         empList = new ArrayList<>();
 
-        authCheck();
         bindView();
+
+        authCheck();
     }
 
     private void loadUser(String userId) {
@@ -106,7 +112,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         switch (id){
             case R.id.nav_home:
-                onActionLogoutClicked();
+                onActionHomeClicked();
                 break;
             case R.id.nav_logout:
                 onActionLogoutClicked();
@@ -115,6 +121,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void onActionHomeClicked() {
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
     }
 
     @Override
@@ -142,8 +153,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void bindView(){
+        mainLayout = findViewById(R.id.main_layout);
+        mainLayout.setVisibility(View.INVISIBLE);
+
         toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
         drawer = findViewById(R.id.drawer_layout);
         toggler = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -227,6 +240,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         mAdapter = new FeaturedJobAdapter(this, jobList, empList);
         mRecyclerView.setAdapter(mAdapter);
+
+        mainLayout.setVisibility(View.VISIBLE);
     }
 
     private void setupView() {
