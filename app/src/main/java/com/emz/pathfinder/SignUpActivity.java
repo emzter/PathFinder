@@ -22,6 +22,7 @@ import static com.emz.pathfinder.Utils.Ui.createProgressDialog;
 import static com.emz.pathfinder.Utils.Ui.createSnackbar;
 import static com.emz.pathfinder.Utils.Ui.dismissProgressDialog;
 import static com.emz.pathfinder.Utils.Utils.AUTH_URL;
+import static com.emz.pathfinder.Utils.Utils.REGISTER_URL;
 import static com.emz.pathfinder.Utils.Utils.convertString;
 
 public class SignUpActivity extends AppCompatActivity implements View.OnClickListener {
@@ -89,16 +90,15 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void registerUser(String name, String lastname, String email, String pass) {
-        Velocity.post(AUTH_URL)
-                .withFormData("status","register")
+        Velocity.post(REGISTER_URL)
                 .withFormData("email",email)
-                .withFormData("name",name)
+                .withFormData("firstname",name)
                 .withFormData("lastname",lastname)
-                .withFormData("pass",pass)
+                .withFormData("password",pass)
                 .connect(new Velocity.ResponseListener() {
                     @Override
                     public void onVelocitySuccess(Velocity.Response response) {
-                        if(Objects.equals(response.body, "Pass")){
+                        if(Objects.equals(response.body, "Success")){
                             Log.d(TAG, response.body);
                             dismissProgressDialog();
                             onRegisterSuccess();
