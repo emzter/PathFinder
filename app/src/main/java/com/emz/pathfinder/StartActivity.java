@@ -24,7 +24,7 @@ import java.util.Objects;
 import static com.emz.pathfinder.Utils.Ui.createProgressDialog;
 import static com.emz.pathfinder.Utils.Ui.createSnackbar;
 import static com.emz.pathfinder.Utils.Ui.dismissProgressDialog;
-import static com.emz.pathfinder.Utils.Utils.AUTH_URL;
+import static com.emz.pathfinder.Utils.Utils.LOGIN_URL;
 import static com.emz.pathfinder.Utils.Utils.convertString;
 
 public class StartActivity extends AppCompatActivity implements View.OnClickListener {
@@ -104,11 +104,14 @@ public class StartActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void authUser(String email, String password) {
-        Velocity.post(AUTH_URL).withFormData("status","login").withFormData("email", email).withFormData("password", password).connect(new Velocity.ResponseListener() {
+        Velocity.post(LOGIN_URL).withFormData("email", email).withFormData("password", password).connect(new Velocity.ResponseListener() {
             @Override
             public void onVelocitySuccess(Velocity.Response response) {
-                if(!Objects.equals(response.body, "Failed")){
-                    onLoginSuccess(response.body);
+                if(response.body.contains("Success")){
+                    String uid = response.body.replace("Success", "");
+                    onLoginSuccess(uid);
+                }else if(Objects.equals(response.body, "FailedNoUsers")){
+                    onLoginFailed(2);
                 }else{
                     onLoginFailed(0);
                 }
@@ -138,6 +141,8 @@ public class StartActivity extends AppCompatActivity implements View.OnClickList
             createSnackbar(view, getString(R.string.auth_failed));
         }else if(stage == 1){
             createSnackbar(view, getString(R.string.connection_error));
+        }else if(stage == 2){
+            createSnackbar(view, getString(R.string.no_user_found));
         }
 
         loginButton.setEnabled(true);

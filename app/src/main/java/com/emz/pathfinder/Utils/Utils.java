@@ -13,7 +13,7 @@ import static android.support.v4.content.ContextCompat.startActivity;
 
 public class Utils {
 
-    public static final String AUTH_URL = "https://www.pathfinder.in.th/dist/home/auth.php";
+    public static final String LOGIN_URL = "https://www.pathfinder.in.th/home/login/";
     public static final String REGISTER_URL = "https://www.pathfinder.in.th/registration/signup/";
     public static final String USER_URL = "https://www.pathfinder.in.th/dist/home/users.php";
     public static final String JOBS_URL = "https://www.pathfinder.in.th/dist/home/jobs.php";
