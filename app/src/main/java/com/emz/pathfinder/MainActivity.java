@@ -32,6 +32,7 @@ import com.emz.pathfinder.Models.Employer;
 import com.emz.pathfinder.Models.Jobs;
 import com.emz.pathfinder.Models.Users;
 import com.emz.pathfinder.Utils.UserHelper;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -51,8 +52,11 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import static com.emz.pathfinder.Utils.Utils.JOBS_URL;
 import static com.emz.pathfinder.Utils.Utils.PROFILEPIC_URL;
 import static com.emz.pathfinder.Utils.Utils.USER_URL;
+import static com.emz.pathfinder.Utils.Utils.sendRegistrationToServer;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+
+    private static final String TAG = "MainActivity";
 
     private Toolbar toolbar;
     private DrawerLayout drawer;
@@ -252,7 +256,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         String fullname = users.getFirst_name()+" "+users.getLast_name();
         navEMailText.setText(users.getEmail());
         navNameText.setText(fullname);
-        Glide.with(navProPic.getContext()).load(PROFILEPIC_URL+users.getGuid()+".jpg").apply(RequestOptions.centerCropTransform().error(R.drawable.defaultprofilepicture)).into(navProPic);
+        Glide.with(navProPic.getContext()).load(PROFILEPIC_URL+users.getProfile_image()).apply(RequestOptions.centerCropTransform().error(R.drawable.defaultprofilepicture)).into(navProPic);
+
+        String token = FirebaseInstanceId.getInstance().getToken();
+        sendRegistrationToServer(token, this);
+        Log.d(TAG, "Token: " + token);
 
         loadFeaturedJobs();
 

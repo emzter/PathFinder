@@ -6,6 +6,8 @@ public class Users {
     private String email;
     private String user_group;
     private String status;
+    private String validate;
+    private String profile_image;
     private String first_name;
     private String last_name;
     private int sex;
@@ -17,12 +19,14 @@ public class Users {
     private String province;
     private String telephone;
 
-    public Users(int id, String guid, String email, String user_group, String status, String first_name, String last_name, int sex, String birthdate, String address, String subdistrict, String district, String postcode, String province, String telephone) {
+    public Users(int id, String guid, String email, String user_group, String status, String validate, String profile_image, String first_name, String last_name, int sex, String birthdate, String address, String subdistrict, String district, String postcode, String province, String telephone) {
         this.id = id;
         this.guid = guid;
         this.email = email;
         this.user_group = user_group;
         this.status = status;
+        this.validate = validate;
+        this.profile_image = profile_image;
         this.first_name = first_name;
         this.last_name = last_name;
         this.sex = sex;
@@ -153,5 +157,21 @@ public class Users {
 
     public void setTelephone(String telephone) {
         this.telephone = telephone;
+    }
+
+    public String getValidate() {
+        return validate;
+    }
+
+    public void setValidate(String validate) {
+        this.validate = validate;
+    }
+
+    public String getProfile_image() {
+        return profile_image;
+    }
+
+    public void setProfile_image(String profile_image) {
+        this.profile_image = profile_image;
     }
 }

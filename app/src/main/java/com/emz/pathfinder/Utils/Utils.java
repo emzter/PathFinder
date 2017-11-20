@@ -5,9 +5,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.support.annotation.NonNull;
+import android.util.Log;
 import android.widget.EditText;
 
 import com.emz.pathfinder.StartActivity;
+import com.rw.velocity.Velocity;
 
 import static android.support.v4.content.ContextCompat.startActivity;
 
@@ -24,5 +26,31 @@ public class Utils {
     @NonNull
     public static String convertString(EditText editText) {
         return editText.getText().toString();
+    }
+
+    public static void sendRegistrationToServer(String refreshedToken, Context context) {
+        final String TAG = "MyFirebaseIDService";
+
+        UserHelper usrHelper = new UserHelper(context);
+
+        if(usrHelper.getLoginStatus()){
+            String id = usrHelper.getUserId();
+            Velocity.post(UTILITIES_URL+"newtoken")
+                    .withFormData("id", id)
+                    .withFormData("token", refreshedToken)
+                    .connect(new Velocity.ResponseListener() {
+                        @Override
+                        public void onVelocitySuccess(Velocity.Response response) {
+                            Log.d(TAG, response.body);
+                            Log.d(TAG, "Registered Token");
+                        }
+
+                        @Override
+                        public void onVelocityFailed(Velocity.Response response) {
+                            Log.e(TAG, response.body);
+                            Log.e(TAG, "Failed to Registered Token");
+                        }
+                    });
+        }
     }
 }
