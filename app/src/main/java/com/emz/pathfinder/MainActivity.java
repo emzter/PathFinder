@@ -1,6 +1,8 @@
 package com.emz.pathfinder;
 
+import android.content.Context;
 import android.content.Intent;
+import android.location.LocationManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -242,6 +244,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mRecyclerView.setAdapter(mAdapter);
 
         mainLayout.setVisibility(View.VISIBLE);
+
+        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
     }
 
     private void setupView() {

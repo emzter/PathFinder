@@ -19,6 +19,7 @@ public class Utils {
     public static final String JOBS_URL = "https://www.pathfinder.in.th/dist/home/jobs.php";
     public static final String PROFILEPIC_URL = "https://www.pathfinder.in.th/uploads/profile_image/";
     public static final String EMPPIC_URL = "https://www.pathfinder.in.th/uploads/logo_images/";
+    public static final String UTILITIES_URL = "https://www.pathfinder.in.th/utilities/";
 
     @NonNull
     public static String convertString(EditText editText) {
