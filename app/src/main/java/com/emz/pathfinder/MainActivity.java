@@ -1,8 +1,6 @@
 package com.emz.pathfinder;
 
-import android.content.Context;
 import android.content.Intent;
-import android.location.LocationManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
@@ -14,51 +12,27 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.emz.pathfinder.Adapters.CategoryChipsAdapter;
-import com.emz.pathfinder.Adapters.FeaturedJobAdapter;
 import com.emz.pathfinder.Fragments.JobPortalFragment;
 import com.emz.pathfinder.Fragments.NotificationFragment;
 import com.emz.pathfinder.Fragments.SearchFragment;
-import com.emz.pathfinder.Fragments.SettingsFragment;
 import com.emz.pathfinder.Fragments.TimelineFragment;
-import com.emz.pathfinder.Models.Categories;
-import com.emz.pathfinder.Models.Employer;
-import com.emz.pathfinder.Models.Jobs;
 import com.emz.pathfinder.Models.Users;
 import com.emz.pathfinder.Utils.UserHelper;
 import com.google.firebase.iid.FirebaseInstanceId;
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
 import com.rw.velocity.Velocity;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-import static com.emz.pathfinder.Utils.Utils.JOBS_URL;
 import static com.emz.pathfinder.Utils.Utils.PROFILEPIC_URL;
 import static com.emz.pathfinder.Utils.Utils.USER_URL;
 import static com.emz.pathfinder.Utils.Utils.sendRegistrationToServer;
@@ -94,15 +68,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     new JobPortalFragment(),
                     new TimelineFragment(),
                     new SearchFragment(),
-                    new NotificationFragment(),
-                    new SettingsFragment()
+                    new NotificationFragment()
             };
             private final String[] mFragmentNames = new String[]{
                     "Portal",
                     "Timeline",
                     "Search",
-                    "Notification",
-                    "Settings",
+                    "Notification"
             };
 
             @Override

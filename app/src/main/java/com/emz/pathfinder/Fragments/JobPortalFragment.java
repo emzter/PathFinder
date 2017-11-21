@@ -52,8 +52,6 @@ public class JobPortalFragment extends Fragment{
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
         mRecyclerView.setLayoutManager(layoutManager);
 
-        loadAllEmp();
-
         return rootView;
     }
 
@@ -61,7 +59,7 @@ public class JobPortalFragment extends Fragment{
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        loadFeaturedJobs();
+        loadAllEmp();
     }
 
     private void loadFeaturedJobs(){
@@ -106,6 +104,8 @@ public class JobPortalFragment extends Fragment{
                             Employer employer = gson.fromJson(mJson, Employer.class);
                             empList.add(employer);
                         }
+
+                        loadFeaturedJobs();
                     }
 
                     @Override
