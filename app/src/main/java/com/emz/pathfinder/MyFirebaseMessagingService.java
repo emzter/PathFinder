@@ -12,17 +12,22 @@ import android.graphics.Color;
 import android.media.RingtoneManager;
 import android.os.Build;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.content.res.ResourcesCompat;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Map;
 
-/**
- * Created by im_ae on 20/11/2560.
- */
+import static com.emz.pathfinder.Utils.Utils.getBitmapFromURL;
+import static com.emz.pathfinder.Utils.Utils.getCircleBitmap;
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
     @Override
@@ -36,9 +41,12 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     }
 
     private void sendNotification(RemoteMessage.Notification notification, Map<String, String> data) {
-        Bitmap icon = BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher);
+        Bitmap icon = getCircleBitmap(getBitmapFromURL(data.get("profile_image")));
 
-        Intent intent = new Intent(this, MainActivity.class);
+        int primary = ContextCompat.getColor(this, R.color.colorPrimary);
+
+        Intent intent = new Intent(notification.getClickAction());
+        intent.putExtra("id", data.get("id"));
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);
 
@@ -50,23 +58,10 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 .setContentIntent(pendingIntent)
                 .setContentInfo(notification.getTitle())
                 .setLargeIcon(icon)
-                .setColor(Color.RED)
+                .setColor(primary)
                 .setLights(Color.RED, 1000, 300)
                 .setDefaults(Notification.DEFAULT_VIBRATE)
-                .setSmallIcon(R.mipmap.ic_launcher);
-
-        try {
-            String picture_url = data.get("picture_url");
-            if (picture_url != null && !"".equals(picture_url)) {
-                URL url = new URL(picture_url);
-                Bitmap bigPicture = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-                notificationBuilder.setStyle(
-                        new NotificationCompat.BigPictureStyle().bigPicture(bigPicture).setSummaryText(notification.getBody())
-                );
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+                .setSmallIcon(R.mipmap.pf_launcher);
 
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 

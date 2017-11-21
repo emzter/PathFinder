@@ -5,7 +5,11 @@ import android.content.Intent;
 import android.location.LocationManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -27,6 +31,11 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.emz.pathfinder.Adapters.CategoryChipsAdapter;
 import com.emz.pathfinder.Adapters.FeaturedJobAdapter;
+import com.emz.pathfinder.Fragments.JobPortalFragment;
+import com.emz.pathfinder.Fragments.NotificationFragment;
+import com.emz.pathfinder.Fragments.SearchFragment;
+import com.emz.pathfinder.Fragments.SettingsFragment;
+import com.emz.pathfinder.Fragments.TimelineFragment;
 import com.emz.pathfinder.Models.Categories;
 import com.emz.pathfinder.Models.Employer;
 import com.emz.pathfinder.Models.Jobs;
@@ -68,10 +77,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private ProgressBar progressBar;
     private CircleImageView navProPic;
 
-    private RecyclerView mRecyclerView;
-    private FeaturedJobAdapter mAdapter;
-
-    private List<Employer> empList;
+    private FragmentPagerAdapter mPagerAdapter;
+    private ViewPager mViewPager;
 
     private UserHelper usrHelper;
     private Users users;
@@ -81,7 +88,39 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         usrHelper = new UserHelper(this);
-        empList = new ArrayList<>();
+
+        mPagerAdapter = new FragmentPagerAdapter(getSupportFragmentManager()) {
+            private final Fragment[] mFragments = new Fragment[]{
+                    new JobPortalFragment(),
+                    new TimelineFragment(),
+                    new SearchFragment(),
+                    new NotificationFragment(),
+                    new SettingsFragment()
+            };
+            private final String[] mFragmentNames = new String[]{
+                    "Portal",
+                    "Timeline",
+                    "Search",
+                    "Notification",
+                    "Settings",
+            };
+
+            @Override
+            public int getCount() {
+                return mFragments.length;
+            }
+
+            @Override
+            public Fragment getItem(int position) {
+                return mFragments[position];
+            }
+
+            public CharSequence getPageTitle(int position) {
+                return mFragmentNames[position];
+            }
+        };
+
+        mViewPager = findViewById(R.id.container);
 
         bindView();
 
@@ -120,6 +159,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.nav_home:
                 onActionHomeClicked();
                 break;
+            case R.id.nav_location:
+                onActionLocationClicked();
+                break;
             case R.id.nav_logout:
                 onActionLogoutClicked();
                 break;
@@ -127,6 +169,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void onActionLocationClicked() {
+        Intent intent = new Intent(this, MapsActivity.class);
+        startActivity(intent);
     }
 
     private void onActionHomeClicked() {
@@ -159,10 +206,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void bindView(){
-        mainLayout = findViewById(R.id.main_layout);
-        mainLayout.setVisibility(View.INVISIBLE);
-
         toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
         drawer = findViewById(R.id.drawer_layout);
         toggler = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -180,77 +225,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         navEMailText = navHeaderView.findViewById(R.id.navEmailText);
         navNameText = navHeaderView.findViewById(R.id.navNameText);
 
-        loadAllEmp();
+        mViewPager.setAdapter(mPagerAdapter);
+
+        TabLayout tabLayout = findViewById(R.id.tabs);
+        tabLayout.setupWithViewPager(mViewPager);
     }
 
-    private void loadFeaturedJobs(){
-        Velocity.get(JOBS_URL)
-                .withPathParam("status","loadfeaturedjob")
-                .connect(new Velocity.ResponseListener() {
-                    @Override
-                    public void onVelocitySuccess(Velocity.Response response) {
-                        List<Jobs> jobList = new ArrayList<>();
-
-                        Gson gson = new Gson();
-                        JsonParser parser = new JsonParser();
-                        JsonArray jsonArray = parser.parse(response.body).getAsJsonArray();
-
-                        for(int i = 0; i < jsonArray.size(); i++) {
-                            JsonElement mJson = jsonArray.get(i);
-                            Jobs job = gson.fromJson(mJson, Jobs.class);
-                            jobList.add(job);
-                        }
-
-                        addAdapter(jobList);
-                    }
-
-                    @Override
-                    public void onVelocityFailed(Velocity.Response response) {
-                        Log.e("LOADJOB", String.valueOf(R.string.no_internet_connection));
-                    }
-                });
-    }
-
-    private void loadAllEmp(){
-        Velocity.get(JOBS_URL)
-                .withPathParam("status","loadallemp")
-                .connect(new Velocity.ResponseListener() {
-                    @Override
-                    public void onVelocitySuccess(Velocity.Response response) {
-
-
-                        Gson gson = new Gson();
-                        JsonParser parser = new JsonParser();
-                        JsonArray jsonArray = parser.parse(response.body).getAsJsonArray();
-
-                        for(int i = 0; i < jsonArray.size(); i++) {
-                            JsonElement mJson = jsonArray.get(i);
-                            Employer employer = gson.fromJson(mJson, Employer.class);
-                            empList.add(employer);
-                        }
-                    }
-
-                    @Override
-                    public void onVelocityFailed(Velocity.Response response) {
-                        Log.e("LOADJOB", String.valueOf(R.string.no_internet_connection));
-                    }
-                });
-    }
-
-    private void addAdapter(List<Jobs> jobList){
-        mRecyclerView = findViewById(R.id.catRecyclerView);
-        mRecyclerView.setHasFixedSize(true);
-
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
-        mRecyclerView.setLayoutManager(layoutManager);
-
-        mAdapter = new FeaturedJobAdapter(this, jobList, empList);
-        mRecyclerView.setAdapter(mAdapter);
-
-        mainLayout.setVisibility(View.VISIBLE);
-
-        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-    }
 
     private void setupView() {
         String fullname = users.getFirst_name()+" "+users.getLast_name();
@@ -261,8 +241,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         String token = FirebaseInstanceId.getInstance().getToken();
         sendRegistrationToServer(token, this);
         Log.d(TAG, "Token: " + token);
-
-        loadFeaturedJobs();
 
         progressBar.setVisibility(View.GONE);
     }
