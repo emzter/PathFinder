@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="wrap_content">
+
+    <android.support.v7.widget.CardView
+        android:layout_margin="8dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp">
+
+                <ImageView
+                    android:id="@+id/feed_profile_pic"
+                    android:layout_width="@dimen/feed_item_profile_pic"
+                    android:layout_height="@dimen/feed_item_profile_pic"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginEnd="8dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:contentDescription="@string/profile_picture"
+                    android:scaleType="fitXY" />
+
+                <TextView
+                    android:id="@+id/feed_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignTop="@+id/feed_profile_pic"
+                    android:layout_toEndOf="@+id/feed_profile_pic"
+                    android:text="Name Lastname"
+                    android:lines="1"
+                    android:layout_marginTop="6dp"
+                    android:textColor="@color/black"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/feed_to"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toEndOf="@+id/feed_name"
+                    android:fontFamily="@font/font_awesome"
+                    android:text="@string/fa_arrow_circle_right"
+                    android:layout_marginStart="3dp"
+                    android:layout_marginTop="6dp"
+                    android:textColor="@color/black" />
+
+                <TextView
+                    android:id="@+id/feed_2nd_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toEndOf="@+id/feed_to"
+                    android:layout_marginStart="3dp"
+                    android:lines="1"
+                    android:text="Name Lastname"
+                    android:layout_marginTop="6dp"
+                    android:textColor="@color/black"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/feed_timestamp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/feed_name"
+                    android:layout_toEndOf="@+id/feed_profile_pic"
+                    android:textSize="12sp"
+                    android:text="Timestamp" />
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/feed_item_border" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp">
+
+                <TextView
+                    android:id="@+id/feed_main_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="16dp"
+                    android:textSize="18sp"
+                    android:text="@string/lorem_ipsum"
+                    android:textColor="@color/black" />
+
+                <Button
+                    android:id="@+id/feed_button_like"
+                    style="@style/Widget.AppCompat.Button.ButtonBar.AlertDialog"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/feed_main_text"
+                    android:fontFamily="@font/font_awesome"
+                    android:text="@string/fa_heart" />
+
+                <Button
+                    android:id="@+id/feed_button_reply"
+                    style="@style/Widget.AppCompat.Button.ButtonBar.AlertDialog"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/feed_main_text"
+                    android:layout_toEndOf="@id/feed_button_like"
+                    android:fontFamily="@font/font_awesome"
+                    android:text="@string/fa_reply" />
+
+                <Button
+                    android:id="@+id/feed_button_share"
+                    style="@style/Widget.AppCompat.Button.ButtonBar.AlertDialog"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/feed_main_text"
+                    android:layout_toEndOf="@id/feed_button_reply"
+                    android:fontFamily="@font/font_awesome"
+                    android:text="@string/fa_share_alt" />
+
+            </RelativeLayout>
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
+
+</RelativeLayout>

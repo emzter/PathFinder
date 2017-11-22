@@ -46,7 +46,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         int primary = ContextCompat.getColor(this, R.color.colorPrimary);
 
         Intent intent = new Intent(notification.getClickAction());
-        intent.putExtra("id", data.get("id"));
+        intent.putExtra("sender_id", data.get("sender_id"));
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);
 

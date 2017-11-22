@@ -17,6 +17,8 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 import android.widget.EditText;
 
+import com.emz.pathfinder.Models.Users;
+import com.emz.pathfinder.R;
 import com.emz.pathfinder.StartActivity;
 import com.rw.velocity.Velocity;
 

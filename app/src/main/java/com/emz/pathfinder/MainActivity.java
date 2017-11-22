@@ -2,7 +2,9 @@ package com.emz.pathfinder;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -71,10 +73,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     new NotificationFragment()
             };
             private final String[] mFragmentNames = new String[]{
-                    "Portal",
-                    "Timeline",
-                    "Search",
-                    "Notification"
+                    getResources().getString(R.string.fa_home),
+                    getResources().getString(R.string.fa_rss),
+                    getResources().getString(R.string.fa_search),
+                    getResources().getString(R.string.fa_bell)
             };
 
             @Override
@@ -148,6 +150,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         startActivity(intent);
     }
 
+    private void onFabNewPostClicked() {
+        Intent intent = new Intent(this, NewPostActivity.class);
+        startActivity(intent);
+    }
+
     private void onActionHomeClicked() {
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
@@ -201,6 +208,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         TabLayout tabLayout = findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
+
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onFabNewPostClicked();
+            }
+        });
     }
 
 
