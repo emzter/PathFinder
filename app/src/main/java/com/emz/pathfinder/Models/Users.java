@@ -1,34 +1,53 @@
 package com.emz.pathfinder.Models;
 
+import com.google.gson.annotations.SerializedName;
+
 public class Users {
+    @SerializedName("id")
     private int id;
+    @SerializedName("guid")
     private String guid;
+    @SerializedName("email")
     private String email;
-    private String user_group;
+    @SerializedName("user_group")
+    private String group;
+    @SerializedName("status")
     private String status;
+    @SerializedName("validate")
     private String validate;
-    private String profile_image;
-    private String first_name;
-    private String last_name;
+    @SerializedName("profile_image")
+    private String proPic;
+    @SerializedName("first_name")
+    private String fname;
+    @SerializedName("last_name")
+    private String lname;
+    @SerializedName("sex")
     private int sex;
+    @SerializedName("birthdate")
     private String birthdate;
+    @SerializedName("address")
     private String address;
+    @SerializedName("subdistrict")
     private String subdistrict;
+    @SerializedName("district")
     private String district;
+    @SerializedName("postcode")
     private String postcode;
+    @SerializedName("province")
     private String province;
+    @SerializedName("telephone")
     private String telephone;
 
-    public Users(int id, String guid, String email, String user_group, String status, String validate, String profile_image, String first_name, String last_name, int sex, String birthdate, String address, String subdistrict, String district, String postcode, String province, String telephone) {
+    public Users(int id, String guid, String email, String group, String status, String validate, String proPic, String fname, String lname, int sex, String birthdate, String address, String subdistrict, String district, String postcode, String province, String telephone) {
         this.id = id;
         this.guid = guid;
         this.email = email;
-        this.user_group = user_group;
+        this.group = group;
         this.status = status;
         this.validate = validate;
-        this.profile_image = profile_image;
-        this.first_name = first_name;
-        this.last_name = last_name;
+        this.proPic = proPic;
+        this.fname = fname;
+        this.lname = lname;
         this.sex = sex;
         this.birthdate = birthdate;
         this.address = address;
@@ -63,12 +82,12 @@ public class Users {
         this.email = email;
     }
 
-    public String getUser_group() {
-        return user_group;
+    public String getGroup() {
+        return group;
     }
 
-    public void setUser_group(String user_group) {
-        this.user_group = user_group;
+    public void setGroup(String group) {
+        this.group = group;
     }
 
     public String getStatus() {
@@ -79,20 +98,36 @@ public class Users {
         this.status = status;
     }
 
-    public String getFirst_name() {
-        return first_name;
+    public String getValidate() {
+        return validate;
     }
 
-    public void setFirst_name(String first_name) {
-        this.first_name = first_name;
+    public void setValidate(String validate) {
+        this.validate = validate;
     }
 
-    public String getLast_name() {
-        return last_name;
+    public String getProPic() {
+        return proPic;
     }
 
-    public void setLast_name(String last_name) {
-        this.last_name = last_name;
+    public void setProPic(String proPic) {
+        this.proPic = proPic;
+    }
+
+    public String getFname() {
+        return fname;
+    }
+
+    public void setFname(String fname) {
+        this.fname = fname;
+    }
+
+    public String getLname() {
+        return lname;
+    }
+
+    public void setLname(String lname) {
+        this.lname = lname;
     }
 
     public int getSex() {
@@ -157,21 +192,5 @@ public class Users {
 
     public void setTelephone(String telephone) {
         this.telephone = telephone;
-    }
-
-    public String getValidate() {
-        return validate;
-    }
-
-    public void setValidate(String validate) {
-        this.validate = validate;
-    }
-
-    public String getProfile_image() {
-        return profile_image;
-    }
-
-    public void setProfile_image(String profile_image) {
-        this.profile_image = profile_image;
     }
 }

@@ -42,20 +42,21 @@
                 android:value="com.emz.pathfinder.StartActivity" />
         </activity>
         <activity
-            android:name=".MapsActivity"
-            android:label="@string/title_activity_maps"
+            android:name=".NewPostActivity"
+            android:label="Create New Post"
             android:parentActivityName=".MainActivity">
             <intent-filter>
-                <action android:name="OPEN_MAP_ACTIVITY" />
+                <action android:name="OPEN_NEWPOST_ACTIVITY" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
         <activity
-            android:name=".NewPostActivity"
-            android:parentActivityName=".MainActivity"
-            android:label="Create New Post">
+            android:name=".LocationActivity"
+            android:label="Map"
+            android:parentActivityName=".MainActivity">
             <intent-filter>
-                <action android:name="OPEN_NEWPOST_ACTIVITY" />
+                <action android:name="OPEN_MAP_ACTIVITY" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
@@ -80,6 +81,7 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
+
     </application>
 
 </manifest>

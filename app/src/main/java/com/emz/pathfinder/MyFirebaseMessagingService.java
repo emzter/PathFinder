@@ -7,32 +7,26 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.media.RingtoneManager;
 import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.content.res.ResourcesCompat;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.target.SimpleTarget;
-import com.bumptech.glide.request.transition.Transition;
+import com.emz.pathfinder.Utils.Utils;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.Map;
 
-import static com.emz.pathfinder.Utils.Utils.getBitmapFromURL;
-import static com.emz.pathfinder.Utils.Utils.getCircleBitmap;
-
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
+    private Utils utils;
+
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
+
+        utils = new Utils(this);
 
         RemoteMessage.Notification notification = remoteMessage.getNotification();
         Map<String, String> data = remoteMessage.getData();
@@ -41,7 +35,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     }
 
     private void sendNotification(RemoteMessage.Notification notification, Map<String, String> data) {
-        Bitmap icon = getCircleBitmap(getBitmapFromURL(data.get("profile_image")));
+        Bitmap icon = utils.getCircleBitmap(utils.getBitmapFromURL(data.get("profile_image")));
 
         int primary = ContextCompat.getColor(this, R.color.colorPrimary);
 

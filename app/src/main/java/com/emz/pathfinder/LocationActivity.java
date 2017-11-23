@@ -1,15 +1,12 @@
 package com.emz.pathfinder;
 
-import android.content.Context;
-import android.location.Location;
-import android.location.LocationListener;
 import android.location.LocationManager;
-import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 
 import com.emz.pathfinder.Models.Locations;
+import com.emz.pathfinder.Utils.Utils;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -20,24 +17,21 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.rw.velocity.Velocity;
 
 import static com.emz.pathfinder.Utils.Ui.createSnackbar;
-import static com.emz.pathfinder.Utils.Utils.UTILITIES_URL;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
+public class LocationActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private static final String TAG = "MapsActivity";
 
     private GoogleMap mMap;
-
-    Marker mMarker;
-    LocationManager lm;
-    double lat, lng;
-
     private String extra;
+    private Utils utils;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_maps);
+        setContentView(R.layout.activity_location);
+
+        utils = new Utils(this);
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -52,7 +46,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(final GoogleMap googleMap) {
         if (getIntent().getExtras() != null) {
-            Velocity.post(UTILITIES_URL + "getLocation")
+            Velocity.post(utils.UTILITIES_URL + "getLocation")
                     .withFormData("id", extra)
                     .connect(new Velocity.ResponseListener() {
                         @Override

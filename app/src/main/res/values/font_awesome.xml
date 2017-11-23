@@ -343,4 +343,5 @@
     <string name="fa_long_arrow_left">&#xf177;</string>
     <string name="fa_long_arrow_right">&#xf178;</string>
     <string name="fa_apple">&#xf179;</string>
+    <string name="fa_photo">&#xf03e;</string>
 </resources>

@@ -2,7 +2,6 @@ package com.emz.pathfinder.Adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,21 +13,23 @@ import com.bumptech.glide.request.RequestOptions;
 import com.emz.pathfinder.Models.Users;
 import com.emz.pathfinder.Models.Posts;
 import com.emz.pathfinder.R;
-import com.rw.velocity.Velocity;
+import com.emz.pathfinder.Utils.Utils;
 
+import java.util.HashMap;
 import java.util.List;
-
-import static com.emz.pathfinder.Utils.Utils.PROFILEPIC_URL;
-import static com.emz.pathfinder.Utils.Utils.USER_URL;
 
 public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.MyViewHolder> {
 
     private Context context;
     private List<Posts> postsList;
+    private HashMap<Integer, Users> usersList;
 
-    public TimelineAdapter(Context context, List<Posts> postsList) {
+    private Utils utils = new Utils(context);
+
+    public TimelineAdapter(Context context, HashMap<Integer, Users> usersList, List<Posts> postsList) {
         this.context = context;
         this.postsList = postsList;
+        this.usersList = usersList;
     }
 
     @Override
@@ -38,30 +39,21 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.MyView
     }
 
     @Override
-    public void onBindViewHolder(final MyViewHolder holder, int position) {
-        final Posts post = postsList.get(position);
-        Velocity.get(USER_URL)
-                .withPathParam("status", "userloader")
-                .withPathParam("id", String.valueOf(post.getAuthor()))
-                .withHeader("Content-Type","text/javascript;charset=utf-8")
-                .connect(new Velocity.ResponseListener() {
-                    @Override
-                    public void onVelocitySuccess(Velocity.Response response) {
-                        if(post.getRecipient() == 0){
-                            holder.name2TV.setText("");
-                            holder.toTV.setText("");
-                        }
-                        Users user = response.deserialize(Users.class);
-                        holder.nameTV.setText(user.getFirst_name()+" "+user.getLast_name());
-                        holder.mainTV.setText(post.getMessage());
-                        Glide.with(context).load(PROFILEPIC_URL+user.getProfile_image()).apply(RequestOptions.centerInsideTransform().error(R.drawable.defaultprofilepicture)).into(holder.profilePic);
-                    }
-
-                    @Override
-                    public void onVelocityFailed(Velocity.Response response) {
-                        Log.e("TEST", String.valueOf(R.string.no_internet_connection));
-                    }
-                });
+    public void onBindViewHolder(MyViewHolder holder, int position) {
+        Posts post = postsList.get(position);
+        Users user = usersList.get(post.getAuthor());
+        if(post.getRecipient() == 0){
+            holder.name2TV.setText("");
+            holder.toTV.setText("");
+        }else{
+            Users recipient = usersList.get(post.getRecipient());
+            holder.name2TV.setText(recipient.getFname()+" "+recipient.getLname());
+        }
+        holder.nameTV.setText(user.getFname()+" "+user.getLname());
+        holder.mainTV.setText(post.getMessage());
+        String time = utils.gettimestamp(post.getCreated());
+        holder.timestampTV.setText(time);
+        Glide.with(context).load(utils.PROFILEPIC_URL+user.getProPic()).apply(RequestOptions.centerInsideTransform().error(R.drawable.defaultprofilepicture)).into(holder.profilePic);
     }
 
     @Override
@@ -83,7 +75,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.MyView
             profilePic = itemView.findViewById(R.id.feed_profile_pic);
         }
 
-        private void loadUser(String userId) {
+        private void timestamp(String datetime) {
 
         }
     }

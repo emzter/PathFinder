@@ -47,4 +47,15 @@
     <string name="lorem_ipsum">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</string>
     <string name="relative_position_text">Your relative is here.</string>
     <string name="your_position_text">You\'re here.</string>
+    <string name="what_on_your_mind">What on your mind?</string>
+    <string name="post_btn">Post</string>
+    <string name="decades">decades</string>
+    <string name="years">years</string>
+    <string name="months">months</string>
+    <string name="weeks">weeks</string>
+    <string name="days">days</string>
+    <string name="hours">hrs</string>
+    <string name="minutes">mins</string>
+    <string name="seconds">secs</string>
+    <string name="ago">ago</string>
 </resources>

@@ -14,6 +14,7 @@ import com.emz.pathfinder.Adapters.TimelineAdapter;
 import com.emz.pathfinder.Models.Posts;
 import com.emz.pathfinder.Models.Users;
 import com.emz.pathfinder.R;
+import com.emz.pathfinder.Utils.Utils;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -21,17 +22,19 @@ import com.google.gson.JsonParser;
 import com.rw.velocity.Velocity;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-
-import static com.emz.pathfinder.Utils.Utils.UTILITIES_URL;
 
 public class TimelineFragment extends Fragment{
     private static final String TAG = "TimelineFragment";
 
     private List<Posts> postsList;
+    private HashMap<Integer, Users> usersList;
 
     private RecyclerView mRecyclerView;
     private TimelineAdapter mAdapter;
+    private Utils utils;
+
 
     public TimelineFragment(){}
 
@@ -40,6 +43,9 @@ public class TimelineFragment extends Fragment{
         super.onCreateView(inflater, container, savedInstanceState);
         View rootView = inflater.inflate(R.layout.fragment_newsfeed, container, false);
 
+        utils = new Utils(this.getContext());
+
+        usersList = new HashMap<>();
         postsList = new ArrayList<>();
 
         mRecyclerView = rootView.findViewById(R.id.timelineRecyclerView);
@@ -55,11 +61,38 @@ public class TimelineFragment extends Fragment{
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        loadTimeline();
+        loadUser();
+    }
+
+    private void loadUser() {
+        Velocity.post(utils.UTILITIES_URL+"getAllProfiles")
+                .connect(new Velocity.ResponseListener() {
+                    @Override
+                    public void onVelocitySuccess(Velocity.Response response) {
+                        Gson gson = new Gson();
+                        JsonParser parser = new JsonParser();
+                        JsonArray jsonArray = parser.parse(response.body).getAsJsonArray();
+
+                        for(int i = 0; i < jsonArray.size(); i++) {
+                            JsonElement mJson = jsonArray.get(i);
+                            Users user = gson.fromJson(mJson, Users.class);
+                            usersList.put(user.getId(), user);
+                        }
+
+                        Log.d(TAG, "USERS LOADDED");
+
+                        loadTimeline();
+                    }
+
+                    @Override
+                    public void onVelocityFailed(Velocity.Response response) {
+                        Log.e(TAG, getResources().getString(R.string.no_internet_connection));
+                    }
+                });
     }
 
     private void loadTimeline(){
-        Velocity.post(UTILITIES_URL+"getpost")
+        Velocity.post(utils.UTILITIES_URL+"getpost")
                 .connect(new Velocity.ResponseListener() {
                     @Override
                     public void onVelocitySuccess(Velocity.Response response) {
@@ -75,7 +108,7 @@ public class TimelineFragment extends Fragment{
 
                         Log.d(TAG, "POST LOADDED");
 
-                        mAdapter = new TimelineAdapter(getContext(), postsList);
+                        mAdapter = new TimelineAdapter(getContext(), usersList, postsList);
                         mRecyclerView.setAdapter(mAdapter);
                     }
 

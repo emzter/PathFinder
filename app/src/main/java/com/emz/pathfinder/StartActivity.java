@@ -1,6 +1,4 @@
 package com.emz.pathfinder;
-
-import android.app.VoiceInteractor;
 import android.content.Intent;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
@@ -17,6 +15,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.emz.pathfinder.Utils.UserHelper;
+import com.emz.pathfinder.Utils.Utils;
 import com.rw.velocity.Velocity;
 
 import java.util.Objects;
@@ -24,8 +23,6 @@ import java.util.Objects;
 import static com.emz.pathfinder.Utils.Ui.createProgressDialog;
 import static com.emz.pathfinder.Utils.Ui.createSnackbar;
 import static com.emz.pathfinder.Utils.Ui.dismissProgressDialog;
-import static com.emz.pathfinder.Utils.Utils.LOGIN_URL;
-import static com.emz.pathfinder.Utils.Utils.convertString;
 
 public class StartActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -48,11 +45,14 @@ public class StartActivity extends AppCompatActivity implements View.OnClickList
     private String password;
     private String email;
     private boolean valid;
+    private Utils utils;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
+
+        utils = new Utils(this);
 
         usrHelper = new UserHelper(this);
 
@@ -104,7 +104,7 @@ public class StartActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void authUser(String email, String password) {
-        Velocity.post(LOGIN_URL).withFormData("email", email).withFormData("password", password).connect(new Velocity.ResponseListener() {
+        Velocity.post(utils.LOGIN_URL).withFormData("email", email).withFormData("password", password).connect(new Velocity.ResponseListener() {
             @Override
             public void onVelocitySuccess(Velocity.Response response) {
                 if(response.body.contains("Success")){
@@ -177,8 +177,8 @@ public class StartActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void convertLoginInfo() {
-        email = convertString(emailText);
-        password = convertString(passwordText);
+        email = utils.convertString(emailText);
+        password = utils.convertString(passwordText);
     }
 
     private void authCheck() {

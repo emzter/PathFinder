@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -30,14 +29,11 @@ import com.emz.pathfinder.Fragments.SearchFragment;
 import com.emz.pathfinder.Fragments.TimelineFragment;
 import com.emz.pathfinder.Models.Users;
 import com.emz.pathfinder.Utils.UserHelper;
+import com.emz.pathfinder.Utils.Utils;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.rw.velocity.Velocity;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-
-import static com.emz.pathfinder.Utils.Utils.PROFILEPIC_URL;
-import static com.emz.pathfinder.Utils.Utils.USER_URL;
-import static com.emz.pathfinder.Utils.Utils.sendRegistrationToServer;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -58,11 +54,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private UserHelper usrHelper;
     private Users users;
+    private Utils utils;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        utils = new Utils(this);
         usrHelper = new UserHelper(this);
 
         mPagerAdapter = new FragmentPagerAdapter(getSupportFragmentManager()) {
@@ -102,7 +101,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void loadUser(String userId) {
-        Velocity.get(USER_URL)
+        Velocity.get(utils.USER_URL)
                 .withPathParam("status", "userloader")
                 .withPathParam("id", userId)
                 .withHeader("Content-Type","text/javascript;charset=utf-8")
@@ -146,7 +145,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void onActionLocationClicked() {
-        Intent intent = new Intent(this, MapsActivity.class);
+        Intent intent = new Intent(this, LocationActivity.class);
         startActivity(intent);
     }
 
@@ -220,13 +219,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
     private void setupView() {
-        String fullname = users.getFirst_name()+" "+users.getLast_name();
+        String fullname = users.getFname()+" "+users.getLname();
         navEMailText.setText(users.getEmail());
         navNameText.setText(fullname);
-        Glide.with(navProPic.getContext()).load(PROFILEPIC_URL+users.getProfile_image()).apply(RequestOptions.centerCropTransform().error(R.drawable.defaultprofilepicture)).into(navProPic);
+        Log.d(TAG, users.getProPic());
+        Glide.with(navProPic.getContext()).load(utils.PROFILEPIC_URL+users.getProPic()).apply(RequestOptions.centerCropTransform().error(R.drawable.defaultprofilepicture)).into(navProPic);
 
         String token = FirebaseInstanceId.getInstance().getToken();
-        sendRegistrationToServer(token, this);
+        utils.sendRegistrationToServer(token, this);
         Log.d(TAG, "Token: " + token);
 
         progressBar.setVisibility(View.GONE);

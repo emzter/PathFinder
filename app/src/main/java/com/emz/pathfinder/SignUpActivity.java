@@ -14,6 +14,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.emz.pathfinder.Utils.UserHelper;
+import com.emz.pathfinder.Utils.Utils;
 import com.rw.velocity.Velocity;
 
 import java.util.Objects;
@@ -21,9 +22,6 @@ import java.util.Objects;
 import static com.emz.pathfinder.Utils.Ui.createProgressDialog;
 import static com.emz.pathfinder.Utils.Ui.createSnackbar;
 import static com.emz.pathfinder.Utils.Ui.dismissProgressDialog;
-import static com.emz.pathfinder.Utils.Utils.LOGIN_URL;
-import static com.emz.pathfinder.Utils.Utils.REGISTER_URL;
-import static com.emz.pathfinder.Utils.Utils.convertString;
 
 public class SignUpActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -39,11 +37,14 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
     private boolean valid;
 
     private static final String TAG = "SignUpActivity";
+    private Utils utils;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
+
+        utils = new Utils(this);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -90,7 +91,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void registerUser(String name, String lastname, String email, String pass) {
-        Velocity.post(REGISTER_URL)
+        Velocity.post(utils.REGISTER_URL)
                 .withFormData("email",email)
                 .withFormData("firstname",name)
                 .withFormData("lastname",lastname)
@@ -124,7 +125,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void authUser(String email, String password) {
-        Velocity.post(LOGIN_URL).withFormData("email", email).withFormData("password", password).connect(new Velocity.ResponseListener() {
+        Velocity.post(utils.LOGIN_URL).withFormData("email", email).withFormData("password", password).connect(new Velocity.ResponseListener() {
             @Override
             public void onVelocitySuccess(Velocity.Response response) {
                 if(response.body.contains("Success")){
@@ -244,10 +245,10 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void convertRegisterInfo() {
-        name = convertString(nameText);
-        lastname = convertString(lastnameText);
-        email = convertString(emailText);
-        pass = convertString(passText);
-        cpass = convertString(cpassText);
+        name = utils.convertString(nameText);
+        lastname = utils.convertString(lastnameText);
+        email = utils.convertString(emailText);
+        pass = utils.convertString(passText);
+        cpass = utils.convertString(cpassText);
     }
 }

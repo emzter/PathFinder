@@ -15,18 +15,20 @@ import com.bumptech.glide.request.RequestOptions;
 import com.emz.pathfinder.Models.Employer;
 import com.emz.pathfinder.Models.Jobs;
 import com.emz.pathfinder.R;
+import com.emz.pathfinder.Utils.Utils;
 
+import java.util.HashMap;
 import java.util.List;
-
-import static com.emz.pathfinder.Utils.Utils.EMPPIC_URL;
 
 public class FeaturedJobAdapter extends RecyclerView.Adapter<FeaturedJobAdapter.MyViewHolder> {
 
     private Context context;
     private List<Jobs> jobList;
-    private List<Employer> empList;
+    private HashMap<Integer, Employer> empList;
 
-    public FeaturedJobAdapter(Context context, List<Jobs> jobList, List<Employer> empList){
+    private Utils utils = new Utils(context);
+
+    public FeaturedJobAdapter(Context context, List<Jobs> jobList, HashMap<Integer, Employer> empList){
         this.context = context;
         this.jobList = jobList;
         this.empList = empList;
@@ -41,10 +43,10 @@ public class FeaturedJobAdapter extends RecyclerView.Adapter<FeaturedJobAdapter.
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
         Jobs job = jobList.get(position);
-        Employer emp = empList.get(job.getCompany_id()-1);
+        Employer emp = empList.get(job.getCompany_id());
         holder.jobTitle.setText(job.getName());
 //        holder.employerName.setText(emp.getName());
-        Glide.with(context).load(EMPPIC_URL+emp.getLogo()).apply(RequestOptions.centerInsideTransform().error(R.drawable.defaultprofilepicture)).into(holder.employerLogo);
+        Glide.with(context).load(utils.EMPPIC_URL+emp.getLogo()).apply(RequestOptions.centerInsideTransform().error(R.drawable.defaultprofilepicture)).into(holder.employerLogo);
     }
 
     @Override

@@ -47,7 +47,4 @@ dependencies {
     compile 'com.doodle.android:android-material-chips:1.2.0'
 }
 
-
-
-
 apply plugin: 'com.google.gms.google-services'

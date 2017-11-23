@@ -1,7 +1,5 @@
 package com.emz.pathfinder.Fragments;
 
-import android.content.Context;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -16,6 +14,7 @@ import com.emz.pathfinder.Adapters.FeaturedJobAdapter;
 import com.emz.pathfinder.Models.Employer;
 import com.emz.pathfinder.Models.Jobs;
 import com.emz.pathfinder.R;
+import com.emz.pathfinder.Utils.Utils;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -23,18 +22,19 @@ import com.google.gson.JsonParser;
 import com.rw.velocity.Velocity;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-
-import static com.emz.pathfinder.Utils.Utils.JOBS_URL;
 
 public class JobPortalFragment extends Fragment{
     private static final String TAG = "JobPortalFragment";
 
-    private List<Employer> empList;
+    private HashMap<Integer, Employer> empList;
     private List<Jobs> jobList;
 
     private RecyclerView mRecyclerView;
     private FeaturedJobAdapter mAdapter;
+
+    private Utils utils;
 
     public JobPortalFragment(){}
 
@@ -43,7 +43,8 @@ public class JobPortalFragment extends Fragment{
         super.onCreateView(inflater, container, savedInstanceState);
         View rootView = inflater.inflate(R.layout.fragment_jobportal, container, false);
 
-        empList = new ArrayList<>();
+        utils = new Utils(getContext());
+        empList = new HashMap<>();
         jobList = new ArrayList<>();
 
         mRecyclerView = rootView.findViewById(R.id.catRecyclerView);
@@ -63,7 +64,7 @@ public class JobPortalFragment extends Fragment{
     }
 
     private void loadFeaturedJobs(){
-        Velocity.get(JOBS_URL)
+        Velocity.get(utils.JOBS_URL)
                 .withPathParam("status","loadfeaturedjob")
                 .connect(new Velocity.ResponseListener() {
                     @Override
@@ -90,7 +91,7 @@ public class JobPortalFragment extends Fragment{
     }
 
     private void loadAllEmp(){
-        Velocity.get(JOBS_URL)
+        Velocity.get(utils.JOBS_URL)
                 .withPathParam("status","loadallemp")
                 .connect(new Velocity.ResponseListener() {
                     @Override
@@ -102,7 +103,7 @@ public class JobPortalFragment extends Fragment{
                         for(int i = 0; i < jsonArray.size(); i++) {
                             JsonElement mJson = jsonArray.get(i);
                             Employer employer = gson.fromJson(mJson, Employer.class);
-                            empList.add(employer);
+                            empList.put(employer.getId(), employer);
                         }
 
                         loadFeaturedJobs();
