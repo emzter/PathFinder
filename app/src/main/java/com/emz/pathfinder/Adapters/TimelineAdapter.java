@@ -24,9 +24,10 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.MyView
     private List<Posts> postsList;
     private HashMap<Integer, Users> usersList;
 
-    private Utils utils = new Utils(context);
+    private Utils utils;
 
     public TimelineAdapter(Context context, HashMap<Integer, Users> usersList, List<Posts> postsList) {
+        utils = new Utils(context);
         this.context = context;
         this.postsList = postsList;
         this.usersList = usersList;
@@ -48,6 +49,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.MyView
         }else{
             Users recipient = usersList.get(post.getRecipient());
             holder.name2TV.setText(recipient.getFname()+" "+recipient.getLname());
+            holder.toTV.setText("▶");
         }
         holder.nameTV.setText(user.getFname()+" "+user.getLname());
         holder.mainTV.setText(post.getMessage());

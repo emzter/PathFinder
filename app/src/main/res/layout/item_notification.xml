@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp">
+
+        <ImageView
+            android:id="@+id/noti_profile_pic"
+            android:layout_width="@dimen/feed_item_profile_pic"
+            android:layout_height="@dimen/feed_item_profile_pic"
+            android:layout_alignParentStart="true"
+            android:layout_marginEnd="8dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/profile_picture"
+            android:scaleType="fitXY" />
+
+        <TextView
+            android:id="@+id/noti_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/noti_profile_pic"
+            android:layout_toEndOf="@+id/noti_profile_pic"
+            android:lines="1"
+            android:layout_marginTop="6dp"
+            android:textColor="@color/black"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/noti_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@+id/noti_name"
+            android:layout_marginStart="3dp"
+            android:layout_marginTop="6dp"
+            android:textColor="@color/jet" />
+
+        <TextView
+            android:id="@+id/noti_timestamp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/noti_name"
+            android:layout_toEndOf="@+id/noti_profile_pic"
+            android:textSize="12sp" />
+
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/feed_item_border" />
+
+</LinearLayout>

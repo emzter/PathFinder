@@ -33,7 +33,6 @@
                     android:layout_height="wrap_content"
                     android:layout_alignTop="@+id/feed_profile_pic"
                     android:layout_toEndOf="@+id/feed_profile_pic"
-                    android:text="Name Lastname"
                     android:lines="1"
                     android:layout_marginTop="6dp"
                     android:textColor="@color/black"
@@ -44,11 +43,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_toEndOf="@+id/feed_name"
-                    android:fontFamily="@font/font_awesome"
-                    android:text="@string/fa_arrow_circle_right"
                     android:layout_marginStart="3dp"
                     android:layout_marginTop="6dp"
-                    android:textColor="@color/black" />
+                    android:textColor="@color/iron" />
 
                 <TextView
                     android:id="@+id/feed_2nd_name"
@@ -57,7 +54,6 @@
                     android:layout_toEndOf="@+id/feed_to"
                     android:layout_marginStart="3dp"
                     android:lines="1"
-                    android:text="Name Lastname"
                     android:layout_marginTop="6dp"
                     android:textColor="@color/black"
                     android:textStyle="bold" />
@@ -68,8 +64,7 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/feed_name"
                     android:layout_toEndOf="@+id/feed_profile_pic"
-                    android:textSize="12sp"
-                    android:text="Timestamp" />
+                    android:textSize="12sp" />
 
             </RelativeLayout>
 
@@ -89,37 +84,69 @@
                     android:layout_height="wrap_content"
                     android:padding="16dp"
                     android:textSize="18sp"
-                    android:text="@string/lorem_ipsum"
                     android:textColor="@color/black" />
 
-                <Button
+                <LinearLayout
                     android:id="@+id/feed_button_like"
-                    style="@style/Widget.AppCompat.Button.ButtonBar.AlertDialog"
+                    style="@style/AppTheme.LikeButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/feed_main_text"
-                    android:fontFamily="@font/font_awesome"
-                    android:text="@string/fa_heart" />
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/font_awesome"
+                        android:text="@string/fa_heart"/>
 
-                <Button
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/font_awesome"
+                        android:text=" 1"/>
+                </LinearLayout>
+
+                <LinearLayout
                     android:id="@+id/feed_button_reply"
-                    style="@style/Widget.AppCompat.Button.ButtonBar.AlertDialog"
+                    style="@style/AppTheme.LikeButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/feed_main_text"
                     android:layout_toEndOf="@id/feed_button_like"
-                    android:fontFamily="@font/font_awesome"
-                    android:text="@string/fa_reply" />
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/font_awesome"
+                        android:text="@string/fa_reply"/>
 
-                <Button
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/font_awesome"
+                        android:text=" 1"/>
+                </LinearLayout>
+
+                <LinearLayout
                     android:id="@+id/feed_button_share"
-                    style="@style/Widget.AppCompat.Button.ButtonBar.AlertDialog"
+                    style="@style/AppTheme.LikeButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/feed_main_text"
                     android:layout_toEndOf="@id/feed_button_reply"
-                    android:fontFamily="@font/font_awesome"
-                    android:text="@string/fa_share_alt" />
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/font_awesome"
+                        android:text="@string/fa_share_alt"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/font_awesome"
+                        android:text=" 1"/>
+                </LinearLayout>
 
             </RelativeLayout>
         </LinearLayout>

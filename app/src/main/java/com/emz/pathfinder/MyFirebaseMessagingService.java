@@ -55,7 +55,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 .setColor(primary)
                 .setLights(Color.RED, 1000, 300)
                 .setDefaults(Notification.DEFAULT_VIBRATE)
-                .setSmallIcon(R.mipmap.pf_launcher);
+                .setSmallIcon(R.mipmap.ic_launcher);
 
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 

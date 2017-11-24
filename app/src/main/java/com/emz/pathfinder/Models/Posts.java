@@ -13,13 +13,19 @@ public class Posts {
     private int author;
     @SerializedName("posted_to")
     private int recipient;
+    @SerializedName("like_count")
+    private int likeCount;
+    @SerializedName("comment_count")
+    private int commentCount;
 
-    public Posts(int id, String message, String created, int author, int recipient) {
+    public Posts(int id, String message, String created, int author, int recipient, int likeCount, int commentCount) {
         this.id = id;
         this.message = message;
         this.created = created;
         this.author = author;
         this.recipient = recipient;
+        this.likeCount = likeCount;
+        this.commentCount = commentCount;
     }
 
     public int getId() {
@@ -60,5 +66,21 @@ public class Posts {
 
     public void setRecipient(int recipient) {
         this.recipient = recipient;
+    }
+
+    public int getLikeCount() {
+        return likeCount;
+    }
+
+    public void setLikeCount(int likeCount) {
+        this.likeCount = likeCount;
+    }
+
+    public int getCommentCount() {
+        return commentCount;
+    }
+
+    public void setCommentCount(int commentCount) {
+        this.commentCount = commentCount;
     }
 }
