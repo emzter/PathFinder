@@ -14,6 +14,7 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 import android.widget.EditText;
 
+import com.emz.pathfinder.Adapters.TimelineAdapter;
 import com.emz.pathfinder.R;
 import com.rw.velocity.Velocity;
 
@@ -38,6 +39,7 @@ public class Utils {
     public final String PROFILEPIC_URL = "https://www.pathfinder.in.th/uploads/profile_image/";
     public final String EMPPIC_URL = "https://www.pathfinder.in.th/uploads/logo_images/";
     public final String UTILITIES_URL = "https://www.pathfinder.in.th/utilities/";
+    public final String TIMELINE_URL = "https://www.pathfinder.in.th/timeline/";
 
     private Context context;
 
@@ -166,5 +168,26 @@ public class Utils {
         }
 
         return dateInMillis;
+    }
+
+    public void deleteToken(String token, String userId) {
+        final String TAG = "DeleteTokenMethod";
+
+        Velocity.post(UTILITIES_URL+"deleteToken")
+                .withFormData("id", userId)
+                .withFormData("token", token)
+                .connect(new Velocity.ResponseListener() {
+                    @Override
+                    public void onVelocitySuccess(Velocity.Response response) {
+                        Log.d(TAG, response.body);
+                        Log.d(TAG, "Token Deleted");
+                    }
+
+                    @Override
+                    public void onVelocityFailed(Velocity.Response response) {
+                        Log.e(TAG, response.body);
+                        Log.e(TAG, "Error Deleting Token");
+                    }
+                });
     }
 }

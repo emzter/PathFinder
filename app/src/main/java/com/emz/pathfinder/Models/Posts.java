@@ -17,8 +17,10 @@ public class Posts {
     private int likeCount;
     @SerializedName("comment_count")
     private int commentCount;
+    @SerializedName("like_status")
+    private boolean likeStatus;
 
-    public Posts(int id, String message, String created, int author, int recipient, int likeCount, int commentCount) {
+    public Posts(int id, String message, String created, int author, int recipient, int likeCount, int commentCount, boolean likeStatus) {
         this.id = id;
         this.message = message;
         this.created = created;
@@ -26,6 +28,7 @@ public class Posts {
         this.recipient = recipient;
         this.likeCount = likeCount;
         this.commentCount = commentCount;
+        this.likeStatus = likeStatus;
     }
 
     public int getId() {
@@ -82,5 +85,13 @@ public class Posts {
 
     public void setCommentCount(int commentCount) {
         this.commentCount = commentCount;
+    }
+
+    public boolean getLikeStatus() {
+        return likeStatus;
+    }
+
+    public void setLikeStatus(boolean likeStatus) {
+        this.likeStatus = likeStatus;
     }
 }

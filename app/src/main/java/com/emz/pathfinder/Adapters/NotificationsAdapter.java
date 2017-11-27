@@ -43,7 +43,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
         Notifications noti = notificationList.get(position);
         Users user = userLists.get(noti.getSender());
         holder.nameTV.setText(user.getFname()+" "+user.getLname());
-        holder.statusTV.setText(noti.getType());
+        holder.setStatusText(noti.getType());
         holder.timeTV.setText(noti.getCreated());
         Glide.with(context).load(utils.PROFILEPIC_URL+user.getProPic()).apply(RequestOptions.centerInsideTransform().error(R.drawable.defaultprofilepicture)).into(holder.proPic);
     }
@@ -64,6 +64,37 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
             nameTV = itemView.findViewById(R.id.noti_name);
             statusTV = itemView.findViewById(R.id.noti_status);
             timeTV = itemView.findViewById(R.id.noti_timestamp);
+        }
+
+        public void setStatusText(String status){
+            if(statusTV == null) return;
+            String newmessage = "";
+
+            switch (status){
+                case "post.like":
+                    newmessage = context.getString(R.string.loved_your_post);
+                    break;
+                case "post.comment":
+                    newmessage = context.getString(R.string.comment_post);
+                    break;
+                case "post.comment.like":
+                    newmessage = context.getString(R.string.loved_comment);
+                    break;
+                case "tag.post":
+                    newmessage = context.getString(R.string.tagged_post);
+                    break;
+                case "tag.comment":
+                    newmessage = context.getString(R.string.tagged_comment);
+                    break;
+                case "post.feed":
+                    newmessage = context.getString(R.string.feed_posted);
+                    break;
+                case "dis.callhelp":
+                    newmessage = context.getString(R.string.noti_callhelp);
+                    break;
+            }
+
+            statusTV.setText(newmessage);
         }
     }
 }

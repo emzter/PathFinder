@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#009688</color>
-    <color name="colorPrimaryDark">#00796B</color>
-    <color name="colorAccent">#FF9800</color>
+    <color name="colorPrimary">#FF5722</color>
+    <color name="colorPrimaryDark">#F4511E</color>
+    <color name="colorAccent">#ff8a65</color>
 
     <color name="black">#000000</color>
     <color name="jet">#222222</color>
@@ -12,10 +12,13 @@
     <color name="aluminum">#999999</color>
     <color name="base">#AAAAAA</color>
     <color name="iron">#CCCCCC</color>
+    <color name="grey">#EEEEEE</color>
     <color name="white">#FFFFFF</color>
 
     <color name="viewBg">#f1f5f8</color>
     <color name="album_title">#4c4c4c</color>
+
+    <color name="liked">#F06292</color>
 
     <color name="feed_bg">#d3d6db</color>
     <color name="feed_item_bg">#ffffff</color>

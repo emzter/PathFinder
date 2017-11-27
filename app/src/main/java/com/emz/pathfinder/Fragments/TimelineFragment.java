@@ -3,6 +3,7 @@ package com.emz.pathfinder.Fragments;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -14,6 +15,7 @@ import com.emz.pathfinder.Adapters.TimelineAdapter;
 import com.emz.pathfinder.Models.Posts;
 import com.emz.pathfinder.Models.Users;
 import com.emz.pathfinder.R;
+import com.emz.pathfinder.Utils.UserHelper;
 import com.emz.pathfinder.Utils.Utils;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -31,9 +33,11 @@ public class TimelineFragment extends Fragment{
     private List<Posts> postsList;
     private HashMap<Integer, Users> usersList;
 
+    private SwipeRefreshLayout mSwipeRefreshLayout;
     private RecyclerView mRecyclerView;
     private TimelineAdapter mAdapter;
     private Utils utils;
+    private UserHelper usrHelper;
 
 
     public TimelineFragment(){}
@@ -43,10 +47,20 @@ public class TimelineFragment extends Fragment{
         super.onCreateView(inflater, container, savedInstanceState);
         View rootView = inflater.inflate(R.layout.fragment_newsfeed, container, false);
 
+        usrHelper = new UserHelper(getContext());
+
         utils = new Utils(this.getContext());
 
         usersList = new HashMap<>();
         postsList = new ArrayList<>();
+
+        mSwipeRefreshLayout = rootView.findViewById(R.id.feed_main_layout);
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                refreshItems();
+            }
+        });
 
         mRecyclerView = rootView.findViewById(R.id.timelineRecyclerView);
         mRecyclerView.setHasFixedSize(true);
@@ -57,11 +71,40 @@ public class TimelineFragment extends Fragment{
         return rootView;
     }
 
+    void refreshItems(){
+        loadUser();
+    }
+
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
         loadUser();
+    }
+
+    public void like(final int position, String id, String pid, String type) {
+        final String TAG = "LikeMethod";
+
+        Velocity.post(utils.TIMELINE_URL+"like")
+                .withFormData("id", pid)
+                .withFormData("uid", id)
+                .withFormData("type", type)
+                .connect(new Velocity.ResponseListener() {
+                    @Override
+                    public void onVelocitySuccess(Velocity.Response response) {
+                        Log.d(TAG, response.body);
+                        if(response.body.equals("SuccessAdd")){
+                            Log.d(TAG, "Doing New Like");
+                            mAdapter.notifyItemChanged(position);
+                        }else if(response.body.equals("SuccessDelete")){
+                            Log.d(TAG, "Doing Delete Like");
+                        }
+                    }
+
+                    @Override
+                    public void onVelocityFailed(Velocity.Response response) {
+                    }
+                });
     }
 
     private void loadUser() {
@@ -93,9 +136,14 @@ public class TimelineFragment extends Fragment{
 
     private void loadTimeline(){
         Velocity.post(utils.UTILITIES_URL+"getpost")
+                .withFormData("id", usrHelper.getUserId())
+                .withFormData("offset", "0")
+                .withFormData("limit", "20")
                 .connect(new Velocity.ResponseListener() {
                     @Override
                     public void onVelocitySuccess(Velocity.Response response) {
+                        Log.d(TAG, response.body);
+
                         Gson gson = new Gson();
                         JsonParser parser = new JsonParser();
                         JsonArray jsonArray = parser.parse(response.body).getAsJsonArray();
@@ -108,8 +156,13 @@ public class TimelineFragment extends Fragment{
 
                         Log.d(TAG, "POST LOADDED");
 
-                        mAdapter = new TimelineAdapter(getContext(), usersList, postsList);
-                        mRecyclerView.setAdapter(mAdapter);
+                        if(mRecyclerView.getAdapter() == null){
+                            mAdapter = new TimelineAdapter(getContext(), usersList, postsList, TimelineFragment.this);
+                            mRecyclerView.setAdapter(mAdapter);
+                        }else{
+                            mAdapter.notifyDataSetChanged();
+                            mSwipeRefreshLayout.setRefreshing(false);
+                        }
                     }
 
                     @Override

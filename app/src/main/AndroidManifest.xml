@@ -14,25 +14,28 @@
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
-        android:label="@string/app_name"
-        android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:label="@string/app_name">
+
+        <!--Activity-->
+
         <activity
             android:name=".StartActivity"
             android:theme="@style/AppTheme.Dark">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".MainActivity"
+            android:label="@string/home"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".SignUpActivity"
             android:label="@string/registration"
@@ -41,6 +44,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.emz.pathfinder.StartActivity" />
         </activity>
+
         <activity
             android:name=".NewPostActivity"
             android:label="Create New Post"
@@ -51,15 +55,25 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".LocationActivity"
             android:label="Map"
             android:parentActivityName=".MainActivity">
             <intent-filter>
                 <action android:name="OPEN_MAP_ACTIVITY" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+
+        <activity android:name=".PostActivity"
+            android:parentActivityName=".MainActivity"/>
+
+        <activity android:name=".ProfileActivity"
+            android:parentActivityName=".MainActivity"/>
+
+        <!--Service-->
 
         <service android:name=".MyFirebaseMessagingService">
             <intent-filter>
@@ -72,6 +86,8 @@
             </intent-filter>
         </service>
 
+        <!--Meta-data-->
+
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
             android:resource="@mipmap/pf_launcher" />
@@ -81,7 +97,6 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
-
     </application>
 
 </manifest>

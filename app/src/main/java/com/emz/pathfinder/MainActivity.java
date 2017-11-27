@@ -56,6 +56,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private Users users;
     private Utils utils;
 
+    String token = FirebaseInstanceId.getInstance().getToken();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,12 +67,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         usrHelper = new UserHelper(this);
 
         mPagerAdapter = new FragmentPagerAdapter(getSupportFragmentManager()) {
+
             private final Fragment[] mFragments = new Fragment[]{
                     new JobPortalFragment(),
                     new TimelineFragment(),
                     new SearchFragment(),
                     new NotificationFragment()
             };
+
             private final String[] mFragmentNames = new String[]{
                     getResources().getString(R.string.fa_home),
                     getResources().getString(R.string.fa_rss),
@@ -177,6 +181,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void onActionLogoutClicked() {
+        utils.deleteToken(token, usrHelper.getUserId());
         usrHelper.deleteSession();
         Intent intent = new Intent(this, StartActivity.class);
         startActivity(intent);
@@ -205,6 +210,30 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         mViewPager.setAdapter(mPagerAdapter);
 
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            private final String[] mPageNames = new String[]{
+                    "Home",
+                    "Timeline",
+                    "Search",
+                    "Notifications"
+            };
+
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                toolbar.setTitle(mPageNames[position]);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+
         TabLayout tabLayout = findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
 
@@ -225,9 +254,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Log.d(TAG, users.getProPic());
         Glide.with(navProPic.getContext()).load(utils.PROFILEPIC_URL+users.getProPic()).apply(RequestOptions.centerCropTransform().error(R.drawable.defaultprofilepicture)).into(navProPic);
 
-        String token = FirebaseInstanceId.getInstance().getToken();
         utils.sendRegistrationToServer(token, this);
-        Log.d(TAG, "Token: " + token);
 
         progressBar.setVisibility(View.GONE);
     }

@@ -58,4 +58,13 @@
     <string name="minutes">mins</string>
     <string name="seconds">secs</string>
     <string name="ago">ago</string>
+    <string name="loved_your_post">loved your post.</string>
+    <string name="comment_post">commented on your post.</string>
+    <string name="loved_comment">loved your comment.</string>
+    <string name="tagged_post">tagged you on post.</string>
+    <string name="tagged_comment">tagged you on comment.</string>
+    <string name="feed_posted">posted on your feed.</string>
+    <string name="noti_callhelp">need your help now.</string>
+    <string name="family_locations">Family Locations</string>
+    <string name="timeline">Timeline</string>
 </resources>
