@@ -17,6 +17,8 @@ public class Users {
     private String validate;
     @SerializedName("profile_image")
     private String proPic;
+    @SerializedName("header_image")
+    private String headerPic;
     @SerializedName("first_name")
     private String fname;
     @SerializedName("last_name")
@@ -37,8 +39,10 @@ public class Users {
     private String province;
     @SerializedName("telephone")
     private String telephone;
+    @SerializedName("expected_salary")
+    private String expectedSalary;
 
-    public Users(int id, String guid, String email, String group, String status, String validate, String proPic, String fname, String lname, int sex, String birthdate, String address, String subdistrict, String district, String postcode, String province, String telephone) {
+    public Users(int id, String guid, String email, String group, String status, String validate, String proPic, String headerPic, String fname, String lname, int sex, String birthdate, String address, String subdistrict, String district, String postcode, String province, String telephone, String expectedSalary) {
         this.id = id;
         this.guid = guid;
         this.email = email;
@@ -46,6 +50,7 @@ public class Users {
         this.status = status;
         this.validate = validate;
         this.proPic = proPic;
+        this.headerPic = headerPic;
         this.fname = fname;
         this.lname = lname;
         this.sex = sex;
@@ -56,6 +61,7 @@ public class Users {
         this.postcode = postcode;
         this.province = province;
         this.telephone = telephone;
+        this.expectedSalary = expectedSalary;
     }
 
     public int getId() {
@@ -192,5 +198,21 @@ public class Users {
 
     public void setTelephone(String telephone) {
         this.telephone = telephone;
+    }
+
+    public String getHeaderPic() {
+        return headerPic;
+    }
+
+    public void setHeaderPic(String headerPic) {
+        this.headerPic = headerPic;
+    }
+
+    public String getExpectedSalary() {
+        return expectedSalary;
+    }
+
+    public void setExpectedSalary(String expectedSalary) {
+        this.expectedSalary = expectedSalary;
     }
 }

@@ -1,5 +1,6 @@
 package com.emz.pathfinder.Fragments;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -27,8 +28,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class TimelineFragment extends Fragment{
-    private static final String TAG = "TimelineFragment";
+public class ProfileTimelineFragment extends Fragment {
+
+    private static final String TAG = "ProfileTimelineFragment";
 
     private List<Posts> postsList;
     private HashMap<Integer, Users> usersList;
@@ -37,17 +39,20 @@ public class TimelineFragment extends Fragment{
     private RecyclerView mRecyclerView;
     private TimelineAdapter mAdapter;
     private Utils utils;
-    private UserHelper usrHelper;
 
+    private int userId;
 
-    public TimelineFragment(){}
+    public ProfileTimelineFragment(){}
+
+    @SuppressLint("ValidFragment")
+    public ProfileTimelineFragment(int userId){
+        this.userId = userId;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         View rootView = inflater.inflate(R.layout.fragment_newsfeed, container, false);
-
-        usrHelper = new UserHelper(getContext());
 
         utils = new Utils(this.getContext());
 
@@ -71,40 +76,14 @@ public class TimelineFragment extends Fragment{
         return rootView;
     }
 
-    void refreshItems(){
-        loadUser();
-    }
-
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
         loadUser();
     }
 
-    public void like(final int position, String id, String pid, String type) {
-        final String TAG = "LikeMethod";
-
-        Velocity.post(utils.TIMELINE_URL+"like")
-                .withFormData("id", pid)
-                .withFormData("uid", id)
-                .withFormData("type", type)
-                .connect(new Velocity.ResponseListener() {
-                    @Override
-                    public void onVelocitySuccess(Velocity.Response response) {
-                        Log.d(TAG, response.body);
-                        if(response.body.equals("SuccessAdd")){
-                            Log.d(TAG, "Doing New Like");
-                            mAdapter.notifyItemChanged(position);
-                        }else if(response.body.equals("SuccessDelete")){
-                            Log.d(TAG, "Doing Delete Like");
-                        }
-                    }
-
-                    @Override
-                    public void onVelocityFailed(Velocity.Response response) {
-                    }
-                });
+    private void refreshItems() {
+        loadUser();
     }
 
     private void loadUser() {
@@ -135,10 +114,10 @@ public class TimelineFragment extends Fragment{
     }
 
     private void loadTimeline(){
-        Velocity.post(utils.UTILITIES_URL+"getpost")
-                .withFormData("id", usrHelper.getUserId())
-                .withFormData("offset", "0")
-                .withFormData("limit", "20")
+        Velocity.post(utils.UTILITIES_URL+"getProfileTimeline")
+                .withFormData("pid", String.valueOf(userId))
+                .withFormData("limit", "0")
+                .withFormData("perpage", "20")
                 .connect(new Velocity.ResponseListener() {
                     @Override
                     public void onVelocitySuccess(Velocity.Response response) {

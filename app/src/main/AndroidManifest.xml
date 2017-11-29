@@ -14,7 +14,8 @@
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
-        android:label="@string/app_name">
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme">
 
         <!--Activity-->
 
@@ -71,7 +72,8 @@
             android:parentActivityName=".MainActivity"/>
 
         <activity android:name=".ProfileActivity"
-            android:parentActivityName=".MainActivity"/>
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
 
         <!--Service-->
 

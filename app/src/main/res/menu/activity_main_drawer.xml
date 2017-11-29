@@ -12,15 +12,11 @@
             android:icon="@drawable/ic_home_black_24dp"
             android:title="@string/home" />
         <item
-            android:id="@+id/nav_timeline"
-            android:icon="@drawable/ic_home_black_24dp"
-            android:title="@string/timeline" />
-        <item
             android:id="@+id/nav_profile"
             android:icon="@drawable/ic_home_black_24dp"
             android:title="@string/profile" />
         <item
-            android:id="@+id/nav_notifications"
+            android:id="@+id/nav_favjob"
             android:icon="@drawable/ic_home_black_24dp"
             android:title="Favorite Jobs" />
         <item

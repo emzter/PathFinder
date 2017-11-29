@@ -1,5 +1,6 @@
 package com.emz.pathfinder.Adapters;
 
+import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -33,15 +34,13 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.MyView
     private Context context;
     private List<Posts> postsList;
     private HashMap<Integer, Users> usersList;
-    private TimelineFragment timelineFragment;
 
     private Utils utils;
 
-    public TimelineAdapter(Context context, HashMap<Integer, Users> usersList, List<Posts> postsList, TimelineFragment timelineFragment) {
+    public TimelineAdapter(Context context, HashMap<Integer, Users> usersList, List<Posts> postsList) {
         utils = new Utils(context);
         usrHelper = new UserHelper(context);
 
-        this.timelineFragment = timelineFragment;
         this.context = context;
         this.postsList = postsList;
         this.usersList = usersList;
@@ -106,13 +105,6 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.MyView
 
         holder.nameTV.setOnClickListener(openProfile);
         holder.profilePic.setOnClickListener(openProfile);
-
-        holder.likeBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                timelineFragment.like(position, usrHelper.getUserId(), String.valueOf(post.getId()), "0");
-            }
-        });
 
         holder.commentBtn.setOnClickListener(new View.OnClickListener() {
             @Override

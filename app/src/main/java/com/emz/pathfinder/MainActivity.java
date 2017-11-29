@@ -105,10 +105,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void loadUser(String userId) {
-        Velocity.get(utils.USER_URL)
-                .withPathParam("status", "userloader")
-                .withPathParam("id", userId)
-                .withHeader("Content-Type","text/javascript;charset=utf-8")
+        Velocity.get(utils.UTILITIES_URL+"getProfile/"+userId)
                 .connect(new Velocity.ResponseListener() {
                     @Override
                     public void onVelocitySuccess(Velocity.Response response) {
@@ -136,6 +133,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.nav_home:
                 onActionHomeClicked();
                 break;
+            case R.id.nav_profile:
+                onActionProfileClicked();
+                break;
             case R.id.nav_location:
                 onActionLocationClicked();
                 break;
@@ -150,6 +150,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private void onActionLocationClicked() {
         Intent intent = new Intent(this, LocationActivity.class);
+        startActivity(intent);
+    }
+
+    private void onActionProfileClicked() {
+        Intent intent = new Intent(this, ProfileActivity.class);
+        intent.putExtra("id", Integer.parseInt(usrHelper.getUserId()));
         startActivity(intent);
     }
 
@@ -237,7 +243,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         TabLayout tabLayout = findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
