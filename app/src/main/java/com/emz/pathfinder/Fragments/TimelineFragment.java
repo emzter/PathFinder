@@ -1,6 +1,7 @@
 package com.emz.pathfinder.Fragments;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -12,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.emz.pathfinder.Adapters.TimelineAdapter;
+import com.emz.pathfinder.Listeners.OnLoadMoreListener;
 import com.emz.pathfinder.Models.Posts;
 import com.emz.pathfinder.Models.Users;
 import com.emz.pathfinder.R;
@@ -39,6 +41,7 @@ public class TimelineFragment extends Fragment{
     private Utils utils;
     private UserHelper usrHelper;
 
+    protected Handler handler;
 
     public TimelineFragment(){}
 
@@ -52,7 +55,8 @@ public class TimelineFragment extends Fragment{
         utils = new Utils(this.getContext());
 
         usersList = new HashMap<>();
-        postsList = new ArrayList<>();
+
+        handler = new Handler();
 
         mSwipeRefreshLayout = rootView.findViewById(R.id.feed_main_layout);
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -72,7 +76,7 @@ public class TimelineFragment extends Fragment{
     }
 
     void refreshItems(){
-        loadUser();
+        loadTimeline(0, 5);
     }
 
     @Override
@@ -124,7 +128,7 @@ public class TimelineFragment extends Fragment{
 
                         Log.d(TAG, "USERS LOADDED");
 
-                        loadTimeline();
+                        loadTimeline(0, 5);
                     }
 
                     @Override
@@ -134,33 +138,42 @@ public class TimelineFragment extends Fragment{
                 });
     }
 
-    private void loadTimeline(){
+    private void loadTimeline(int offset, int limit){
+        if(offset == 0){
+            postsList = new ArrayList<>();
+        }
         Velocity.post(utils.UTILITIES_URL+"getpost")
                 .withFormData("id", usrHelper.getUserId())
-                .withFormData("offset", "0")
-                .withFormData("limit", "20")
+                .withFormData("offset", String.valueOf(offset))
+                .withFormData("limit", String.valueOf(limit))
                 .connect(new Velocity.ResponseListener() {
                     @Override
                     public void onVelocitySuccess(Velocity.Response response) {
                         Log.d(TAG, response.body);
 
-                        Gson gson = new Gson();
-                        JsonParser parser = new JsonParser();
-                        JsonArray jsonArray = parser.parse(response.body).getAsJsonArray();
+                        if(response.body != ""){
+                            Gson gson = new Gson();
+                            JsonParser parser = new JsonParser();
+                            JsonArray jsonArray = parser.parse(response.body).getAsJsonArray();
 
-                        for(int i = 0; i < jsonArray.size(); i++) {
-                            JsonElement mJson = jsonArray.get(i);
-                            Posts posts = gson.fromJson(mJson, Posts.class);
-                            postsList.add(posts);
-                        }
+                            for(int i = 0; i < jsonArray.size(); i++) {
+                                JsonElement mJson = jsonArray.get(i);
+                                Posts posts = gson.fromJson(mJson, Posts.class);
+                                postsList.add(posts);
+                            }
 
-                        Log.d(TAG, "POST LOADDED");
+                            Log.d(TAG, "POST LOADDED");
 
-                        if(mRecyclerView.getAdapter() == null){
-                            mAdapter = new TimelineAdapter(getContext(), usersList, postsList);
-                            mRecyclerView.setAdapter(mAdapter);
+                            int size = postsList.size();
+                            Log.d(TAG, "POSTSIZE: "+String.valueOf(size));
+
+                            if(mRecyclerView.getAdapter() == null){
+                                setAdapter();
+                            }else{
+                                mAdapter.notifyDataSetChanged();
+                                mSwipeRefreshLayout.setRefreshing(false);
+                            }
                         }else{
-                            mAdapter.notifyDataSetChanged();
                             mSwipeRefreshLayout.setRefreshing(false);
                         }
                     }
@@ -170,5 +183,43 @@ public class TimelineFragment extends Fragment{
                         Log.e(TAG, getResources().getString(R.string.no_internet_connection));
                     }
                 });
+    }
+
+    private void setAdapter() {
+        mAdapter = new TimelineAdapter(getContext(), usersList, postsList, mRecyclerView);
+        mRecyclerView.setAdapter(mAdapter);
+
+        mAdapter.setOnLoadMoreListener(new OnLoadMoreListener() {
+            @Override
+            public void onLoadMore() {
+//                postsList.add(null);
+//
+//                mAdapter.notifyItemInserted(postsList.size() - 1);
+
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+//                        postsList.remove(postsList.size() - 1);
+//                        mAdapter.notifyItemRemoved(postsList.size());
+
+                        if(postsList.size() > 0){
+                            int start = postsList.get(postsList.size() - 1).getId();
+
+                            int size = postsList.size();
+                            Log.d(TAG, "POSTSIZE: "+postsList.get(postsList.size() - 1));
+
+                            Log.d(TAG, "POST Start"+start);
+
+                            int end = start + 10;
+
+                            Log.d(TAG, "POST End"+end);
+
+                            loadTimeline(start, end);
+                            mAdapter.setLoaded();
+                        }
+                    }
+                }, 2000);
+            }
+        });
     }
 }

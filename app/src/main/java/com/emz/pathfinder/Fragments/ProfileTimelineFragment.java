@@ -136,7 +136,7 @@ public class ProfileTimelineFragment extends Fragment {
                         Log.d(TAG, "POST LOADDED");
 
                         if(mRecyclerView.getAdapter() == null){
-                            mAdapter = new TimelineAdapter(getContext(), usersList, postsList);
+                            mAdapter = new TimelineAdapter(getContext(), usersList, postsList, mRecyclerView);
                             mRecyclerView.setAdapter(mAdapter);
                         }else{
                             mAdapter.notifyDataSetChanged();

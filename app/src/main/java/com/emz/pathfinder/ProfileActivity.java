@@ -22,6 +22,8 @@ import com.emz.pathfinder.Utils.UserHelper;
 import com.emz.pathfinder.Utils.Utils;
 import com.rw.velocity.Velocity;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class ProfileActivity extends AppCompatActivity {
 
     private Toolbar toolbar;
@@ -30,6 +32,7 @@ public class ProfileActivity extends AppCompatActivity {
     private FragmentPagerAdapter mPagerAdapter;
     private ViewPager mViewPager;
     private ImageView headerimage;
+    private CircleImageView profileimage;
     private int uid;
 
     private TextView nameTV, emailTV;
@@ -110,6 +113,7 @@ public class ProfileActivity extends AppCompatActivity {
         mViewPager = findViewById(R.id.htab_viewpager);
 
         headerimage = findViewById(R.id.htab_header);
+        profileimage = findViewById(R.id.htab_profileImage);
         toolbar = findViewById(R.id.htab_toolbar);
         setSupportActionBar(toolbar);
 
@@ -142,6 +146,7 @@ public class ProfileActivity extends AppCompatActivity {
         mViewPager.setAdapter(mPagerAdapter);
 
         Glide.with(this).load(utils.HEADERPIC_URL+currentUser.getHeaderPic()).into(headerimage);
+        Glide.with(this).load(utils.PROFILEPIC_URL+currentUser.getProPic()).into(profileimage);
 
         TabLayout tabLayout = findViewById(R.id.htab_tabs);
         tabLayout.setupWithViewPager(mViewPager);
