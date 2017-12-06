@@ -154,6 +154,19 @@ public class Utils {
         return periods;
     }
 
+    public String getGender(int sex){
+        String gender = context.getString(R.string.male);
+        switch (sex){
+            case 0:
+                gender = context.getString(R.string.male);
+                break;
+            case 1:
+                gender = context.getString(R.string.female);
+                break;
+        }
+        return gender;
+    }
+
     private long getDateInMillis(String time){
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 

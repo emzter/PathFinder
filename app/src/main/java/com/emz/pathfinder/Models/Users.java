@@ -27,22 +27,18 @@ public class Users {
     private int sex;
     @SerializedName("birthdate")
     private String birthdate;
-    @SerializedName("address")
-    private String address;
-    @SerializedName("subdistrict")
-    private String subdistrict;
-    @SerializedName("district")
-    private String district;
-    @SerializedName("postcode")
-    private String postcode;
-    @SerializedName("province")
-    private String province;
     @SerializedName("telephone")
     private String telephone;
-    @SerializedName("expected_salary")
-    private String expectedSalary;
+    @SerializedName("facebook")
+    private String facebook;
+    @SerializedName("twitter")
+    private String twitter;
+    @SerializedName("line")
+    private String line;
+    @SerializedName("other_link")
+    private String otherlink;
 
-    public Users(int id, String guid, String email, String group, String status, String validate, String proPic, String headerPic, String fname, String lname, int sex, String birthdate, String address, String subdistrict, String district, String postcode, String province, String telephone, String expectedSalary) {
+    public Users(int id, String guid, String email, String group, String status, String validate, String proPic, String headerPic, String fname, String lname, int sex, String birthdate, String telephone, String facebook, String twitter, String line, String otherlink) {
         this.id = id;
         this.guid = guid;
         this.email = email;
@@ -55,13 +51,11 @@ public class Users {
         this.lname = lname;
         this.sex = sex;
         this.birthdate = birthdate;
-        this.address = address;
-        this.subdistrict = subdistrict;
-        this.district = district;
-        this.postcode = postcode;
-        this.province = province;
         this.telephone = telephone;
-        this.expectedSalary = expectedSalary;
+        this.facebook = facebook;
+        this.twitter = twitter;
+        this.line = line;
+        this.otherlink = otherlink;
     }
 
     public int getId() {
@@ -120,6 +114,14 @@ public class Users {
         this.proPic = proPic;
     }
 
+    public String getHeaderPic() {
+        return headerPic;
+    }
+
+    public void setHeaderPic(String headerPic) {
+        this.headerPic = headerPic;
+    }
+
     public String getFname() {
         return fname;
     }
@@ -152,46 +154,6 @@ public class Users {
         this.birthdate = birthdate;
     }
 
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public String getSubdistrict() {
-        return subdistrict;
-    }
-
-    public void setSubdistrict(String subdistrict) {
-        this.subdistrict = subdistrict;
-    }
-
-    public String getDistrict() {
-        return district;
-    }
-
-    public void setDistrict(String district) {
-        this.district = district;
-    }
-
-    public String getPostcode() {
-        return postcode;
-    }
-
-    public void setPostcode(String postcode) {
-        this.postcode = postcode;
-    }
-
-    public String getProvince() {
-        return province;
-    }
-
-    public void setProvince(String province) {
-        this.province = province;
-    }
-
     public String getTelephone() {
         return telephone;
     }
@@ -200,19 +162,35 @@ public class Users {
         this.telephone = telephone;
     }
 
-    public String getHeaderPic() {
-        return headerPic;
+    public String getFacebook() {
+        return facebook;
     }
 
-    public void setHeaderPic(String headerPic) {
-        this.headerPic = headerPic;
+    public void setFacebook(String facebook) {
+        this.facebook = facebook;
     }
 
-    public String getExpectedSalary() {
-        return expectedSalary;
+    public String getTwitter() {
+        return twitter;
     }
 
-    public void setExpectedSalary(String expectedSalary) {
-        this.expectedSalary = expectedSalary;
+    public void setTwitter(String twitter) {
+        this.twitter = twitter;
+    }
+
+    public String getLine() {
+        return line;
+    }
+
+    public void setLine(String line) {
+        this.line = line;
+    }
+
+    public String getOtherlink() {
+        return otherlink;
+    }
+
+    public void setOtherlink(String otherlink) {
+        this.otherlink = otherlink;
     }
 }

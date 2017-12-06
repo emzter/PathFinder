@@ -192,16 +192,10 @@ public class TimelineFragment extends Fragment{
         mAdapter.setOnLoadMoreListener(new OnLoadMoreListener() {
             @Override
             public void onLoadMore() {
-//                postsList.add(null);
-//
-//                mAdapter.notifyItemInserted(postsList.size() - 1);
 
                 handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-//                        postsList.remove(postsList.size() - 1);
-//                        mAdapter.notifyItemRemoved(postsList.size());
-
                         if(postsList.size() > 0){
                             int start = postsList.get(postsList.size() - 1).getId();
 

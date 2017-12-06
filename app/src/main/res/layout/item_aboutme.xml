@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:id="@+id/aboutme_view">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/fab_margin"
+        android:id="@+id/aboutme_header">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/font_awesome"
+            android:id="@+id/aboutme_icon"
+            android:textColor="@color/colorPrimary"
+            android:text="@string/fa_user"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_toEndOf="@+id/aboutme_icon"
+            android:text="@string/about_me"
+            android:textAllCaps="true"
+            android:id="@+id/aboutme_title"
+            android:textColor="@color/colorPrimary"
+            android:textStyle="bold" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="16dp"
+        android:layout_below="@id/aboutme_header"
+        android:id="@+id/aboutme_body"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/aboutme_namelayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp">
+
+            <TextView
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text="@string/name"
+                android:textAllCaps="true"
+                android:textColor="@color/black"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/aboutme_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text=""
+                android:textColor="@color/black" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/aboutme_genderlayout"
+            android:layout_marginBottom="8dp">
+
+            <TextView
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text="@string/gender"
+                android:textAllCaps="true"
+                android:textColor="@color/black"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text=""
+                android:id="@+id/aboutme_gender"
+                android:textColor="@color/black" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/aboutme_birthdatelayout"
+            android:layout_marginBottom="8dp">
+
+            <TextView
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text="@string/birthdate"
+                android:textAllCaps="true"
+                android:textColor="@color/black"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text=""
+                android:id="@+id/aboutme_birthdate"
+                android:textColor="@color/black" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/aboutme_telephonelayout"
+            android:layout_marginBottom="8dp">
+
+            <TextView
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text="@string/telephone"
+                android:textAllCaps="true"
+                android:textColor="@color/black"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text=""
+                android:id="@+id/aboutme_telephone"
+                android:textColor="@color/black" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/aboutme_facebooklayout"
+            android:layout_marginBottom="8dp">
+
+            <TextView
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text="@string/facebook"
+                android:textAllCaps="true"
+                android:textColor="@color/black"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text=""
+                android:id="@+id/aboutme_facebook"
+                android:textColor="@color/black" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/aboutme_twitterlayout"
+            android:layout_marginBottom="8dp">
+
+            <TextView
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text="@string/twitter"
+                android:textAllCaps="true"
+                android:textColor="@color/black"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text=""
+                android:id="@+id/aboutme_twitter"
+                android:textColor="@color/black" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/aboutme_linelayout"
+            android:layout_marginBottom="8dp">
+
+            <TextView
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text="@string/line"
+                android:textAllCaps="true"
+                android:textColor="@color/black"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text=""
+                android:id="@+id/aboutme_line"
+                android:textColor="@color/black" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/aboutme_otherlayout"
+            android:layout_marginBottom="8dp">
+
+            <TextView
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text="@string/otherlink"
+                android:textAllCaps="true"
+                android:textColor="@color/black"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text=""
+                android:id="@+id/aboutme_otherlink"
+                android:textColor="@color/black" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+</RelativeLayout>

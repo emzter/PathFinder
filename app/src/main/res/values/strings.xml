@@ -69,4 +69,14 @@
     <string name="timeline">Timeline</string>
     <string name="add_friend">Add Friend</string>
     <string name="sos">SOS</string>
+    <string name="about_me">About Me</string>
+    <string name="gender">Gender</string>
+    <string name="birthdate">Birthdate</string>
+    <string name="telephone">Telephone</string>
+    <string name="facebook">Facebook</string>
+    <string name="twitter">Twitter</string>
+    <string name="line">Line</string>
+    <string name="otherlink">Other</string>
+    <string name="male">Male</string>
+    <string name="female">Female</string>
 </resources>

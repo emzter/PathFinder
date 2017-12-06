@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.emz.pathfinder.Fragments.ProfileAboutFragment;
 import com.emz.pathfinder.Fragments.ProfileTimelineFragment;
 import com.emz.pathfinder.Fragments.SearchFragment;
 import com.emz.pathfinder.Models.Users;
@@ -79,7 +80,7 @@ public class ProfileActivity extends AppCompatActivity {
 
             private final Fragment[] mFragments = new Fragment[]{
                     new ProfileTimelineFragment(uid),
-                    new SearchFragment(),
+                    new ProfileAboutFragment(currentUser),
                     new SearchFragment(),
             };
 
