@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,8 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.emz.pathfinder.Fragments.ProfileTimelineFragment;
+import com.emz.pathfinder.Fragments.TimelineFragment;
 import com.emz.pathfinder.Listeners.OnLoadMoreListener;
 import com.emz.pathfinder.Models.Users;
 import com.emz.pathfinder.Models.Posts;
@@ -20,7 +23,9 @@ import com.emz.pathfinder.PostActivity;
 import com.emz.pathfinder.ProfileActivity;
 import com.emz.pathfinder.R;
 import com.emz.pathfinder.Utils.Ui;
+import com.emz.pathfinder.Utils.UserHelper;
 import com.emz.pathfinder.Utils.Utils;
+import com.rw.velocity.Velocity;
 
 import java.util.HashMap;
 import java.util.List;
@@ -35,11 +40,15 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.MyView
     private int lastVisibleItem, totalItemCount;
     private boolean loading;
     private OnLoadMoreListener onLoadMoreListener;
+    private TimelineFragment timelineFragment;
+    private ProfileTimelineFragment profileTimelineFragment;
 
     private Utils utils;
+    private UserHelper usrHelper;
 
-    public TimelineAdapter(Context context, HashMap<Integer, Users> usersList, List<Posts> postsList, RecyclerView recyclerView) {
+    public TimelineAdapter(Context context, HashMap<Integer, Users> usersList, List<Posts> postsList, RecyclerView recyclerView, TimelineFragment timelineFragment) {
         utils = new Utils(context);
+        usrHelper = new UserHelper(context);
 
         final LinearLayoutManager linearLayoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
 
@@ -53,14 +62,12 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.MyView
 
                         if (!loading) {
                             if(totalItemCount <= (lastVisibleItem + visibleThreshold)){
-//                                Ui.createSnackbar(recyclerView, "No More");
+                                Ui.createSnackbar(recyclerView, "No More");
                             }else{
-
-                            }
-                        }else{
-                            if (onLoadMoreListener != null) {
-                                onLoadMoreListener.onLoadMore();
-                                loading = true;
+                                if (onLoadMoreListener != null) {
+                                    onLoadMoreListener.onLoadMore();
+                                    loading = true;
+                                }
                             }
                         }
 
@@ -70,6 +77,41 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.MyView
         this.context = context;
         this.postsList = postsList;
         this.usersList = usersList;
+        this.timelineFragment = timelineFragment;
+    }
+
+    public TimelineAdapter(Context context, HashMap<Integer, Users> usersList, List<Posts> postsList, RecyclerView mRecyclerView, ProfileTimelineFragment profileTimelineFragment) {
+        utils = new Utils(context);
+        usrHelper = new UserHelper(context);
+
+        final LinearLayoutManager linearLayoutManager = (LinearLayoutManager) mRecyclerView.getLayoutManager();
+
+        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+                totalItemCount = linearLayoutManager.getItemCount();
+                lastVisibleItem = linearLayoutManager.findLastVisibleItemPosition();
+
+                if (!loading) {
+                    if(totalItemCount <= (lastVisibleItem + visibleThreshold)){
+                        Ui.createSnackbar(recyclerView, "No More");
+                    }else{
+                        if (onLoadMoreListener != null) {
+                            onLoadMoreListener.onLoadMore();
+                            loading = true;
+                        }
+                    }
+                }
+
+            }
+        });
+
+        this.context = context;
+        this.postsList = postsList;
+        this.usersList = usersList;
+        this.profileTimelineFragment = profileTimelineFragment;
     }
 
     @Override
@@ -79,7 +121,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.MyView
     }
 
     @Override
-    public void onBindViewHolder(TimelineAdapter.MyViewHolder holder, int position) {
+    public void onBindViewHolder(TimelineAdapter.MyViewHolder holder, final int position) {
         final Posts post = postsList.get(position);
         final Users user = usersList.get(post.getAuthor());
 
@@ -131,6 +173,13 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.MyView
 
         holder.nameTV.setOnClickListener(openProfile);
         holder.profilePic.setOnClickListener(openProfile);
+
+        holder.likeBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                timelineFragment.createLike(position, usrHelper.getUserId(), String.valueOf(post.getId()), 0);
+            }
+        });
 
         holder.commentBtn.setOnClickListener(new View.OnClickListener() {
             @Override

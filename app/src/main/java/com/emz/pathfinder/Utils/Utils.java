@@ -24,9 +24,11 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
 
@@ -119,19 +121,21 @@ public class Utils {
 
     public String gettimestamp(String time){
         int granularity = 1;
+        long oldtime;
         String newtime = "";
         long date = getDateInMillis(time);
         long current = Calendar.getInstance().getTimeInMillis() / 1000;
         long different = current - date;
-        HashMap<String, Long> peroids = getPeriodsTime();
+        LinkedHashMap<String, Long> peroids = getPeriodsTime();
+        int i = 1;
 
         for(Map.Entry<String, Long> entry : peroids.entrySet()){
             String key = entry.getKey();
             Long value = entry.getValue();
             if (different >= value) {
-                date = (long) Math.floor(different/value);
+                oldtime = (long) Math.floor(different / value);
                 different = different%value;
-                newtime = ((!Objects.equals(newtime, "")) ? " " : "")+date+" "+key;
+                newtime = ((!Objects.equals(newtime, "")) ? " " : "")+oldtime+" "+key;
                 granularity--;
             }
             if(granularity == 0) break;
@@ -140,8 +144,9 @@ public class Utils {
         return newtime+" "+context.getString(R.string.ago);
     }
 
-    private HashMap<String, Long> getPeriodsTime(){
-        HashMap<String, Long> periods = new HashMap<>();
+    private LinkedHashMap<String, Long> getPeriodsTime(){
+        LinkedHashMap<String, Long> periods = new LinkedHashMap<>();
+
         periods.put(context.getString(R.string.decades), (long) 315360000);
         periods.put(context.getString(R.string.years), (long) 31536000);
         periods.put(context.getString(R.string.months), (long) 2628000);

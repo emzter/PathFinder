@@ -79,4 +79,5 @@
     <string name="otherlink">Other</string>
     <string name="male">Male</string>
     <string name="female">Female</string>
+    <string name="creating_new_post">Creating new post...</string>
 </resources>

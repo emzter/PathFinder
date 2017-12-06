@@ -37,7 +37,7 @@ public class TimelineFragment extends Fragment{
 
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private RecyclerView mRecyclerView;
-    private TimelineAdapter mAdapter;
+    private static TimelineAdapter mAdapter;
     private Utils utils;
     private UserHelper usrHelper;
 
@@ -55,6 +55,7 @@ public class TimelineFragment extends Fragment{
         utils = new Utils(this.getContext());
 
         usersList = new HashMap<>();
+        postsList = new ArrayList<>();
 
         handler = new Handler();
 
@@ -76,7 +77,7 @@ public class TimelineFragment extends Fragment{
     }
 
     void refreshItems(){
-        loadTimeline(0, 5);
+        loadTimeline(0, 10);
     }
 
     @Override
@@ -86,22 +87,27 @@ public class TimelineFragment extends Fragment{
         loadUser();
     }
 
-    public void like(final int position, String id, String pid, String type) {
+    public void createLike(final int position, String id, String pid, int type) {
         final String TAG = "LikeMethod";
 
         Velocity.post(utils.TIMELINE_URL+"like")
                 .withFormData("id", pid)
                 .withFormData("uid", id)
-                .withFormData("type", type)
+                .withFormData("type", String.valueOf(type))
                 .connect(new Velocity.ResponseListener() {
                     @Override
                     public void onVelocitySuccess(Velocity.Response response) {
                         Log.d(TAG, response.body);
                         if(response.body.equals("SuccessAdd")){
                             Log.d(TAG, "Doing New Like");
+                            postsList.get(position).setLikeStatus(true);
+                            postsList.get(position).setLikeCount(postsList.get(position).getLikeCount() + 1);
                             mAdapter.notifyItemChanged(position);
                         }else if(response.body.equals("SuccessDelete")){
                             Log.d(TAG, "Doing Delete Like");
+                            postsList.get(position).setLikeStatus(false);
+                            postsList.get(position).setLikeCount(postsList.get(position).getLikeCount() - 1);
+                            mAdapter.notifyItemChanged(position);
                         }
                     }
 
@@ -128,7 +134,7 @@ public class TimelineFragment extends Fragment{
 
                         Log.d(TAG, "USERS LOADDED");
 
-                        loadTimeline(0, 5);
+                        loadTimeline(0, 10);
                     }
 
                     @Override
@@ -140,7 +146,9 @@ public class TimelineFragment extends Fragment{
 
     private void loadTimeline(int offset, int limit){
         if(offset == 0){
-            postsList = new ArrayList<>();
+            if(postsList.size() > 0){
+                postsList.clear();
+            }
         }
         Velocity.post(utils.UTILITIES_URL+"getpost")
                 .withFormData("id", usrHelper.getUserId())
@@ -168,8 +176,10 @@ public class TimelineFragment extends Fragment{
                             Log.d(TAG, "POSTSIZE: "+String.valueOf(size));
 
                             if(mRecyclerView.getAdapter() == null){
+                                Log.d(TAG, "ADAPTER SET");
                                 setAdapter();
                             }else{
+                                Log.d(TAG, "POST REFRESHED");
                                 mAdapter.notifyDataSetChanged();
                                 mSwipeRefreshLayout.setRefreshing(false);
                             }
@@ -186,7 +196,7 @@ public class TimelineFragment extends Fragment{
     }
 
     private void setAdapter() {
-        mAdapter = new TimelineAdapter(getContext(), usersList, postsList, mRecyclerView);
+        mAdapter = new TimelineAdapter(getContext(), usersList, postsList, mRecyclerView, TimelineFragment.this);
         mRecyclerView.setAdapter(mAdapter);
 
         mAdapter.setOnLoadMoreListener(new OnLoadMoreListener() {
@@ -215,5 +225,11 @@ public class TimelineFragment extends Fragment{
                 }, 2000);
             }
         });
+    }
+
+    public static void updateList() {
+        if(mAdapter != null){
+            mAdapter.notifyDataSetChanged();
+        }
     }
 }
