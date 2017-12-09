@@ -25,7 +25,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignTop="@+id/feed_profile_pic"
+            android:layout_marginTop="3dp"
             android:layout_toEndOf="@+id/feed_profile_pic"
+            android:fontFamily="@font/kanit"
             android:lines="1"
             android:textColor="@color/black"
             android:textStyle="bold" />
@@ -44,8 +46,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignTop="@+id/feed_name"
-            android:layout_toEndOf="@+id/feed_to"
             android:layout_marginStart="3dp"
+            android:layout_toEndOf="@+id/feed_to"
+            android:fontFamily="@font/kanit"
             android:lines="1"
             android:textColor="@color/black"
             android:textStyle="bold" />
@@ -56,6 +59,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/feed_name"
             android:layout_toEndOf="@+id/feed_profile_pic"
+            android:fontFamily="@font/kanit"
             android:textSize="12sp" />
 
     </RelativeLayout>

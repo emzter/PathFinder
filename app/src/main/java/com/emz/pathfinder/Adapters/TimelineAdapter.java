@@ -62,7 +62,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.MyView
 
                         if (!loading) {
                             if(totalItemCount <= (lastVisibleItem + visibleThreshold)){
-                                Ui.createSnackbar(recyclerView, "No More");
+//                                Ui.createSnackbar(recyclerView, "No More");
                             }else{
                                 if (onLoadMoreListener != null) {
                                     onLoadMoreListener.onLoadMore();

@@ -1,6 +1,8 @@
 package com.emz.pathfinder;
 
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -23,6 +25,8 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.emz.pathfinder.Fragments.JobPortalFragment;
 import com.emz.pathfinder.Fragments.NotificationFragment;
 import com.emz.pathfinder.Fragments.SearchFragment;
@@ -43,7 +47,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private DrawerLayout drawer;
     private ActionBarDrawerToggle toggler;
     private NavigationView navigationView;
-    private LinearLayout mainLayout;
 
     private TextView navNameText, navEMailText;
     private ProgressBar progressBar;
@@ -258,6 +261,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         navEMailText.setText(users.getEmail());
         navNameText.setText(fullname);
         Log.d(TAG, users.getProPic());
+
         Glide.with(navProPic.getContext()).load(utils.PROFILEPIC_URL+users.getProPic()).apply(RequestOptions.centerCropTransform().error(R.drawable.defaultprofilepicture)).into(navProPic);
 
         utils.sendRegistrationToServer(token, this);

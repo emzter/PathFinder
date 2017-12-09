@@ -15,18 +15,20 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/font_awesome"
+            android:layout_centerVertical="true"
             android:id="@+id/aboutme_icon"
             android:textColor="@color/colorPrimary"
             android:text="@string/fa_user"/>
 
         <TextView
+            android:id="@+id/aboutme_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_toEndOf="@+id/aboutme_icon"
+            android:fontFamily="@font/kanit"
             android:text="@string/about_me"
             android:textAllCaps="true"
-            android:id="@+id/aboutme_title"
             android:textColor="@color/colorPrimary"
             android:textStyle="bold" />
     </RelativeLayout>
@@ -50,6 +52,7 @@
                 android:layout_width="80dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
+                android:fontFamily="@font/kanit"
                 android:text="@string/name"
                 android:textAllCaps="true"
                 android:textColor="@color/black"
@@ -75,17 +78,18 @@
                 android:layout_width="80dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
+                android:fontFamily="@font/kanit"
                 android:text="@string/gender"
                 android:textAllCaps="true"
                 android:textColor="@color/black"
                 android:textStyle="bold" />
 
             <TextView
+                android:id="@+id/aboutme_gender"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:text=""
-                android:id="@+id/aboutme_gender"
                 android:textColor="@color/black" />
 
         </LinearLayout>
@@ -100,17 +104,18 @@
                 android:layout_width="80dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
+                android:fontFamily="@font/kanit"
                 android:text="@string/birthdate"
                 android:textAllCaps="true"
                 android:textColor="@color/black"
                 android:textStyle="bold" />
 
             <TextView
+                android:id="@+id/aboutme_birthdate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:text=""
-                android:id="@+id/aboutme_birthdate"
                 android:textColor="@color/black" />
 
         </LinearLayout>
@@ -125,17 +130,18 @@
                 android:layout_width="80dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
+                android:fontFamily="@font/kanit"
                 android:text="@string/telephone"
                 android:textAllCaps="true"
                 android:textColor="@color/black"
                 android:textStyle="bold" />
 
             <TextView
+                android:id="@+id/aboutme_telephone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:text=""
-                android:id="@+id/aboutme_telephone"
                 android:textColor="@color/black" />
 
         </LinearLayout>
@@ -150,17 +156,18 @@
                 android:layout_width="80dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
+                android:fontFamily="@font/kanit"
                 android:text="@string/facebook"
                 android:textAllCaps="true"
                 android:textColor="@color/black"
                 android:textStyle="bold" />
 
             <TextView
+                android:id="@+id/aboutme_facebook"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:text=""
-                android:id="@+id/aboutme_facebook"
                 android:textColor="@color/black" />
 
         </LinearLayout>
@@ -175,17 +182,18 @@
                 android:layout_width="80dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
+                android:fontFamily="@font/kanit"
                 android:text="@string/twitter"
                 android:textAllCaps="true"
                 android:textColor="@color/black"
                 android:textStyle="bold" />
 
             <TextView
+                android:id="@+id/aboutme_twitter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:text=""
-                android:id="@+id/aboutme_twitter"
                 android:textColor="@color/black" />
 
         </LinearLayout>
@@ -200,17 +208,18 @@
                 android:layout_width="80dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
+                android:fontFamily="@font/kanit"
                 android:text="@string/line"
                 android:textAllCaps="true"
                 android:textColor="@color/black"
                 android:textStyle="bold" />
 
             <TextView
+                android:id="@+id/aboutme_line"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:text=""
-                android:id="@+id/aboutme_line"
                 android:textColor="@color/black" />
 
         </LinearLayout>
@@ -225,17 +234,18 @@
                 android:layout_width="80dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
+                android:fontFamily="@font/kanit"
                 android:text="@string/otherlink"
                 android:textAllCaps="true"
                 android:textColor="@color/black"
                 android:textStyle="bold" />
 
             <TextView
+                android:id="@+id/aboutme_otherlink"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:text=""
-                android:id="@+id/aboutme_otherlink"
                 android:textColor="@color/black" />
 
         </LinearLayout>

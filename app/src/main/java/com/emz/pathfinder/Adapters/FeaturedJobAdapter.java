@@ -46,7 +46,7 @@ public class FeaturedJobAdapter extends RecyclerView.Adapter<FeaturedJobAdapter.
         Jobs job = jobList.get(position);
         Employer emp = empList.get(job.getCompany_id());
         holder.jobTitle.setText(job.getName());
-//        holder.employerName.setText(emp.getName());
+        holder.empName.setText(emp.getName());
         Glide.with(context).load(utils.EMPPIC_URL+emp.getLogo()).apply(RequestOptions.centerInsideTransform().error(R.drawable.defaultprofilepicture)).into(holder.employerLogo);
     }
 
@@ -57,13 +57,15 @@ public class FeaturedJobAdapter extends RecyclerView.Adapter<FeaturedJobAdapter.
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         ImageView employerLogo;
-        TextView jobTitle;
+        TextView jobTitle, empName, location, money;
         public MyViewHolder(View itemView) {
             super(itemView);
 
             employerLogo = itemView.findViewById(R.id.employer_logo);
             jobTitle = itemView.findViewById(R.id.jobTitle);
-//            employerName = itemView.findViewById(R.id.empName);
+            empName = itemView.findViewById(R.id.empName);
+            location = itemView.findViewById(R.id.locationName);
+            money = itemView.findViewById(R.id.moneyText);
         }
     }
 }

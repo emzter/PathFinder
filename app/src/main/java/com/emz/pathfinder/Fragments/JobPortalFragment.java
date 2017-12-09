@@ -50,7 +50,12 @@ public class JobPortalFragment extends Fragment{
         mRecyclerView = rootView.findViewById(R.id.catRecyclerView);
         mRecyclerView.setHasFixedSize(true);
 
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false){
+            @Override
+            public boolean canScrollVertically() {
+                return false;
+            }
+        };
         mRecyclerView.setLayoutManager(layoutManager);
 
         return rootView;

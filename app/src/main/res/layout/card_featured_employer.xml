@@ -35,16 +35,16 @@
                     android:layout_centerVertical="true"
                     android:id="@+id/featured_icon"
                     android:textColor="@color/colorPrimary"
-                    android:text="@string/fa_tasks"/>
+                    android:text="@string/fa_building"/>
 
                 <TextView
-                    android:id="@+id/tvFeaturedJobs"
+                    android:id="@+id/tvFeaturedEmp"
                     android:layout_width="wrap_content"
                     android:layout_height="48dp"
                     android:layout_marginStart="8dp"
                     android:fontFamily="@font/kanit"
                     android:gravity="center_vertical"
-                    android:text="Featured Jobs"
+                    android:text="Featured Employers"
                     android:textAllCaps="true"
                     android:textStyle="bold"
                     android:textColor="@color/colorPrimary"

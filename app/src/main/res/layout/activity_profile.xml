@@ -57,9 +57,11 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/htab_profileImage"
                     android:layout_marginStart="16dp"
+                    android:fontFamily="@font/kanit"
                     android:textAlignment="center"
                     android:textColor="@color/black"
-                    android:textSize="24sp" />
+                    android:textSize="24sp"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/user_email"
@@ -67,6 +69,7 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/user_profile_name"
                     android:layout_marginStart="16dp"
+                    android:fontFamily="@font/kanit"
                     android:textAlignment="center"
                     android:textColor="@color/base"
                     android:textSize="16sp" />
