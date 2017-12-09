@@ -3,7 +3,9 @@ package com.emz.pathfinder;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.location.Criteria;
 import android.location.Location;
+import android.location.LocationListener;
 import android.location.LocationManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
@@ -16,6 +18,7 @@ import com.emz.pathfinder.Utils.UserHelper;
 import com.emz.pathfinder.Utils.Utils;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.LocationSource;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
@@ -75,8 +78,37 @@ public class LocationActivity extends AppCompatActivity implements OnMapReadyCal
             if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 checkpermission();
                 return;
+            }
+
+            location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+
+            if(location != null){
+                longitude = location.getLongitude();
+                latitude = location.getLatitude();
             }else{
-                markMap();
+                LocationListener ln = new LocationListener() {
+                    @Override
+                    public void onLocationChanged(Location location) {
+                        longitude = location.getLongitude();
+                        latitude = location.getLatitude();
+                    }
+
+                    @Override
+                    public void onStatusChanged(String s, int i, Bundle bundle) {
+
+                    }
+
+                    @Override
+                    public void onProviderEnabled(String s) {
+
+                    }
+
+                    @Override
+                    public void onProviderDisabled(String s) {
+
+                    }
+                };
+                lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000 , 0, ln);
             }
         }
     }
@@ -101,19 +133,13 @@ public class LocationActivity extends AppCompatActivity implements OnMapReadyCal
                 });
     }
 
-    @SuppressLint("MissingPermission")
-    private void markMap() {
-        location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-        longitude = location.getLongitude();
-        latitude = location.getLatitude();
-    }
-
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         switch (requestCode) {
             case 1:
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    markMap();
+                    longitude = location.getLongitude();
+                    latitude = location.getLatitude();
                 } else {
                     createSnackbar(mainView, "Permissions are needed for this function.");
                 }
@@ -157,6 +183,7 @@ public class LocationActivity extends AppCompatActivity implements OnMapReadyCal
             mMap.addMarker(new MarkerOptions().position(current).title("You're here."));
             mMap.moveCamera(CameraUpdateFactory.newLatLng(current));
             mMap.animateCamera(CameraUpdateFactory.zoomTo(17.0f));
+
         }
     }
 }
