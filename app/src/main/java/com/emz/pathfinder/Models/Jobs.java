@@ -19,8 +19,9 @@ public class Jobs {
     private int edu_req;
     private int category_id;
     private int company_id;
+    private boolean favStatus;
 
-    public Jobs(int id, String name, String responsibility, String qualification, String benefit, String salary, int salary_type, String location, String type, int level, int exp_req, int edu_req, int category_id, int company_id) {
+    public Jobs(int id, String name, String responsibility, String qualification, String benefit, String salary, int salary_type, String location, String type, int level, int exp_req, int edu_req, int category_id, int company_id, boolean favStatus) {
         this.id = id;
         this.name = name;
         this.responsibility = responsibility;
@@ -35,6 +36,7 @@ public class Jobs {
         this.edu_req = edu_req;
         this.category_id = category_id;
         this.company_id = company_id;
+        this.favStatus = favStatus;
     }
 
     public int getId() {
@@ -147,5 +149,13 @@ public class Jobs {
 
     public void setCompany_id(int company_id) {
         this.company_id = company_id;
+    }
+
+    public boolean isFavStatus() {
+        return favStatus;
+    }
+
+    public void setFavStatus(boolean favStatus) {
+        this.favStatus = favStatus;
     }
 }

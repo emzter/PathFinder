@@ -19,6 +19,7 @@
     <color name="album_title">#4c4c4c</color>
 
     <color name="liked">#F06292</color>
+    <color name="favorited">#ffcf40</color>
 
     <color name="feed_bg">#d3d6db</color>
     <color name="feed_item_bg">#ffffff</color>

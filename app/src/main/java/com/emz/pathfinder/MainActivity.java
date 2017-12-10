@@ -217,6 +217,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         navEMailText = navHeaderView.findViewById(R.id.navEmailText);
         navNameText = navHeaderView.findViewById(R.id.navNameText);
 
+
+        TabLayout tabLayout = findViewById(R.id.tabs);
+        tabLayout.setupWithViewPager(mViewPager);
+
+        final FloatingActionButton fab = findViewById(R.id.fab);
+        fab.setVisibility(View.GONE);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onFabNewPostClicked();
+            }
+        });
+
         mViewPager.setAdapter(mPagerAdapter);
 
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -235,6 +248,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onPageSelected(int position) {
                 toolbar.setTitle(mPageNames[position]);
+                if(position == 1){
+                    fab.setVisibility(View.VISIBLE);
+                }else{
+                    fab.setVisibility(View.GONE);
+                }
             }
 
             @Override
@@ -243,16 +261,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         });
 
-        TabLayout tabLayout = findViewById(R.id.tabs);
-        tabLayout.setupWithViewPager(mViewPager);
-
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onFabNewPostClicked();
-            }
-        });
     }
 
 
