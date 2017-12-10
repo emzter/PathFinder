@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tool="http://schemas.android.com/tools"
     android:id="@+id/htab_maincontent"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -95,7 +95,38 @@
                 android:layout_gravity="top"
                 android:layout_marginBottom="48dp"
                 app:layout_collapseMode="pin"
-                app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/kanit"
+                        android:text=""
+                        android:textColor="@color/white"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:id="@+id/profile_title_name"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/kanit"
+                        android:textColor="@color/white"
+                        android:text=""
+                        android:id="@+id/profile_title_email"/>
+
+                </LinearLayout>
+
+
+
+            </android.support.v7.widget.Toolbar>
+
 
             <android.support.design.widget.TabLayout
                 android:id="@+id/htab_tabs"

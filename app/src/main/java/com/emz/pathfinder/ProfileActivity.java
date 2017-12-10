@@ -12,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -26,6 +27,9 @@ import com.rw.velocity.Velocity;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
+import static com.emz.pathfinder.Utils.Ui.slideDown;
+import static com.emz.pathfinder.Utils.Ui.slideUp;
+
 public class ProfileActivity extends AppCompatActivity {
 
     private Toolbar toolbar;
@@ -37,7 +41,7 @@ public class ProfileActivity extends AppCompatActivity {
     private CircleImageView profileimage;
     private int uid;
 
-    private TextView nameTV, emailTV;
+    private TextView nameTV, emailTV, titleNameTv, titleEmailTv;
 
     private Utils utils;
     private UserHelper usrHelper;
@@ -120,6 +124,9 @@ public class ProfileActivity extends AppCompatActivity {
         nameTV = findViewById(R.id.user_profile_name);
         emailTV = findViewById(R.id.user_email);
 
+        titleNameTv = findViewById(R.id.profile_title_name);
+        titleEmailTv = findViewById(R.id.profile_title_email);
+
         nameTV.setText(currentUser.getFname()+" "+currentUser.getLname());
         emailTV.setText(currentUser.getEmail());
 
@@ -132,6 +139,12 @@ public class ProfileActivity extends AppCompatActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+        titleNameTv.setText(currentUser.getFname()+" "+currentUser.getLname());
+        titleEmailTv.setText(currentUser.getEmail());
+
+        titleNameTv.setVisibility(View.INVISIBLE);
+        titleEmailTv.setVisibility(View.INVISIBLE);
 
         toolbar.setTitle(" ");
 
@@ -147,10 +160,12 @@ public class ProfileActivity extends AppCompatActivity {
                     scrollRange = appBarLayout.getTotalScrollRange();
                 }
                 if (scrollRange + verticalOffset == 0) {
-                    toolbar.setTitle(currentUser.getFname()+" "+currentUser.getLname());
+                    titleNameTv.setVisibility(View.VISIBLE);
+                    titleEmailTv.setVisibility(View.VISIBLE);
                     isShow = true;
                 } else if(isShow) {
-                    toolbar.setTitle(" ");
+                    titleNameTv.setVisibility(View.INVISIBLE);
+                    titleEmailTv.setVisibility(View.INVISIBLE);
                     isShow = false;
                 }
             }

@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.support.design.widget.Snackbar;
 import android.view.View;
+import android.view.animation.AnimationUtils;
 
 import com.emz.pathfinder.R;
 
@@ -34,5 +35,15 @@ public class Ui {
 
     public static void createSnackbar(View view, String string){
         Snackbar.make(view, string, Snackbar.LENGTH_LONG).show();
+    }
+
+    public static void slideUp(View view, Context context)
+    {
+        view.startAnimation(AnimationUtils.loadAnimation(context, R.anim.slid_down));
+    }
+
+    public static void slideDown(View view, Context context)
+    {
+        view.startAnimation(AnimationUtils.loadAnimation(context, R.anim.slid_up));
     }
 }
