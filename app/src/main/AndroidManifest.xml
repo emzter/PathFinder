@@ -20,7 +20,7 @@
         <!-- Activity -->
 
         <activity
-            android:name=".StartActivity"
+            android:name=".SplashScreenActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Dark">
             <intent-filter>
@@ -30,21 +30,27 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".StartActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.Dark" />
+        <activity
+            android:name=".LoginActivity"
+            android:label=""
+            android:parentActivityName=".StartActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.Dark" />
+        <activity android:name=".RegisterActivity"
+            android:label=""
+            android:parentActivityName=".StartActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.Dark"/>
+        <activity
             android:name=".MainActivity"
             android:label="@string/home"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
-        </activity>
-        <activity
-            android:name=".SignUpActivity"
-            android:label="@string/registration"
-            android:parentActivityName=".StartActivity"
-            android:screenOrientation="portrait">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.emz.pathfinder.StartActivity" />
         </activity>
         <activity
             android:name=".NewPostActivity"
@@ -101,8 +107,6 @@
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
-
-        <activity android:name=".SplashScreenActivity"></activity>
     </application>
 
 </manifest>
