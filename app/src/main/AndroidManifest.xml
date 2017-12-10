@@ -39,11 +39,12 @@
             android:parentActivityName=".StartActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Dark" />
-        <activity android:name=".RegisterActivity"
+        <activity
+            android:name=".RegisterActivity"
             android:label=""
             android:parentActivityName=".StartActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.Dark"/>
+            android:theme="@style/AppTheme.Dark" />
         <activity
             android:name=".MainActivity"
             android:label="@string/home"
@@ -52,6 +53,10 @@
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
         </activity>
+
+        <activity android:name=".JobDetailActivity"
+            android:label=""
+            android:parentActivityName=".MainActivity"/>
         <activity
             android:name=".NewPostActivity"
             android:label="Create New Post"
@@ -107,6 +112,7 @@
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
+
     </application>
 
 </manifest>

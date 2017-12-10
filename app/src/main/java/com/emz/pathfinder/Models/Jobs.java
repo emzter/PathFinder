@@ -1,42 +1,70 @@
 package com.emz.pathfinder.Models;
 
-/**
- * Created by EMZ on 30/10/2560.
- */
+import com.google.gson.annotations.SerializedName;
 
 public class Jobs {
+    @SerializedName("id")
     private int id;
+    @SerializedName("name")
     private String name;
+    @SerializedName("responsibilities")
     private String responsibility;
+    @SerializedName("qualification")
     private String qualification;
+    @SerializedName("benefit")
     private String benefit;
+    @SerializedName("capacity")
+    private int capacity;
+    @SerializedName("cap_type")
+    private int capType;
+    @SerializedName("salary")
     private String salary;
-    private int salary_type;
+    @SerializedName("salary_type")
+    private int salaryType;
+    @SerializedName("negotiable")
+    private boolean negotiable;
+    @SerializedName("location")
     private String location;
+    @SerializedName("type")
     private String type;
+    @SerializedName("level")
     private int level;
+    @SerializedName("exp_req")
     private int exp_req;
+    @SerializedName("edu_req")
     private int edu_req;
-    private int category_id;
+    @SerializedName("category")
+    private String category;
+    @SerializedName("company_id")
     private int company_id;
-    private boolean favStatus;
+    @SerializedName("created_at")
+    private String createdAt;
+    @SerializedName("favorite")
+    private boolean favorite;
+    @SerializedName("apply")
+    private boolean apply;
 
-    public Jobs(int id, String name, String responsibility, String qualification, String benefit, String salary, int salary_type, String location, String type, int level, int exp_req, int edu_req, int category_id, int company_id, boolean favStatus) {
+    public Jobs(int id, String name, String responsibility, String qualification, String benefit, int capacity, int capType, String salary, int salaryType, boolean negotiable, String location, String type, int level, int exp_req, int edu_req, String category, int company_id, String createdAt, boolean favorite, boolean apply) {
         this.id = id;
         this.name = name;
         this.responsibility = responsibility;
         this.qualification = qualification;
         this.benefit = benefit;
+        this.capacity = capacity;
+        this.capType = capType;
         this.salary = salary;
-        this.salary_type = salary_type;
+        this.salaryType = salaryType;
+        this.negotiable = negotiable;
         this.location = location;
         this.type = type;
         this.level = level;
         this.exp_req = exp_req;
         this.edu_req = edu_req;
-        this.category_id = category_id;
+        this.category = category;
         this.company_id = company_id;
-        this.favStatus = favStatus;
+        this.createdAt = createdAt;
+        this.favorite = favorite;
+        this.apply = apply;
     }
 
     public int getId() {
@@ -79,6 +107,22 @@ public class Jobs {
         this.benefit = benefit;
     }
 
+    public int getCapacity() {
+        return capacity;
+    }
+
+    public void setCapacity(int capacity) {
+        this.capacity = capacity;
+    }
+
+    public int getCapType() {
+        return capType;
+    }
+
+    public void setCapType(int capType) {
+        this.capType = capType;
+    }
+
     public String getSalary() {
         return salary;
     }
@@ -87,12 +131,20 @@ public class Jobs {
         this.salary = salary;
     }
 
-    public int getSalary_type() {
-        return salary_type;
+    public int getSalaryType() {
+        return salaryType;
     }
 
-    public void setSalary_type(int salary_type) {
-        this.salary_type = salary_type;
+    public void setSalaryType(int salaryType) {
+        this.salaryType = salaryType;
+    }
+
+    public boolean isNegotiable() {
+        return negotiable;
+    }
+
+    public void setNegotiable(boolean negotiable) {
+        this.negotiable = negotiable;
     }
 
     public String getLocation() {
@@ -135,12 +187,12 @@ public class Jobs {
         this.edu_req = edu_req;
     }
 
-    public int getCategory_id() {
-        return category_id;
+    public String getCategory() {
+        return category;
     }
 
-    public void setCategory_id(int category_id) {
-        this.category_id = category_id;
+    public void setCategory(String category) {
+        this.category = category;
     }
 
     public int getCompany_id() {
@@ -151,11 +203,27 @@ public class Jobs {
         this.company_id = company_id;
     }
 
-    public boolean isFavStatus() {
-        return favStatus;
+    public String getCreatedAt() {
+        return createdAt;
     }
 
-    public void setFavStatus(boolean favStatus) {
-        this.favStatus = favStatus;
+    public void setCreatedAt(String createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public boolean isFavorite() {
+        return favorite;
+    }
+
+    public void setFavorite(boolean favorite) {
+        this.favorite = favorite;
+    }
+
+    public boolean isApply() {
+        return apply;
+    }
+
+    public void setApply(boolean apply) {
+        this.apply = apply;
     }
 }

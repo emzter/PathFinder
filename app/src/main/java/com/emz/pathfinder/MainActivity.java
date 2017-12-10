@@ -71,6 +71,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         utils = new Utils(this);
         usrHelper = new UserHelper(this);
 
+        Log.d(TAG, "USER: "+usrHelper.getUserId());
+
         mPagerAdapter = new FragmentPagerAdapter(getSupportFragmentManager()) {
 
             private final Fragment[] mFragments = new Fragment[]{

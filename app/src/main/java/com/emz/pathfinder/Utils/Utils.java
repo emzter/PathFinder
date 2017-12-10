@@ -14,8 +14,11 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 import android.widget.EditText;
 
+import com.emz.pathfinder.Adapters.FeaturedJobAdapter;
 import com.emz.pathfinder.Adapters.TimelineAdapter;
 import com.emz.pathfinder.R;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.rw.velocity.Velocity;
 
 import java.io.IOException;

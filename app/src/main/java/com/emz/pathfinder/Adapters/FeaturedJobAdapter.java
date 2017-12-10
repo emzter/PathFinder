@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,11 +14,15 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.emz.pathfinder.Fragments.JobPortalFragment;
+import com.emz.pathfinder.Fragments.TimelineFragment;
+import com.emz.pathfinder.JobDetailActivity;
 import com.emz.pathfinder.Models.Employer;
 import com.emz.pathfinder.Models.Jobs;
 import com.emz.pathfinder.PostActivity;
 import com.emz.pathfinder.R;
 import com.emz.pathfinder.Utils.Utils;
+import com.rw.velocity.Velocity;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -27,14 +32,16 @@ public class FeaturedJobAdapter extends RecyclerView.Adapter<FeaturedJobAdapter.
     private Context context;
     private List<Jobs> jobList;
     private LinkedHashMap<Integer, Employer> empList;
+    private JobPortalFragment jobPortalFragment;
 
     private Utils utils;
 
-    public FeaturedJobAdapter(Context context, List<Jobs> jobList, LinkedHashMap<Integer, Employer> empList){
+    public FeaturedJobAdapter(Context context, List<Jobs> jobList, LinkedHashMap<Integer, Employer> empList, JobPortalFragment jobPortalFragment){
         utils = new Utils(context);
         this.context = context;
         this.jobList = jobList;
         this.empList = empList;
+        this.jobPortalFragment = jobPortalFragment;
     }
 
     @Override
@@ -44,25 +51,32 @@ public class FeaturedJobAdapter extends RecyclerView.Adapter<FeaturedJobAdapter.
     }
 
     @Override
-    public void onBindViewHolder(final MyViewHolder holder, int position) {
+    public void onBindViewHolder(final MyViewHolder holder, final int position) {
         Jobs job = jobList.get(position);
+        final int jobid = job.getId();
         Employer emp = empList.get(job.getCompany_id());
+
+        holder.fav = job.isFavorite();
+        holder.setFavorite();
         holder.jobTitle.setText(job.getName());
         holder.empName.setText(emp.getName());
         holder.location.setText(job.getLocation());
         holder.money.setText(job.getSalary());
         Glide.with(context).load(utils.EMPPIC_URL+emp.getLogo()).apply(RequestOptions.centerInsideTransform().error(R.drawable.default_emp_logo)).into(holder.employerLogo);
+
         holder.layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent post = new Intent(context, PostActivity.class);
+                Intent post = new Intent(context, JobDetailActivity.class);
+                post.putExtra("id", jobid);
                 context.startActivity(post);
             }
         });
+
         holder.favStar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                holder.setFavorite();
+                jobPortalFragment.setFavoriteJob(position, jobid);
             }
         });
     }
@@ -92,17 +106,15 @@ public class FeaturedJobAdapter extends RecyclerView.Adapter<FeaturedJobAdapter.
 
         public void setFavorite() {
             if(fav){
-                favStar.setText(context.getString(R.string.fa_star_o));
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    favStar.setTextColor(context.getColor(R.color.monsoon));
-                }
-                fav = false;
-            }else{
                 favStar.setText(context.getString(R.string.fa_star));
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     favStar.setTextColor(context.getColor(R.color.favorited));
                 }
-                fav = true;
+            }else{
+                favStar.setText(context.getString(R.string.fa_star_o));
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    favStar.setTextColor(context.getColor(R.color.monsoon));
+                }
             }
         }
     }
