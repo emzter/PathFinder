@@ -22,6 +22,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.Gson;
@@ -127,8 +128,7 @@ public class LocationActivity extends AppCompatActivity implements OnMapReadyCal
         switch (requestCode) {
             case 1:
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    longitude = location.getLongitude();
-                    latitude = location.getLatitude();
+                    markMap();
                 } else {
                     createSnackbar(mainView, "Permissions are needed for this function.");
                 }
@@ -145,7 +145,7 @@ public class LocationActivity extends AppCompatActivity implements OnMapReadyCal
     }
 
     private void getInRangeVolunteer(){
-        Velocity.get(utils.VOLUNTEER_URL+"getInRangeVolunteer/"+latitude+"/"+longitude)
+        Velocity.get(utils.VOLUNTEER_URL+"getVolunteerLocation")
                 .connect(new Velocity.ResponseListener() {
                     @Override
                     public void onVelocitySuccess(Velocity.Response response) {
@@ -170,17 +170,44 @@ public class LocationActivity extends AppCompatActivity implements OnMapReadyCal
                 });
     }
 
+    private boolean isInBound(LatLng anotherLocation){
+        float[] dist = new float[1];
+        double anotherLat = anotherLocation.latitude;
+        double anotherLng = anotherLocation.longitude;
+
+        Location.distanceBetween(latitude, longitude, anotherLat, anotherLng, dist);
+
+        if(dist[0]/1000 > 1){
+            return false;
+        }else{
+            return true;
+        }
+    }
+
     private void markVolunteer(List<Volunteer> volList) {
         for (Volunteer vol : volList) {
+            LatLng latlng = new LatLng(vol.getLat(), vol.getLng());
             Marker currentMarker = volMarker.get(vol.getId());
-            if(currentMarker != null){
-                LatLng latlng = new LatLng(vol.getLat(), vol.getLng());
-                currentMarker.setPosition(latlng);
+            if(vol.isOnline()){
+                if(isInBound(latlng)){
+                    if(currentMarker != null){
+                        currentMarker.setPosition(latlng);
+                    }else{
+                        Marker marker = mMap.addMarker(new MarkerOptions().position(latlng).title(vol.getFirstName()+" "+vol.getLastName()));
+                        marker.setIcon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_launcher));
+                        volMarker.put(vol.getId(), marker);
+                    }
+                }else{
+                    if(currentMarker != null){
+                        currentMarker.remove();
+                        volMarker.remove(vol.getId());
+                    }
+                }
             }else{
-                LatLng latlng = new LatLng(vol.getLat(), vol.getLng());
-                Marker marker = mMap.addMarker(new MarkerOptions().position(latlng).title(vol.getFirstName()+" "+vol.getLastName()));
-                marker.setIcon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_launcher));
-                volMarker.put(vol.getId(), marker);
+                if(currentMarker != null){
+                    currentMarker.remove();
+                    volMarker.remove(vol.getId());
+                }
             }
         }
     }

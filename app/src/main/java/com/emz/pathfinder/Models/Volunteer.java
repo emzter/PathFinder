@@ -97,4 +97,14 @@ public class Volunteer {
     public double getLng() {
         return lng;
     }
+
+    public boolean isOnline(){
+        boolean status = false;
+        if(online == 0){
+            status = false;
+        }else if(online == 1){
+            status = true;
+        }
+        return status;
+    }
 }
