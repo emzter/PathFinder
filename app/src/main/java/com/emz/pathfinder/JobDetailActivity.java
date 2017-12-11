@@ -1,5 +1,8 @@
 package com.emz.pathfinder;
 
+import android.content.Intent;
+import android.support.design.widget.BottomSheetBehavior;
+import android.support.design.widget.BottomSheetDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -10,6 +13,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -37,8 +41,10 @@ public class JobDetailActivity extends AppCompatActivity {
     private ScrollView jobDetailLayout;
     private ProgressBar progressBar;
     private LinearLayout empAboutLayout, empAddressLayout, empEmailLayout, empTelLayout;
-    private TextView empName, empAbout, empCat, empEmail, empTel, jobResponse, jobQualify, jobBenefit;
+    private TextView empName, empAbout, empCat, empEmail, empTel, jobResponse, jobQualify, jobBenefit, jobCapacity,
+            jobCapacityUnit, jobLevel, jobSalary, jobSalaryType, jobNegotiable, jobExp, jobEdu, jobCategory;
     private ImageView empLogo;
+    private LinearLayout saveBtn, applyBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -125,6 +131,19 @@ public class JobDetailActivity extends AppCompatActivity {
         jobQualify.setText(Html.fromHtml(currentJob.getQualification(), null, new UlTagHandler()));
         jobBenefit.setText(Html.fromHtml(currentJob.getBenefit(), null, new UlTagHandler()));
 
+        if(currentJob.getCapType() == 1){
+            jobCapacity.setText(R.string.multirates);
+            jobCapacityUnit.setVisibility(View.GONE);
+        }else{
+            jobCapacity.setText(String.valueOf(currentJob.getCapacity()));
+        }
+
+        jobLevel.setText(utils.getJobLevel(currentJob.getLevel()));
+        jobSalary.setText(String.valueOf(currentJob.getSalary()));
+        jobCategory.setText(currentJob.getCategory());
+        jobEdu.setText(utils.getEduReq(currentJob.getEdu_req()));
+
+
         if(!Objects.equals(currentEmp.getAbout(), "")){
             empAbout.setText(currentEmp.getAbout());
             empAboutLayout.setVisibility(View.VISIBLE);
@@ -141,6 +160,15 @@ public class JobDetailActivity extends AppCompatActivity {
         }
 
         Glide.with(this).load(utils.EMPPIC_URL+currentEmp.getLogo()).apply(RequestOptions.centerInsideTransform().error(R.drawable.default_emp_logo)).into(empLogo);
+
+        applyBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent apply = new Intent(JobDetailActivity.this, JobApplyActivity.class);
+                apply.putExtra("id", jobId);
+                startActivityForResult(apply, 0);
+            }
+        });
 
         jobDetailLayout.setVisibility(View.VISIBLE);
         progressBar.setVisibility(View.GONE);
@@ -159,6 +187,15 @@ public class JobDetailActivity extends AppCompatActivity {
         jobResponse = findViewById(R.id.job_detail_responsibility);
         jobQualify = findViewById(R.id.job_detail_qualify);
         jobBenefit = findViewById(R.id.job_detail_benefit);
+        jobCapacity = findViewById(R.id.job_detail_capacity);
+        jobCapacityUnit = findViewById(R.id.job_detail_capacity_rates);
+        jobLevel = findViewById(R.id.job_detail_level);
+        jobSalary = findViewById(R.id.job_detail_salary);
+        jobSalaryType = findViewById(R.id.job_detail_salary_unit);
+        jobNegotiable = findViewById(R.id.job_detail_salary_negotiable);
+        jobExp = findViewById(R.id.job_detail_experiences_requirement);
+        jobEdu = findViewById(R.id.job_detail_edu_requirement);
+        jobCategory = findViewById(R.id.job_detail_category);
 
         empLogo = findViewById(R.id.emp_detail_logo);
 
@@ -166,6 +203,9 @@ public class JobDetailActivity extends AppCompatActivity {
         empAddressLayout = findViewById(R.id.emp_detail_address_layout);
         empEmailLayout = findViewById(R.id.emp_detail_contact_email_layout);
         empTelLayout = findViewById(R.id.emp_detail_contact_number_layout);
+
+        saveBtn = findViewById(R.id.save_btn);
+        applyBtn = findViewById(R.id.applyBtn);
 
         jobDetailLayout.setVisibility(View.GONE);
         empAddressLayout.setVisibility(View.GONE);

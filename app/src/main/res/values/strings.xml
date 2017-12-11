@@ -94,4 +94,7 @@
     <string name="category">Category</string>
     <string name="email_short">E-Mail</string>
     <string name="responsibility">Responsibility</string>
+    <string name="multirates">Multirates</string>
+    <string name="apply">Apply</string>
+    <string name="save">Save</string>
 </resources>

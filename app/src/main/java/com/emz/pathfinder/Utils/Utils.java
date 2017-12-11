@@ -212,4 +212,52 @@ public class Utils {
                     }
                 });
     }
+
+    public String getJobLevel(int level){
+        String joblevel = "";
+        switch (level){
+            case 0:
+                joblevel = "N/A";
+                break;
+            case 1:
+                joblevel = "Entry";
+                break;
+            case 2:
+                joblevel = "Middle";
+                break;
+            case 3:
+                joblevel = "Senior";
+                break;
+            case 4:
+                joblevel = "Top";
+                break;
+
+        }
+        return joblevel;
+    }
+
+    public String getEduReq(int edu){
+        String edureq = "";
+        switch (edu){
+            case 0:
+                edureq = "Not Specified";
+                break;
+            case 1:
+                edureq = "High School";
+                break;
+            case 2:
+                edureq = "Diploma";
+                break;
+            case 3:
+                edureq = "Degree";
+                break;
+            case 4:
+                edureq = "Master";
+                break;
+            case 5:
+                edureq = "Doctorate";
+                break;
+        }
+        return edureq;
+    }
 }

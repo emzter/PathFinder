@@ -53,10 +53,10 @@
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
         </activity>
-
-        <activity android:name=".JobDetailActivity"
+        <activity
+            android:name=".JobDetailActivity"
             android:label=""
-            android:parentActivityName=".MainActivity"/>
+            android:parentActivityName=".MainActivity" />
         <activity
             android:name=".NewPostActivity"
             android:label="Create New Post"
@@ -113,6 +113,7 @@
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
 
+        <activity android:name=".JobApplyActivity"></activity>
     </application>
 
 </manifest>
