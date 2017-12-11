@@ -39,7 +39,7 @@ public class Utils {
 
     public final String LOGIN_URL = "https://www.pathfinder.in.th/home/login/";
     public final String REGISTER_URL = "https://www.pathfinder.in.th/registration/signup/";
-    public final String USER_URL = "https://www.pathfinder.in.th/dist/home/users.php";
+    public final String VOLUNTEER_URL = "https://www.pathfinder.in.th/volunteer/";
     public final String JOBS_URL = "https://www.pathfinder.in.th/dist/home/jobs.php";
     public final String PROFILEPIC_URL = "https://www.pathfinder.in.th/uploads/profile_image/";
     public final String HEADERPIC_URL = "https://www.pathfinder.in.th/uploads/header_images/";
@@ -120,6 +120,24 @@ public class Utils {
         bitmap.recycle();
 
         return output;
+    }
+
+    public String parseDate(String time) {
+        String inputPattern = "yyyy-MM-dd HH:mm:ss";
+        String outputPattern = "dd/MM/yyyy";
+        SimpleDateFormat inputFormat = new SimpleDateFormat(inputPattern);
+        SimpleDateFormat outputFormat = new SimpleDateFormat(outputPattern);
+
+        Date date = null;
+        String str = null;
+
+        try {
+            date = inputFormat.parse(time);
+            str = outputFormat.format(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return str;
     }
 
     public String gettimestamp(String time){
@@ -214,7 +232,7 @@ public class Utils {
     }
 
     public String getJobLevel(int level){
-        String joblevel = "";
+        String joblevel = "N/A";
         switch (level){
             case 0:
                 joblevel = "N/A";
@@ -237,7 +255,7 @@ public class Utils {
     }
 
     public String getEduReq(int edu){
-        String edureq = "";
+        String edureq = "Not Specified";
         switch (edu){
             case 0:
                 edureq = "Not Specified";
@@ -259,5 +277,27 @@ public class Utils {
                 break;
         }
         return edureq;
+    }
+
+    public String getExpReq(int level){
+        String years = "";
+        if(level == 0){
+            years = "Not Specified";
+        }else{
+            years = level+" Years or more";
+        }
+        return years;
+    }
+
+    public String getGetSalaryType(int type){
+        String salaryType;
+        if(type == 1){
+            salaryType = "per month";
+        }else if(type == 2){
+            salaryType = "per hour";
+        }else{
+            salaryType = "";
+        }
+        return salaryType;
     }
 }

@@ -32,6 +32,16 @@
             android:textColor="@color/colorPrimary"
             android:textStyle="bold" />
 
+        <TextView
+            android:id="@+id/job_detail_posted_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_alignParentEnd="true"
+            android:fontFamily="@font/kanit"
+            android:text=""
+            android:textAllCaps="true" />
+
     </RelativeLayout>
 
     <LinearLayout
@@ -192,7 +202,7 @@
             <TextView
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
+                android:layout_marginBottom="4dp"
                 android:fontFamily="@font/kanit"
                 android:text="Salary"
                 android:textAllCaps="true"
@@ -210,15 +220,23 @@
                 android:id="@+id/job_detail_salary_unit"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:text="THB"
+                android:layout_marginStart="4dp"
+                android:text="@string/salary_unit"
+                android:textColor="@color/black" />
+
+            <TextView
+                android:id="@+id/job_detail_salary_type"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:text=""
                 android:textColor="@color/black" />
 
             <TextView
                 android:id="@+id/job_detail_salary_negotiable"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
+                android:layout_marginStart="4dp"
                 android:textColor="@color/black" />
 
         </LinearLayout>

@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import com.emz.pathfinder.Utils.UserHelper;
+import com.rw.velocity.Velocity;
 
 public class SplashScreenActivity extends AppCompatActivity {
 
@@ -15,6 +16,8 @@ public class SplashScreenActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
+
+        Velocity.initialize(3);
 
         usrHelper = new UserHelper(this);
 

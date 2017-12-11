@@ -44,7 +44,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
         Users user = userLists.get(noti.getSender());
         holder.nameTV.setText(user.getFname()+" "+user.getLname());
         holder.setStatusText(noti.getType());
-        holder.timeTV.setText(noti.getCreated());
+        holder.timeTV.setText(utils.gettimestamp(noti.getCreated()));
         Glide.with(context).load(utils.PROFILEPIC_URL+user.getProPic()).apply(RequestOptions.centerInsideTransform().error(R.drawable.defaultprofilepicture)).into(holder.proPic);
     }
 

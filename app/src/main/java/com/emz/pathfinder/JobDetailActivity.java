@@ -26,6 +26,7 @@ import com.emz.pathfinder.Utils.UserHelper;
 import com.emz.pathfinder.Utils.Utils;
 import com.rw.velocity.Velocity;
 
+import java.text.SimpleDateFormat;
 import java.util.Objects;
 
 public class JobDetailActivity extends AppCompatActivity {
@@ -42,7 +43,7 @@ public class JobDetailActivity extends AppCompatActivity {
     private ProgressBar progressBar;
     private LinearLayout empAboutLayout, empAddressLayout, empEmailLayout, empTelLayout;
     private TextView empName, empAbout, empCat, empEmail, empTel, jobResponse, jobQualify, jobBenefit, jobCapacity,
-            jobCapacityUnit, jobLevel, jobSalary, jobSalaryType, jobNegotiable, jobExp, jobEdu, jobCategory;
+            jobCapacityUnit, jobLevel, jobSalary, jobSalaryType, jobNegotiable, jobExp, jobEdu, jobCategory, jobPostedDate;
     private ImageView empLogo;
     private LinearLayout saveBtn, applyBtn;
 
@@ -50,8 +51,6 @@ public class JobDetailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_job_detail);
-
-        Velocity.initialize(3);
 
         utils = new Utils(this);
         usrHelper = new UserHelper(this);
@@ -124,9 +123,25 @@ public class JobDetailActivity extends AppCompatActivity {
 
     private void setupView() {
         getSupportActionBar().setTitle(currentJob.getName());
-        empName.setText(currentEmp.getName());
-        empCat.setText(String.valueOf(currentEmp.getCategory_id()));
 
+        setEmpView();
+        setJobView();
+
+        applyBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent apply = new Intent(JobDetailActivity.this, JobApplyActivity.class);
+                apply.putExtra("id", jobId);
+                startActivityForResult(apply, 0);
+            }
+        });
+
+        jobDetailLayout.setVisibility(View.VISIBLE);
+        progressBar.setVisibility(View.GONE);
+    }
+
+    private void setJobView() {
+        jobPostedDate.setText(utils.parseDate(currentJob.getCreatedAt()));
         jobResponse.setText(Html.fromHtml(currentJob.getResponsibility(), null, new UlTagHandler()));
         jobQualify.setText(Html.fromHtml(currentJob.getQualification(), null, new UlTagHandler()));
         jobBenefit.setText(Html.fromHtml(currentJob.getBenefit(), null, new UlTagHandler()));
@@ -140,9 +155,15 @@ public class JobDetailActivity extends AppCompatActivity {
 
         jobLevel.setText(utils.getJobLevel(currentJob.getLevel()));
         jobSalary.setText(String.valueOf(currentJob.getSalary()));
+        jobSalaryType.setText(utils.getGetSalaryType(currentJob.getSalaryType()));
         jobCategory.setText(currentJob.getCategory());
         jobEdu.setText(utils.getEduReq(currentJob.getEdu_req()));
+        jobExp.setText(utils.getExpReq(currentJob.getExp_req()));
+    }
 
+    private void setEmpView() {
+        empName.setText(currentEmp.getName());
+        empCat.setText(String.valueOf(currentEmp.getCategory_id()));
 
         if(!Objects.equals(currentEmp.getAbout(), "")){
             empAbout.setText(currentEmp.getAbout());
@@ -160,18 +181,6 @@ public class JobDetailActivity extends AppCompatActivity {
         }
 
         Glide.with(this).load(utils.EMPPIC_URL+currentEmp.getLogo()).apply(RequestOptions.centerInsideTransform().error(R.drawable.default_emp_logo)).into(empLogo);
-
-        applyBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent apply = new Intent(JobDetailActivity.this, JobApplyActivity.class);
-                apply.putExtra("id", jobId);
-                startActivityForResult(apply, 0);
-            }
-        });
-
-        jobDetailLayout.setVisibility(View.VISIBLE);
-        progressBar.setVisibility(View.GONE);
     }
 
     private void bindView() {
@@ -183,7 +192,9 @@ public class JobDetailActivity extends AppCompatActivity {
         empCat = findViewById(R.id.emp_detail_category);
         empEmail = findViewById(R.id.emp_detail_contact_email);
         empTel = findViewById(R.id.emp_detail_contact_number);
+        empLogo = findViewById(R.id.emp_detail_logo);
 
+        jobPostedDate = findViewById(R.id.job_detail_posted_date);
         jobResponse = findViewById(R.id.job_detail_responsibility);
         jobQualify = findViewById(R.id.job_detail_qualify);
         jobBenefit = findViewById(R.id.job_detail_benefit);
@@ -191,13 +202,11 @@ public class JobDetailActivity extends AppCompatActivity {
         jobCapacityUnit = findViewById(R.id.job_detail_capacity_rates);
         jobLevel = findViewById(R.id.job_detail_level);
         jobSalary = findViewById(R.id.job_detail_salary);
-        jobSalaryType = findViewById(R.id.job_detail_salary_unit);
+        jobSalaryType = findViewById(R.id.job_detail_salary_type);
         jobNegotiable = findViewById(R.id.job_detail_salary_negotiable);
         jobExp = findViewById(R.id.job_detail_experiences_requirement);
         jobEdu = findViewById(R.id.job_detail_edu_requirement);
         jobCategory = findViewById(R.id.job_detail_category);
-
-        empLogo = findViewById(R.id.emp_detail_logo);
 
         empAboutLayout = findViewById(R.id.emp_detail_about_layout);
         empAddressLayout = findViewById(R.id.emp_detail_address_layout);

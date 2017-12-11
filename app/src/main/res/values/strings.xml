@@ -97,4 +97,10 @@
     <string name="multirates">Multirates</string>
     <string name="apply">Apply</string>
     <string name="save">Save</string>
+    <string name="salary_unit">THB</string>
+    <string name="title">Title :</string>
+    <string name="to">To :</string>
+    <string name="from">From :</string>
+    <string name="messages_optional">Messages (Optional)</string>
+    <string name="messages_title">Messages</string>
 </resources>

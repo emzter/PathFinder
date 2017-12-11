@@ -52,8 +52,6 @@ public class ProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
-        Velocity.initialize(3);
-
         if(getIntent().getExtras() != null) {
             uid = getIntent().getExtras().getInt("id");
             utils = new Utils(this);

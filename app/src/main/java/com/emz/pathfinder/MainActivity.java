@@ -66,8 +66,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Velocity.initialize(3);
-
         utils = new Utils(this);
         usrHelper = new UserHelper(this);
 

@@ -43,8 +43,6 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
         overridePendingTransition( R.anim.trans_left_in, R.anim.trans_left_out);
 
-        Velocity.initialize(3);
-
         utils = new Utils(this);
         usrHelper = new UserHelper(this);
 
