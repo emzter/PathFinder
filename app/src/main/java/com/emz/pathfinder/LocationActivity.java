@@ -5,6 +5,7 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -59,7 +60,6 @@ public class LocationActivity extends AppCompatActivity implements OnMapReadyCal
     private static Double latitude;
     private LinkedHashMap<Integer, Marker> volMarker;
     private ScheduledExecutorService executorService;
-    private Long startTime;
     private Marker myMarker;
 
     @Override
@@ -74,6 +74,14 @@ public class LocationActivity extends AppCompatActivity implements OnMapReadyCal
         usrHelper = new UserHelper(this);
         utils = new Utils(this);
 
+        FloatingActionButton gpsFixed = findViewById(R.id.goto_user_fab);
+        gpsFixed.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                goToUser();
+            }
+        });
+
         if (getIntent().getExtras() != null) {
             extra = getIntent().getExtras().getString("sender_id");
         } else {
@@ -82,6 +90,10 @@ public class LocationActivity extends AppCompatActivity implements OnMapReadyCal
             SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
             mapFragment.getMapAsync(this);
         }
+    }
+
+    private void goToUser() {
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(myMarker.getPosition(), 16.0f));
     }
 
     private void markMap() {
@@ -248,8 +260,6 @@ public class LocationActivity extends AppCompatActivity implements OnMapReadyCal
 
     private void scheduleRandomUpdates() {
         this.executorService = Executors.newSingleThreadScheduledExecutor();
-        this.startTime = System.currentTimeMillis();
-
         this.executorService.scheduleAtFixedRate(new Runnable() {
             @Override
             public void run() {

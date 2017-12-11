@@ -69,8 +69,9 @@
         </activity>
         <activity
             android:name=".LocationActivity"
-            android:label="Map"
-            android:parentActivityName=".MainActivity">
+            android:label=""
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar">
             <intent-filter>
                 <action android:name="OPEN_MAP_ACTIVITY" />
 
