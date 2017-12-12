@@ -1,5 +1,6 @@
 package com.emz.pathfinder;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -46,6 +47,8 @@ public class LocationActivity extends AppCompatActivity implements OnMapReadyCal
 
     private static final String TAG = "MapsActivity";
 
+    LocationManager mLocationManager;
+
     private GoogleMap mMap;
     private String extra;
     private Utils utils;
@@ -85,7 +88,6 @@ public class LocationActivity extends AppCompatActivity implements OnMapReadyCal
         if (getIntent().getExtras() != null) {
             extra = getIntent().getExtras().getString("sender_id");
         } else {
-            lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
             markMap();
             SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
             mapFragment.getMapAsync(this);
@@ -97,42 +99,38 @@ public class LocationActivity extends AppCompatActivity implements OnMapReadyCal
     }
 
     private void markMap() {
+
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             checkPermission();
             return;
         }
 
-        location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        location  = getLastKnownLocation();
 
         if (location != null) {
             longitude = location.getLongitude();
             latitude = location.getLatitude();
-        } else {
-            LocationListener ln = new LocationListener() {
-                @Override
-                public void onLocationChanged(Location location) {
-                    longitude = location.getLongitude();
-                    latitude = location.getLatitude();
-                }
-
-                @Override
-                public void onStatusChanged(String s, int i, Bundle bundle) {
-
-                }
-
-                @Override
-                public void onProviderEnabled(String s) {
-
-                }
-
-                @Override
-                public void onProviderDisabled(String s) {
-
-                }
-            };
-
-            lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 0, ln);
         }
+
+        Log.d(TAG, "LATLNG: " + latitude + longitude);
+    }
+
+    @SuppressLint("MissingPermission")
+    private Location getLastKnownLocation() {
+        mLocationManager = (LocationManager) getApplicationContext().getSystemService(LOCATION_SERVICE);
+        List<String> providers = mLocationManager.getProviders(true);
+        Location bestLocation = null;
+        for (String provider : providers) {
+            Location l = mLocationManager.getLastKnownLocation(provider);
+            if (l == null) {
+                continue;
+            }
+            if (bestLocation == null || l.getAccuracy() < bestLocation.getAccuracy()) {
+                bestLocation = l;
+            }
+        }
+
+        return bestLocation;
     }
 
     @Override
@@ -206,7 +204,8 @@ public class LocationActivity extends AppCompatActivity implements OnMapReadyCal
                         currentMarker.setPosition(latlng);
                     }else{
                         Marker marker = mMap.addMarker(new MarkerOptions().position(latlng).title(vol.getFirstName()+" "+vol.getLastName()));
-                        marker.setIcon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_launcher));
+                        marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.car_marker));
+                        marker.setRotation(5);
                         volMarker.put(vol.getId(), marker);
                     }
                 }else{
@@ -249,7 +248,7 @@ public class LocationActivity extends AppCompatActivity implements OnMapReadyCal
         }else{
             mMap = googleMap;
             LatLng current = new LatLng(latitude, longitude);
-            myMarker = mMap.addMarker(new MarkerOptions().position(current).title("You're here!"));
+            myMarker = mMap.addMarker(new MarkerOptions().position(current));
             myMarker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.mymarkersmall));
             mMap.moveCamera(CameraUpdateFactory.newLatLng(current));
             mMap.animateCamera(CameraUpdateFactory.zoomTo(16.0f));
