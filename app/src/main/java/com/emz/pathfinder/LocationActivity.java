@@ -250,6 +250,7 @@ public class LocationActivity extends AppCompatActivity implements OnMapReadyCal
             mMap = googleMap;
             LatLng current = new LatLng(latitude, longitude);
             myMarker = mMap.addMarker(new MarkerOptions().position(current).title("You're here!"));
+            myMarker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.mymarkersmall));
             mMap.moveCamera(CameraUpdateFactory.newLatLng(current));
             mMap.animateCamera(CameraUpdateFactory.zoomTo(16.0f));
 
