@@ -142,7 +142,7 @@ public class JobApplyActivity extends AppCompatActivity {
         getSupportActionBar().setTitle(currentJob.getName());
         titleTv.setText("I want to apply for "+currentJob.getName());
         toTv.setText(currentEmp.getName());
-        fromTv.setText(users.getFname()+" "+users.getLname()+" ("+users.getEmail()+")");
+        fromTv.setText(users.getFullName()+" ("+users.getEmail()+")");
 
         jobApplyLayout.setVisibility(View.VISIBLE);
         progressBar.setVisibility(View.GONE);

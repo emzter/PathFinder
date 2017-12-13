@@ -193,4 +193,6 @@ public class Users {
     public void setOtherlink(String otherlink) {
         this.otherlink = otherlink;
     }
+
+    public String getFullName() { return fname+" "+lname; }
 }

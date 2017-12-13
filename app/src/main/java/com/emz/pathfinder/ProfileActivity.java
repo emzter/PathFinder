@@ -125,7 +125,7 @@ public class ProfileActivity extends AppCompatActivity {
         titleNameTv = findViewById(R.id.profile_title_name);
         titleEmailTv = findViewById(R.id.profile_title_email);
 
-        nameTV.setText(currentUser.getFname()+" "+currentUser.getLname());
+        nameTV.setText(currentUser.getFullName());
         emailTV.setText(currentUser.getEmail());
 
         mViewPager = findViewById(R.id.htab_viewpager);
@@ -138,7 +138,7 @@ public class ProfileActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-        titleNameTv.setText(currentUser.getFname()+" "+currentUser.getLname());
+        titleNameTv.setText(currentUser.getFullName());
         titleEmailTv.setText(currentUser.getEmail());
 
         titleNameTv.setVisibility(View.INVISIBLE);

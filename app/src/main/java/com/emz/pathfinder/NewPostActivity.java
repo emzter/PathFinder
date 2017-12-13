@@ -115,8 +115,7 @@ public class NewPostActivity extends AppCompatActivity {
     }
 
     private void setupView() {
-        String fullname = users.getFname()+" "+users.getLname();
-        nameTv.setText(fullname);
+        nameTv.setText(users.getFullName());
         Glide.with(profile_pic.getContext()).load(utils.PROFILEPIC_URL+users.getProPic()).apply(RequestOptions.centerCropTransform().error(R.drawable.defaultprofilepicture)).into(profile_pic);
     }
 

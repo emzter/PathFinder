@@ -32,6 +32,7 @@ import com.emz.pathfinder.Fragments.NotificationFragment;
 import com.emz.pathfinder.Fragments.SearchFragment;
 import com.emz.pathfinder.Fragments.TimelineFragment;
 import com.emz.pathfinder.Models.Users;
+import com.emz.pathfinder.Models.Volunteer;
 import com.emz.pathfinder.Utils.UserHelper;
 import com.emz.pathfinder.Utils.Utils;
 import com.google.firebase.iid.FirebaseInstanceId;
@@ -154,7 +155,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void onActionLocationClicked() {
-        Intent intent = new Intent(this, LocationActivity.class);
+        Intent intent = new Intent(this, VolunteerActivity.class);
         startActivity(intent);
     }
 
@@ -267,9 +268,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
     private void setupView() {
-        String fullname = users.getFname()+" "+users.getLname();
         navEMailText.setText(users.getEmail());
-        navNameText.setText(fullname);
+        navNameText.setText(users.getFullName());
         Log.d(TAG, users.getProPic());
 
         Glide.with(navProPic.getContext()).load(utils.PROFILEPIC_URL+users.getProPic()).apply(RequestOptions.centerCropTransform().error(R.drawable.defaultprofilepicture)).into(navProPic);
