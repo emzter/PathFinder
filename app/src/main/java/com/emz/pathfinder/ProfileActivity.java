@@ -1,7 +1,6 @@
 package com.emz.pathfinder;
 
 import android.annotation.SuppressLint;
-import android.os.Build;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.TabLayout;
@@ -26,9 +25,6 @@ import com.emz.pathfinder.Utils.Utils;
 import com.rw.velocity.Velocity;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-
-import static com.emz.pathfinder.Utils.Ui.slideDown;
-import static com.emz.pathfinder.Utils.Ui.slideUp;
 
 public class ProfileActivity extends AppCompatActivity {
 

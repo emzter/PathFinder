@@ -3,26 +3,8 @@ import android.content.Intent;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
-import android.util.Patterns;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
-
-import com.emz.pathfinder.Utils.UserHelper;
-import com.emz.pathfinder.Utils.Utils;
-import com.rw.velocity.Velocity;
-
-import java.util.Objects;
-
-import static com.emz.pathfinder.Utils.Ui.createProgressDialog;
-import static com.emz.pathfinder.Utils.Ui.createSnackbar;
-import static com.emz.pathfinder.Utils.Ui.dismissProgressDialog;
 
 public class StartActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -76,11 +58,11 @@ public class StartActivity extends AppCompatActivity implements View.OnClickList
 
 
     private void startMainActivity() {
+
         final Runnable runnable = new Runnable() {
             @Override
             public void run() {
                 startActivity(new Intent(StartActivity.this, MainActivity.class));
-                dismissProgressDialog();
                 finish();
             }
         };

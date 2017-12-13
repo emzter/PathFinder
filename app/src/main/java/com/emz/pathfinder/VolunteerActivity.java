@@ -1,22 +1,28 @@
 package com.emz.pathfinder;
 
+import android.*;
+import android.Manifest;
 import android.app.Service;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.location.Location;
+import android.location.LocationManager;
+import android.os.Build;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.emz.pathfinder.Models.Volunteer;
+import com.emz.pathfinder.Models.VolunteerCategory;
+import com.emz.pathfinder.Utils.Ui;
 import com.emz.pathfinder.Utils.UserHelper;
 import com.emz.pathfinder.Utils.Utils;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -30,6 +36,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.rw.velocity.Velocity;
 
@@ -58,8 +65,12 @@ public class VolunteerActivity extends AppCompatActivity implements OnMapReadyCa
     private static Double longitude;
     private static Double latitude;
     private LinkedHashMap<Integer, Marker> volMarker;
+    private List<VolunteerCategory> volCatList;
     private Marker myMarker;
     private ScheduledExecutorService executorService;
+    private MaterialDialog materialDialog;
+
+    private ScheduledExecutorService orderExcutorService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,7 +82,10 @@ public class VolunteerActivity extends AppCompatActivity implements OnMapReadyCa
         utils = new Utils(this);
         usrHelper = new UserHelper(this);
 
+        volCatList = new ArrayList<>();
         volMarker = new LinkedHashMap<>();
+
+        getAllCat();
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
@@ -80,6 +94,7 @@ public class VolunteerActivity extends AppCompatActivity implements OnMapReadyCa
     @Override
     protected void onStart() {
         super.onStart();
+        checkPermission();
         if(SmartLocation.with(this).location().state().locationServicesEnabled()){
             Log.d(TAG, "LocationService: Found");
             SmartLocation.with(this)
@@ -90,6 +105,18 @@ public class VolunteerActivity extends AppCompatActivity implements OnMapReadyCa
             Log.e(TAG, "LocationService: None");
             onLocationServiceUnavailable();
         }
+    }
+
+    private void checkPermission() {
+        if(ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED){
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
     @Override
@@ -103,6 +130,8 @@ public class VolunteerActivity extends AppCompatActivity implements OnMapReadyCa
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        mMap.getUiSettings().setMapToolbarEnabled(false);
+        mMap.getUiSettings().setTiltGesturesEnabled(false);
     }
 
     @Override
@@ -112,7 +141,7 @@ public class VolunteerActivity extends AppCompatActivity implements OnMapReadyCa
 
     @OnClick(R.id.goto_user_fab)
     public void goToUser() {
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(myMarker.getPosition(), 16.0f));
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(myMarker.getPosition(), 15.5f));
     }
 
     private void markMap() {
@@ -156,7 +185,7 @@ public class VolunteerActivity extends AppCompatActivity implements OnMapReadyCa
 
                     @Override
                     public void onVelocityFailed(Velocity.Response response) {
-
+                        //TODO: Can't Connect to the Server
                     }
                 });
     }
@@ -219,29 +248,136 @@ public class VolunteerActivity extends AppCompatActivity implements OnMapReadyCa
 
     @OnClick(R.id.request_button)
     public void callVolunteer() {
-        AlertDialog.Builder dialog = new AlertDialog.Builder(this);
-        dialog.setTitle("CALL VOLUNTEER");
-        String[] options = { "A", "B", "C" };
-        dialog.setItems(options, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
+        ArrayList<String> options = new ArrayList<>();
+        for (VolunteerCategory vol : volCatList) {
+            options.add(vol.getName());
+        }
+        new MaterialDialog.Builder(this)
+                .title("CALL VOLUNTEER")
+                .items(options)
+                .itemsCallback(new MaterialDialog.ListCallback() {
+                    @Override
+                    public void onSelection(MaterialDialog dialog, View itemView, int position, CharSequence text) {
+                        requestVolunteer(position);
+                    }
+                })
+                .show();
+    }
 
-            }
-        });
-        dialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
+    private void requestVolunteer(int position) {
+        Velocity.post(utils.VOLUNTEER_URL+"requestVolunteer")
+                .withFormData("id", usrHelper.getUserId())
+                .withFormData("volcat", String.valueOf(volCatList.get(position).getId()))
+                .withFormData("lat", String.valueOf(latitude))
+                .withFormData("lng", String.valueOf(longitude))
+                .connect(new Velocity.ResponseListener() {
+                    @Override
+                    public void onVelocitySuccess(Velocity.Response response) {
+                        JsonParser parser = new JsonParser();
+                        JsonObject jsonObj = parser.parse(response.body).getAsJsonObject();
 
+                        boolean status = jsonObj.get("status").getAsBoolean();
+                        if(status){
+                            final int orderId = jsonObj.get("order_id").getAsInt();
+                            materialDialog = new MaterialDialog.Builder(VolunteerActivity.this)
+                                    .title(R.string.progress_dialog_title)
+                                    .content(R.string.requesting_a_volunteer)
+                                    .progress(true, 0)
+                                    .canceledOnTouchOutside(false)
+                                    .autoDismiss(false)
+                                    .negativeText("Cancel")
+                                    .onNegative(new MaterialDialog.SingleButtonCallback() {
+                                        @Override
+                                        public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                            cancelOrder(orderId);
+                                        }
+                                    })
+                                    .show();
+                            checkOrderStatus(orderId);
+                        }
+
+                        Log.d(TAG, "VOLUNTEER-REQUEST: Sent Order");
+                    }
+
+                    @Override
+                    public void onVelocityFailed(Velocity.Response response) {
+                        //TODO: Can't Connect to the Server
+                    }
+                });
+    }
+
+    private void checkOrderStatus(final int orderId) {
+//        ORDER STATUS (0: Placing, 1: Accepted, 2: On Duty, 3: Completed, 4: Canceled)
+        orderExcutorService = Executors.newSingleThreadScheduledExecutor();
+        orderExcutorService.scheduleAtFixedRate(new Runnable() {
+            @Override
+            public void run() {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Velocity.get(utils.VOLUNTEER_URL+"checkOrderStatus/"+orderId)
+                                .connect(new Velocity.ResponseListener() {
+                                    @Override
+                                    public void onVelocitySuccess(Velocity.Response response) {
+                                        JsonParser parser = new JsonParser();
+                                        JsonObject jsonObj = parser.parse(response.body).getAsJsonObject();
+
+                                        boolean status = jsonObj.get("status").getAsBoolean();
+                                        if(status){
+                                            Log.d(TAG, "VOLUNTEER-REQUEST: Order Accepted");
+                                            int vid = jsonObj.get("volunteer_id").getAsInt();
+                                            orderAccepted(vid);
+                                            orderExcutorService.shutdown();
+                                        }
+
+                                        Log.d(TAG, "VOLUNTEER-REQUEST: Status Checking");
+                                    }
+
+                                    @Override
+                                    public void onVelocityFailed(Velocity.Response response) {
+                                        //TODO: Can't Connect to the Server
+                                    }
+                                });
+                    }
+                });
             }
-        });
-        dialog.show();
+        }, 0, 5, TimeUnit.SECONDS);
+    }
+
+    private void orderAccepted(int vid) {
+//        TODO: When order is accept show volunteer profile
+        materialDialog.dismiss();
+    }
+
+    private void cancelOrder(int orderId) {
+        Velocity.post(utils.VOLUNTEER_URL+"setOrderStatus/"+orderId)
+                .withFormData("status", String.valueOf(4))
+                .connect(new Velocity.ResponseListener() {
+                    @Override
+                    public void onVelocitySuccess(Velocity.Response response) {
+                        JsonParser parser = new JsonParser();
+                        JsonObject jsonObj = parser.parse(response.body).getAsJsonObject();
+
+                        boolean status = jsonObj.get("status").getAsBoolean();
+                        if(status){
+                            Log.d(TAG, "VOLUNTEER-REQUEST: Order Canceled");
+                            materialDialog.dismiss();
+                            orderExcutorService.shutdown();
+                        }
+                    }
+
+                    @Override
+                    public void onVelocityFailed(Velocity.Response response) {
+                        //TODO: Can't Connect to the Server
+                    }
+                });
     }
 
     private void onLocationServiceUnavailable() {
         new MaterialDialog.Builder(this)
-                .title("Use Google's Location Services?")
-                .content("Let Google help apps determine location. This means sending anonymous location data to Google, even when no apps are running.")
-                .positiveText("Agree")
+                .title(R.string.google_location_service_request_title)
+                .content(R.string.google_location_service_request_body)
+                .positiveText(R.string.agree)
                 .onPositive(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
@@ -249,7 +385,30 @@ public class VolunteerActivity extends AppCompatActivity implements OnMapReadyCa
                         startActivity(intent);
                     }
                 })
-                .negativeText("Disagree")
+                .negativeText(R.string.disagree)
                 .show();
+    }
+
+    private void getAllCat() {
+        Velocity.get(utils.VOLUNTEER_URL+"getAllCat")
+                .connect(new Velocity.ResponseListener() {
+                    @Override
+                    public void onVelocitySuccess(Velocity.Response response) {
+                        Gson gson = new Gson();
+                        JsonParser parser = new JsonParser();
+                        JsonArray jsonArray = parser.parse(response.body).getAsJsonArray();
+
+                        for (int i = 0; i < jsonArray.size(); i++) {
+                            JsonElement mJson = jsonArray.get(i);
+                            VolunteerCategory cat = gson.fromJson(mJson, VolunteerCategory.class);
+                            volCatList.add(cat);
+                        }
+                    }
+
+                    @Override
+                    public void onVelocityFailed(Velocity.Response response) {
+                        //TODO: Can't Connect to the Server
+                    }
+                });
     }
 }

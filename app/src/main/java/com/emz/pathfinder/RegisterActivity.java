@@ -12,15 +12,14 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.emz.pathfinder.Utils.UserHelper;
 import com.emz.pathfinder.Utils.Utils;
 import com.rw.velocity.Velocity;
 
 import java.util.Objects;
 
-import static com.emz.pathfinder.Utils.Ui.createProgressDialog;
 import static com.emz.pathfinder.Utils.Ui.createSnackbar;
-import static com.emz.pathfinder.Utils.Ui.dismissProgressDialog;
 
 public class RegisterActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -35,6 +34,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
     private boolean valid;
     private UserHelper usrHelper;
+    private MaterialDialog materialDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,7 +113,12 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         }
 
         registerBtn.setEnabled(false);
-        createProgressDialog(this, getString(R.string.registering));
+        materialDialog = new MaterialDialog.Builder(this)
+                .title(R.string.progress_dialog_title)
+                .content(R.string.registering)
+                .progress(true, 0)
+                .cancelable(false)
+                .show();
 
         registerUser(fname, lname, email, pass);
     }
@@ -137,7 +142,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                     public void onVelocitySuccess(Velocity.Response response) {
                         if(Objects.equals(response.body, "Success")){
                             Log.d(TAG, response.body);
-                            dismissProgressDialog();
+                            materialDialog.dismiss();
                             onRegisterSuccess();
                         }else if(Objects.equals(response.body, "EMailUsed")){
                             Log.w(TAG, response.body);
@@ -242,17 +247,22 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         }
 
         registerBtn.setEnabled(true);
-        dismissProgressDialog();
+        materialDialog.dismiss();
     }
 
     private void onRegisterSuccess(){
-        dismissProgressDialog();
-        createProgressDialog(this, getString(R.string.AuthenticatingText));
+        materialDialog.dismiss();
+        materialDialog = new MaterialDialog.Builder(this)
+                .title(R.string.progress_dialog_title)
+                .content(R.string.AuthenticatingText)
+                .progress(true, 0)
+                .cancelable(false)
+                .show();
         authUser(email, pass);
     }
 
     private void onLoginSuccess(String uid){
-        dismissProgressDialog();
+        materialDialog.dismiss();
         usrHelper.createSession(uid);
         startMainActivity();
     }
@@ -271,7 +281,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         } else if (stage == 2) {
             createSnackbar(view, getString(R.string.connection_error));
         }
-        dismissProgressDialog();
+        materialDialog.dismiss();
         startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
         finish();
     }

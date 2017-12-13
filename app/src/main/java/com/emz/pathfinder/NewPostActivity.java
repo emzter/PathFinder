@@ -9,9 +9,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.emz.pathfinder.Adapters.TimelineAdapter;
 import com.emz.pathfinder.Fragments.TimelineFragment;
 import com.emz.pathfinder.Models.Users;
 import com.emz.pathfinder.Utils.UserHelper;
@@ -19,9 +19,6 @@ import com.emz.pathfinder.Utils.Utils;
 import com.rw.velocity.Velocity;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-
-import static com.emz.pathfinder.Utils.Ui.createProgressDialog;
-import static com.emz.pathfinder.Utils.Ui.dismissProgressDialog;
 
 public class NewPostActivity extends AppCompatActivity {
 
@@ -33,6 +30,8 @@ public class NewPostActivity extends AppCompatActivity {
     private UserHelper usrHelper;
     private Users users;
     private Utils utils;
+
+    private MaterialDialog materialDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,14 +76,21 @@ public class NewPostActivity extends AppCompatActivity {
 
     private void createNewPost() {
         String postcontent = statusText.getText().toString();
-        createProgressDialog(this, getString(R.string.creating_new_post));
+
+        materialDialog = new MaterialDialog.Builder(this)
+                .title(R.string.progress_dialog_title)
+                .content(R.string.creating_new_post)
+                .progress(true, 0)
+                .cancelable(false)
+                .show();
+
         Velocity.post(utils.TIMELINE_URL+"/post/")
                 .withFormData("id", usrHelper.getUserId())
                 .withFormData("message", postcontent)
                 .connect(new Velocity.ResponseListener() {
                     @Override
                     public void onVelocitySuccess(Velocity.Response response) {
-                        dismissProgressDialog();
+                        materialDialog.dismiss();
                         TimelineFragment.updateList();
                         finish();
                     }

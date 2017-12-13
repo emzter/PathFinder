@@ -5,29 +5,20 @@ import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.util.Patterns;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.animation.Animation;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.emz.pathfinder.Utils.Ui;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.emz.pathfinder.Utils.UserHelper;
 import com.emz.pathfinder.Utils.Utils;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import com.rw.velocity.Velocity;
 
 import java.util.Objects;
 
-import static com.emz.pathfinder.Utils.Ui.createProgressDialog;
 import static com.emz.pathfinder.Utils.Ui.createSnackbar;
-import static com.emz.pathfinder.Utils.Ui.dismissProgressDialog;
 
 public class LoginActivity extends AppCompatActivity  implements View.OnClickListener {
 
@@ -41,6 +32,7 @@ public class LoginActivity extends AppCompatActivity  implements View.OnClickLis
 
     private boolean valid;
     private UserHelper usrHelper;
+    private MaterialDialog materialDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -118,7 +110,12 @@ public class LoginActivity extends AppCompatActivity  implements View.OnClickLis
             return;
         }
 
-        createProgressDialog(this, getString(R.string.AuthenticatingText));
+        materialDialog = new MaterialDialog.Builder(this)
+                .title(R.string.progress_dialog_title)
+                .content(R.string.AuthenticatingText)
+                .progress(true, 0)
+                .cancelable(false)
+                .show();
 
         Velocity.post(utils.LOGIN_URL)
                 .withFormData("email", email)
@@ -144,7 +141,7 @@ public class LoginActivity extends AppCompatActivity  implements View.OnClickLis
     }
 
     private void onLoginSuccess(String uid){
-        dismissProgressDialog();
+        materialDialog.dismiss();
         usrHelper.createSession(uid);
         startMainActivity();
     }
@@ -165,7 +162,7 @@ public class LoginActivity extends AppCompatActivity  implements View.OnClickLis
         }
 
         loginBtn.setEnabled(true);
-        dismissProgressDialog();
+        materialDialog.dismiss();
     }
 
     private boolean validate() {

@@ -10,4 +10,6 @@ public class PostActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post);
     }
+
+    //TODO: A POST AND COMMENT ACTIVITY
 }

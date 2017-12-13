@@ -103,4 +103,10 @@
     <string name="from">From :</string>
     <string name="messages_optional">Messages (Optional)</string>
     <string name="messages_title">Messages</string>
+    <string name="google_location_service_request_title">Use Google\'s Location Services?</string>
+    <string name="google_location_service_request_body">Let Google help apps determine location. This means sending anonymous location data to Google, even when no apps are running.</string>
+    <string name="agree">Agree</string>
+    <string name="disagree">Disagree</string>
+    <string name="progress_dialog_title">Please Wait...</string>
+    <string name="requesting_a_volunteer">Requesting a volunteer...</string>
 </resources>
