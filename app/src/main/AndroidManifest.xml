@@ -20,8 +20,8 @@
 
         <activity
             android:name=".SplashScreenActivity"
-            android:screenOrientation="portrait"
             android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Dark">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -113,18 +113,19 @@
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
         <meta-data
-            tools:replace="android:value"
             android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version" />
+            android:value="@integer/google_play_services_version"
+            tools:replace="android:value" />
 
         <activity
             android:name=".JobApplyActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label=""
             android:parentActivityName=".JobDetailActivity" />
-        <activity android:name=".VolunteerActivity"
+        <activity
+            android:name=".VolunteerActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:parentActivityName=".MainActivity"/>
+            android:parentActivityName=".MainActivity" />
     </application>
 
 </manifest>

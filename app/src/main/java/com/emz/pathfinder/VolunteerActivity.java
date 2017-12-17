@@ -17,9 +17,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.RatingBar;
+import android.widget.TextView;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.bumptech.glide.Glide;
 import com.emz.pathfinder.Models.Volunteer;
 import com.emz.pathfinder.Models.VolunteerCategory;
 import com.emz.pathfinder.Utils.Ui;
@@ -40,6 +43,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.rw.velocity.Velocity;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -49,6 +53,7 @@ import java.util.concurrent.TimeUnit;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import de.hdodenhof.circleimageview.CircleImageView;
 import io.nlopez.smartlocation.OnLocationUpdatedListener;
 import io.nlopez.smartlocation.SmartLocation;
 import io.nlopez.smartlocation.location.config.LocationParams;
@@ -346,12 +351,30 @@ public class VolunteerActivity extends AppCompatActivity implements OnMapReadyCa
 
     private void orderAccepted(int vid) {
         //TODO: When order is accept show volunteer profile
-        //TODO: Add Url
         Velocity.get(utils.VOLUNTEER_URL+"getUserDetail/"+vid)
                 .connect(new Velocity.ResponseListener() {
                     @Override
                     public void onVelocitySuccess(Velocity.Response response) {
+                        materialDialog.dismiss();
                         Volunteer volunteer = response.deserialize(Volunteer.class);
+                        materialDialog = new MaterialDialog.Builder(VolunteerActivity.this)
+                                .title("We found your volunteer!")
+                                .customView(R.layout.dialog_volunteer_profile, false)
+                                .positiveText("OK")
+                                .show();
+
+                        View customView = materialDialog.getCustomView();
+                        CircleImageView propic = customView.findViewById(R.id.dialog_profile_pic);
+                        TextView name = customView.findViewById(R.id.dialog_name);
+                        TextView email = customView.findViewById(R.id.dialog_email);
+                        RatingBar rating = customView.findViewById(R.id.dialog_rating);
+
+                        Glide.with(getBaseContext()).load(utils.PROFILEPIC_URL+volunteer.getProPic()).into(propic);
+                        name.setText(volunteer.getFullName());
+                        email.setText(volunteer.getEmail());
+                        rating.setRating(volunteer.getRating());
+
+                        //TODO: Show rating and markmap
                     }
 
                     @Override
@@ -359,7 +382,6 @@ public class VolunteerActivity extends AppCompatActivity implements OnMapReadyCa
                         //TODO: Can't Connect to the Server
                     }
                 });
-        materialDialog.dismiss();
     }
 
     private void cancelOrder(int orderId) {

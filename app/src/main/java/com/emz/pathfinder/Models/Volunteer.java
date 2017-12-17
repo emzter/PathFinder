@@ -2,7 +2,9 @@ package com.emz.pathfinder.Models;
 
 import com.google.gson.annotations.SerializedName;
 
-public class Volunteer {
+import java.io.Serializable;
+
+public class Volunteer implements Serializable {
     @SerializedName("id")
     private int id;
     @SerializedName("email")
@@ -29,8 +31,24 @@ public class Volunteer {
     private double lat;
     @SerializedName("lng")
     private double lng;
+    @SerializedName("rating")
+    private float rating;
 
-    public Volunteer(int id, String email, String firstName, String lastName, String proPic, String telephone, int carType, String category, int status, int validate, int online, double lat, double lng) {
+    public Volunteer(int id, String email, String firstName, String lastName, String proPic, String telephone, int carType, String category, int status, int validate, int online) {
+        this.id = id;
+        this.email = email;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.proPic = proPic;
+        this.telephone = telephone;
+        this.carType = carType;
+        this.category = category;
+        this.status = status;
+        this.validate = validate;
+        this.online = online;
+    }
+
+    public Volunteer(int id, String email, String firstName, String lastName, String proPic, String telephone, int carType, String category, int status, int validate, int online, double lat, double lng, float rating) {
         this.id = id;
         this.email = email;
         this.firstName = firstName;
@@ -44,6 +62,7 @@ public class Volunteer {
         this.online = online;
         this.lat = lat;
         this.lng = lng;
+        this.rating = rating;
     }
 
     public int getId() {
@@ -98,6 +117,14 @@ public class Volunteer {
         return lng;
     }
 
+    public float getRating() {
+        return rating;
+    }
+
+    public void setRating(float rating) {
+        this.rating = rating;
+    }
+
     public boolean isOnline(){
         boolean status = false;
         if(online == 0){
@@ -106,5 +133,9 @@ public class Volunteer {
             status = true;
         }
         return status;
+    }
+
+    public String getFullName(){
+        return firstName+" "+lastName;
     }
 }

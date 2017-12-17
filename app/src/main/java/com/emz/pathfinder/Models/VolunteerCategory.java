@@ -1,9 +1,5 @@
 package com.emz.pathfinder.Models;
 
-/**
- * Created by im_ae on 13/12/2560.
- */
-
 public class VolunteerCategory {
     private int id;
     private String name;
