@@ -345,7 +345,20 @@ public class VolunteerActivity extends AppCompatActivity implements OnMapReadyCa
     }
 
     private void orderAccepted(int vid) {
-//        TODO: When order is accept show volunteer profile
+        //TODO: When order is accept show volunteer profile
+        //TODO: Add Url
+        Velocity.get(utils.VOLUNTEER_URL+"getUserDetail/"+vid)
+                .connect(new Velocity.ResponseListener() {
+                    @Override
+                    public void onVelocitySuccess(Velocity.Response response) {
+                        Volunteer volunteer = response.deserialize(Volunteer.class);
+                    }
+
+                    @Override
+                    public void onVelocityFailed(Velocity.Response response) {
+                        //TODO: Can't Connect to the Server
+                    }
+                });
         materialDialog.dismiss();
     }
 
