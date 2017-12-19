@@ -24,12 +24,16 @@ import com.emz.pathfinder.Models.Jobs;
 import com.emz.pathfinder.Utils.UlTagHandler;
 import com.emz.pathfinder.Utils.UserHelper;
 import com.emz.pathfinder.Utils.Utils;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.rw.velocity.Velocity;
 
 import java.text.SimpleDateFormat;
 import java.util.Objects;
 
 public class JobDetailActivity extends AppCompatActivity {
+
+    //TODO: EMP CATEGORY
 
     private static final String TAG = "JobDetailActivity";
 
@@ -42,8 +46,8 @@ public class JobDetailActivity extends AppCompatActivity {
     private ScrollView jobDetailLayout;
     private ProgressBar progressBar;
     private LinearLayout empAboutLayout, empAddressLayout, empEmailLayout, empTelLayout;
-    private TextView empName, empAbout, empCat, empEmail, empTel, jobResponse, jobQualify, jobBenefit, jobCapacity,
-            jobCapacityUnit, jobLevel, jobSalary, jobSalaryType, jobNegotiable, jobExp, jobEdu, jobCategory, jobPostedDate;
+    private TextView empName, empAbout, empCat, empEmail, empTel, jobResponse, jobQualify, jobBenefit, jobCapacity, applyBtnIcon, applyBtnText,
+            jobCapacityUnit, jobLevel, jobSalary, jobSalaryType, jobNegotiable, jobExp, jobEdu, jobCategory, jobPostedDate, favStar;
     private ImageView empLogo;
     private LinearLayout saveBtn, applyBtn;
 
@@ -127,17 +131,88 @@ public class JobDetailActivity extends AppCompatActivity {
         setEmpView();
         setJobView();
 
-        applyBtn.setOnClickListener(new View.OnClickListener() {
+        setFavStar();
+
+        saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent apply = new Intent(JobDetailActivity.this, JobApplyActivity.class);
-                apply.putExtra("id", jobId);
-                startActivityForResult(apply, 0);
+                setFavJob();
             }
         });
 
+        if(currentJob.isApply()){
+            applyBtnIcon.setText(R.string.fa_check);
+            applyBtnText.setText(R.string.sent);
+        }else{
+            applyBtnIcon.setText(R.string.fa_paper_plane);
+            applyBtnText.setText(R.string.apply);
+            applyBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent apply = new Intent(JobDetailActivity.this, JobApplyActivity.class);
+                    apply.putExtra("job", currentJob);
+                    apply.putExtra("emp", currentEmp);
+                    startActivityForResult(apply, 0);
+                }
+            });
+        }
+
         jobDetailLayout.setVisibility(View.VISIBLE);
         progressBar.setVisibility(View.GONE);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(requestCode == 0){
+            if(resultCode == RESULT_OK){
+                finish();
+            }
+        }
+    }
+
+    private void setFavJob() {
+        Velocity.post(utils.UTILITIES_URL+"saveJob/"+jobId)
+                .withFormData("uid", usrHelper.getUserId())
+                .connect(new Velocity.ResponseListener() {
+                    @Override
+                    public void onVelocitySuccess(Velocity.Response response) {
+                        JsonParser parser = new JsonParser();
+                        JsonObject jsonObject = parser.parse(response.body).getAsJsonObject();
+
+                        boolean status = jsonObject.get("success").getAsBoolean();
+
+                        if(status){
+                            boolean add = jsonObject.get("add").getAsBoolean();
+                            if(add){
+                                currentJob.setFavorite(true);
+                                setFavStar();
+                                Log.d(TAG, "SUCCESS ADD");
+                            }else{
+                                currentJob.setFavorite(false);
+                                setFavStar();
+                                Log.d(TAG, "SUCCESS DELETE");
+                            }
+
+                        }else{
+                            Log.e(TAG, "ERROR FAVORITES");
+                        }
+                    }
+
+                    @Override
+                    public void onVelocityFailed(Velocity.Response response) {
+                        Log.e(TAG, "ERROR FAVORITES CAN'T CONNECT");
+                    }
+                });
+    }
+
+    private void setFavStar() {
+        if(currentJob.isFavorite()){
+            favStar.setText(R.string.fa_star);
+            favStar.setTextColor(getResources().getColor(R.color.favorited));
+        }else{
+            favStar.setText(R.string.fa_star_o);
+            favStar.setTextColor(getResources().getColor(R.color.monsoon));
+        }
     }
 
     private void setJobView() {
@@ -213,8 +288,11 @@ public class JobDetailActivity extends AppCompatActivity {
         empEmailLayout = findViewById(R.id.emp_detail_contact_email_layout);
         empTelLayout = findViewById(R.id.emp_detail_contact_number_layout);
 
+        favStar = findViewById(R.id.favStar);
         saveBtn = findViewById(R.id.save_btn);
         applyBtn = findViewById(R.id.applyBtn);
+        applyBtnIcon = findViewById(R.id.applyBtn_icon);
+        applyBtnText = findViewById(R.id.applyBtn_text);
 
         jobDetailLayout.setVisibility(View.GONE);
         empAddressLayout.setVisibility(View.GONE);

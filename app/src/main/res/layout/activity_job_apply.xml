@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/job_apply_main_layout"
     tools:context="com.emz.pathfinder.JobApplyActivity">
 
     <ScrollView

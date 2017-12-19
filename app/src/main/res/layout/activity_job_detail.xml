@@ -55,6 +55,7 @@
                 android:padding="8dp">
 
                 <TextView
+                    android:id="@+id/favStar"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/font_awesome"
@@ -84,22 +85,22 @@
                 android:layout_alignParentEnd="true">
 
                 <TextView
+                    android:id="@+id/applyBtn_icon"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/fa_paper_plane"
-                    android:textColor="@color/white"
                     android:fontFamily="@font/font_awesome"
+                    android:textColor="@color/white"
                     android:textSize="16sp"
-                    android:textStyle="bold"/>
+                    android:textStyle="bold" />
 
                 <TextView
-                    android:layout_marginStart="6dp"
+                    android:id="@+id/applyBtn_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/apply"
+                    android:layout_marginStart="6dp"
                     android:textColor="@color/white"
                     android:textSize="16sp"
-                    android:textStyle="bold"/>
+                    android:textStyle="bold" />
 
             </LinearLayout>
 

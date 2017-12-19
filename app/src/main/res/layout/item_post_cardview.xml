@@ -126,31 +126,31 @@
                 android:id="@+id/commentBtnText"/>
         </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/feed_button_share"
-            style="@style/AppTheme.LikeButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/feed_main_text"
-            android:layout_toEndOf="@id/feed_button_reply"
-            android:orientation="horizontal">
+        <!--<LinearLayout-->
+            <!--android:id="@+id/feed_button_share"-->
+            <!--style="@style/AppTheme.LikeButton"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_below="@id/feed_main_text"-->
+            <!--android:layout_toEndOf="@id/feed_button_reply"-->
+            <!--android:orientation="horizontal">-->
 
-            <TextView
-                android:id="@+id/shareBtnIcon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/font_awesome"
-                android:text="@string/fa_share_alt"
-                android:textAppearance="@style/Font.Button"
-                android:textColor="@color/monsoon" />
+            <!--<TextView-->
+                <!--android:id="@+id/shareBtnIcon"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:fontFamily="@font/font_awesome"-->
+                <!--android:text="@string/fa_share_alt"-->
+                <!--android:textAppearance="@style/Font.Button"-->
+                <!--android:textColor="@color/monsoon" />-->
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/font_awesome"
-                android:text=" 0"
-                android:id="@+id/shareBtnText"/>
-        </LinearLayout>
+            <!--<TextView-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:fontFamily="@font/font_awesome"-->
+                <!--android:text=" 0"-->
+                <!--android:id="@+id/shareBtnText"/>-->
+        <!--</LinearLayout>-->
 
     </RelativeLayout>
 

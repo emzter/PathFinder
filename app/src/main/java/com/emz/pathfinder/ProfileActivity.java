@@ -17,8 +17,8 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.emz.pathfinder.Fragments.ProfileAboutFragment;
-import com.emz.pathfinder.Fragments.ProfileTimelineFragment;
 import com.emz.pathfinder.Fragments.SearchFragment;
+import com.emz.pathfinder.Fragments.TimelineFragment;
 import com.emz.pathfinder.Models.Users;
 import com.emz.pathfinder.Utils.UserHelper;
 import com.emz.pathfinder.Utils.Utils;
@@ -86,10 +86,16 @@ public class ProfileActivity extends AppCompatActivity {
 
     @SuppressLint("ResourceType")
     private void bindView() {
+        Bundle bundle = new Bundle();
+        bundle.putInt("id", uid);
+
+        final TimelineFragment timelineFragment = new TimelineFragment();
+        timelineFragment.setArguments(bundle);
+
         mPagerAdapter = new FragmentPagerAdapter(getSupportFragmentManager()) {
 
             private final Fragment[] mFragments = new Fragment[]{
-                    new ProfileTimelineFragment(uid),
+                    timelineFragment,
                     new ProfileAboutFragment(currentUser),
                     new SearchFragment(),
             };

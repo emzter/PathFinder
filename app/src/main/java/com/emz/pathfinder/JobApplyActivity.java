@@ -7,25 +7,32 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toolbar;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.emz.pathfinder.Models.Employer;
 import com.emz.pathfinder.Models.Jobs;
 import com.emz.pathfinder.Models.Users;
 import com.emz.pathfinder.Utils.UserHelper;
 import com.emz.pathfinder.Utils.Utils;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.rw.velocity.Velocity;
 
 import java.util.Objects;
+
+import static com.emz.pathfinder.Utils.Ui.createSnackbar;
 
 public class JobApplyActivity extends AppCompatActivity {
 
     private static final String TAG = "JobApplyActivity";
 
-    private int jobId;
     private Utils utils;
     private Jobs currentJob;
     private Employer currentEmp;
@@ -33,6 +40,7 @@ public class JobApplyActivity extends AppCompatActivity {
 
     private ScrollView jobApplyLayout;
     private TextView titleTv, fromTv, toTv;
+    private EditText messageEt;
     private ProgressBar progressBar;
     private Users users;
 
@@ -46,9 +54,10 @@ public class JobApplyActivity extends AppCompatActivity {
         usrHelper = new UserHelper(this);
 
         if(getIntent().getExtras() != null) {
-            jobId = getIntent().getExtras().getInt("id");
+            currentJob = (Jobs) getIntent().getExtras().get("job");
+            currentEmp = (Employer) getIntent().getExtras().get("emp");
             bindView();
-            loadJobDetail();
+            loadUser(usrHelper.getUserId());
         }else{
             finish();
         }
@@ -87,53 +96,8 @@ public class JobApplyActivity extends AppCompatActivity {
 
                     @Override
                     public void onVelocityFailed(Velocity.Response response) {
-                        Log.e("TEST", String.valueOf(R.string.no_internet_connection));
-                    }
-                });
-    }
-
-    private void loadJobDetail() {
-        Velocity.post(utils.UTILITIES_URL+"getJobDetail/"+jobId)
-                .withFormData("uid", usrHelper.getUserId())
-                .connect(new Velocity.ResponseListener() {
-                    @Override
-                    public void onVelocitySuccess(Velocity.Response response) {
-                        if(!Objects.equals(response.body, "")){
-                            Log.d(TAG, response.requestUrl);
-                            Log.d(TAG, response.body);
-                            Log.d(TAG, "Job Details GET");
-                            currentJob = response.deserialize(Jobs.class);
-                            getEmpDetail(currentJob.getCompany_id());
-                        }else{
-                            Log.e(TAG, "Error Getting Job Details");
-                        }
-                    }
-
-                    @Override
-                    public void onVelocityFailed(Velocity.Response response) {
-                        Log.e(TAG, "Error Connect to server.");
-                    }
-                });
-    }
-
-    private void getEmpDetail(int company_id) {
-        Velocity.post(utils.UTILITIES_URL+"getEmpDetail/"+company_id)
-                .connect(new Velocity.ResponseListener() {
-                    @Override
-                    public void onVelocitySuccess(Velocity.Response response) {
-                        if(!Objects.equals(response.body, "")){
-                            Log.d(TAG, response.body);
-                            Log.d(TAG, "Emp Details GET");
-                            currentEmp = response.deserialize(Employer.class);
-                            loadUser(usrHelper.getUserId());
-                        }else{
-                            Log.e(TAG, "Error Getting Emp Details");
-                        }
-                    }
-
-                    @Override
-                    public void onVelocityFailed(Velocity.Response response) {
-                        Log.e(TAG, "Error Connect to server.");
+                        View v = findViewById(R.id.job_apply_main_layout);
+                        createSnackbar(v, getString(R.string.connection_error));
                     }
                 });
     }
@@ -156,6 +120,56 @@ public class JobApplyActivity extends AppCompatActivity {
         fromTv = findViewById(R.id.job_apply_message_from);
         toTv = findViewById(R.id.job_apply_message_to);
 
+        messageEt = findViewById(R.id.job_apply_message);
+
+        LinearLayout applyBtn = findViewById(R.id.applyBtn);
+        applyBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                applyJob();
+            }
+        });
+
         jobApplyLayout.setVisibility(View.GONE);
+    }
+
+
+    public void applyJob(){
+        final MaterialDialog md = new MaterialDialog.Builder(this)
+                .title(R.string.progress_dialog_title)
+                .content(R.string.sending_application)
+                .progress(true, 0)
+                .cancelable(false)
+                .show();
+
+        String message = messageEt.getText().toString();
+        Velocity.post(utils.JOBS_URL+"sendapply")
+                .withFormData("id", String.valueOf(currentJob.getId()))
+                .withFormData("message", message)
+                .withFormData("uid", usrHelper.getUserId())
+                .connect(new Velocity.ResponseListener() {
+                    @Override
+                    public void onVelocitySuccess(Velocity.Response response) {
+                        JsonParser parser = new JsonParser();
+                        JsonObject jsonObject = parser.parse(response.body).getAsJsonObject();
+
+                        boolean status = jsonObject.get("success").getAsBoolean();
+                        if(status){
+                            md.dismiss();
+                            Intent returnIntent = getIntent();
+                            setResult(RESULT_OK, returnIntent);
+                            finish();
+                        }else{
+                            View v = findViewById(R.id.job_apply_main_layout);
+                            createSnackbar(v, getString(R.string.cant_apply_job));
+                        }
+                    }
+
+                    @Override
+                    public void onVelocityFailed(Velocity.Response response) {
+                        View v = findViewById(R.id.job_apply_main_layout);
+                        createSnackbar(v, getString(R.string.connection_error));
+                    }
+                });
     }
 }

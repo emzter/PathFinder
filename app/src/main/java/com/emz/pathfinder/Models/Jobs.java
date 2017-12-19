@@ -2,7 +2,9 @@ package com.emz.pathfinder.Models;
 
 import com.google.gson.annotations.SerializedName;
 
-public class Jobs {
+import java.io.Serializable;
+
+public class Jobs implements Serializable {
     @SerializedName("id")
     private int id;
     @SerializedName("name")

@@ -56,8 +56,6 @@ public class FeaturedJobAdapter extends RecyclerView.Adapter<FeaturedJobAdapter.
         final int jobid = job.getId();
         Employer emp = empList.get(job.getCompany_id());
 
-        holder.fav = job.isFavorite();
-        holder.setFavorite();
         holder.jobTitle.setText(job.getName());
         holder.empName.setText(emp.getName());
         holder.location.setText(job.getLocation());
@@ -72,13 +70,6 @@ public class FeaturedJobAdapter extends RecyclerView.Adapter<FeaturedJobAdapter.
                 context.startActivity(post);
             }
         });
-
-        holder.favStar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                jobPortalFragment.setFavoriteJob(position, jobid);
-            }
-        });
     }
 
     @Override
@@ -86,13 +77,12 @@ public class FeaturedJobAdapter extends RecyclerView.Adapter<FeaturedJobAdapter.
         return jobList.size();
     }
 
-    public class MyViewHolder extends RecyclerView.ViewHolder {
-        Boolean fav = false;
+    class MyViewHolder extends RecyclerView.ViewHolder {
         RelativeLayout layout;
         ImageView employerLogo;
-        TextView jobTitle, empName, location, money, favStar;
+        TextView jobTitle, empName, location, money;
 
-        public MyViewHolder(View itemView) {
+        MyViewHolder(View itemView) {
             super(itemView);
 
             layout = itemView.findViewById(R.id.job_card);
@@ -101,21 +91,6 @@ public class FeaturedJobAdapter extends RecyclerView.Adapter<FeaturedJobAdapter.
             empName = itemView.findViewById(R.id.empName);
             location = itemView.findViewById(R.id.locationName);
             money = itemView.findViewById(R.id.moneyText);
-            favStar = itemView.findViewById(R.id.favStar);
-        }
-
-        public void setFavorite() {
-            if(fav){
-                favStar.setText(context.getString(R.string.fa_star));
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    favStar.setTextColor(context.getColor(R.color.favorited));
-                }
-            }else{
-                favStar.setText(context.getString(R.string.fa_star_o));
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    favStar.setTextColor(context.getColor(R.color.monsoon));
-                }
-            }
         }
     }
 }

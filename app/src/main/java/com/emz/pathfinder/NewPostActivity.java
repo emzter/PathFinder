@@ -60,8 +60,8 @@ public class NewPostActivity extends AppCompatActivity {
         profile_pic = findViewById(R.id.newpost_propic);
         nameTv = findViewById(R.id.newpost_name);
         statusText = findViewById(R.id.newpost_status);
-        galleryBtn = findViewById(R.id.btn_gallery);
-        cameraBtn = findViewById(R.id.btn_camera);
+//        galleryBtn = findViewById(R.id.btn_gallery);
+//        cameraBtn = findViewById(R.id.btn_camera);
         postBtn = findViewById(R.id.btn_post);
 
         postBtn.setOnClickListener(new View.OnClickListener() {

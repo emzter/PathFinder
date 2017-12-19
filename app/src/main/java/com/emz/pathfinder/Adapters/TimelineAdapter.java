@@ -14,7 +14,6 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.emz.pathfinder.Fragments.ProfileTimelineFragment;
 import com.emz.pathfinder.Fragments.TimelineFragment;
 import com.emz.pathfinder.Listeners.OnLoadMoreListener;
 import com.emz.pathfinder.Models.Users;
@@ -22,13 +21,14 @@ import com.emz.pathfinder.Models.Posts;
 import com.emz.pathfinder.PostActivity;
 import com.emz.pathfinder.ProfileActivity;
 import com.emz.pathfinder.R;
-import com.emz.pathfinder.Utils.Ui;
 import com.emz.pathfinder.Utils.UserHelper;
 import com.emz.pathfinder.Utils.Utils;
-import com.rw.velocity.Velocity;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+
+import static com.emz.pathfinder.Utils.Ui.createSnackbar;
 
 public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.MyViewHolder> {
 
@@ -41,7 +41,6 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.MyView
     private boolean loading;
     private OnLoadMoreListener onLoadMoreListener;
     private TimelineFragment timelineFragment;
-    private ProfileTimelineFragment profileTimelineFragment;
 
     private Utils utils;
     private UserHelper usrHelper;
@@ -60,17 +59,14 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.MyView
                 totalItemCount = linearLayoutManager.getItemCount();
                 lastVisibleItem = linearLayoutManager.findLastVisibleItemPosition();
 
-                        if (!loading) {
-                            if(totalItemCount <= (lastVisibleItem + visibleThreshold)){
-//                                Ui.createSnackbar(recyclerView, "No More");
-                            }else{
-                                if (onLoadMoreListener != null) {
-                                    onLoadMoreListener.onLoadMore();
-                                    loading = true;
-                                }
-                            }
-                        }
+                Log.d("TimelineAdapter", "TOTAL: "+totalItemCount+" LAST: "+lastVisibleItem);
 
+                if (!loading && totalItemCount <= (lastVisibleItem + visibleThreshold)) {
+                    if (onLoadMoreListener != null) {
+                        onLoadMoreListener.onLoadMore();
+                        loading = true;
+                    }
+                }
             }
         });
 
@@ -80,40 +76,6 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.MyView
         this.timelineFragment = timelineFragment;
     }
 
-    public TimelineAdapter(Context context, HashMap<Integer, Users> usersList, List<Posts> postsList, RecyclerView mRecyclerView, ProfileTimelineFragment profileTimelineFragment) {
-        utils = new Utils(context);
-        usrHelper = new UserHelper(context);
-
-        final LinearLayoutManager linearLayoutManager = (LinearLayoutManager) mRecyclerView.getLayoutManager();
-
-        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-
-                totalItemCount = linearLayoutManager.getItemCount();
-                lastVisibleItem = linearLayoutManager.findLastVisibleItemPosition();
-
-                if (!loading) {
-                    if(totalItemCount <= (lastVisibleItem + visibleThreshold)){
-                        Ui.createSnackbar(recyclerView, "No More");
-                    }else{
-                        if (onLoadMoreListener != null) {
-                            onLoadMoreListener.onLoadMore();
-                            loading = true;
-                        }
-                    }
-                }
-
-            }
-        });
-
-        this.context = context;
-        this.postsList = postsList;
-        this.usersList = usersList;
-        this.profileTimelineFragment = profileTimelineFragment;
-    }
-
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_post_cardview, parent, false);
@@ -121,7 +83,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.MyView
     }
 
     @Override
-    public void onBindViewHolder(TimelineAdapter.MyViewHolder holder, final int position) {
+    public void onBindViewHolder(TimelineAdapter.MyViewHolder holder, int position) {
         final Posts post = postsList.get(position);
         final Users user = usersList.get(post.getAuthor());
 
@@ -145,7 +107,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.MyView
             holder.name2TV.setOnClickListener(openProfile);
         }
 
-        holder.nameTV.setText(user.getFname() + " " + user.getLname());
+        holder.nameTV.setText(user.getFullName());
         holder.mainTV.setText(post.getMessage());
         String time = utils.gettimestamp(post.getCreated());
         holder.timestampTV.setText(time);
@@ -174,10 +136,11 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.MyView
         holder.nameTV.setOnClickListener(openProfile);
         holder.profilePic.setOnClickListener(openProfile);
 
+        final int likePostion = position;
         holder.likeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                timelineFragment.createLike(position, usrHelper.getUserId(), String.valueOf(post.getId()), 0);
+                timelineFragment.createLike(likePostion, usrHelper.getUserId(), String.valueOf(post.getId()), 0);
             }
         });
 
@@ -223,7 +186,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.MyView
 
             likeBtn = itemView.findViewById(R.id.feed_button_like);
             commentBtn = itemView.findViewById(R.id.feed_button_reply);
-            shareBtn = itemView.findViewById(R.id.feed_button_share);
+//            shareBtn = itemView.findViewById(R.id.feed_button_share);
 
             nameTV = itemView.findViewById(R.id.feed_name);
             name2TV = itemView.findViewById(R.id.feed_2nd_name);
@@ -234,7 +197,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.MyView
             likeTV = itemView.findViewById(R.id.likeBtnText);
             likeIcon = itemView.findViewById(R.id.likeBtnIcon);
             commentTV = itemView.findViewById(R.id.commentBtnText);
-            shareTV = itemView.findViewById(R.id.shareBtnText);
+//            shareTV = itemView.findViewById(R.id.shareBtnText);
         }
     }
 }

@@ -40,7 +40,7 @@ public class Utils {
     public final String LOGIN_URL = "https://www.pathfinder.in.th/home/login/";
     public final String REGISTER_URL = "https://www.pathfinder.in.th/registration/signup/";
     public final String VOLUNTEER_URL = "https://www.pathfinder.in.th/volunteer/";
-    public final String JOBS_URL = "https://www.pathfinder.in.th/dist/home/jobs.php";
+    public final String JOBS_URL = "https://www.pathfinder.in.th/job/";
     public final String PROFILEPIC_URL = "https://www.pathfinder.in.th/uploads/profile_image/";
     public final String HEADERPIC_URL = "https://www.pathfinder.in.th/uploads/header_images/";
     public final String EMPPIC_URL = "https://www.pathfinder.in.th/uploads/logo_images/";
@@ -51,11 +51,6 @@ public class Utils {
 
     public Utils(Context current){
         this.context = current;
-    }
-
-    @NonNull
-    public String convertString(EditText editText) {
-        return editText.getText().toString();
     }
 
     public void sendRegistrationToServer(String refreshedToken, Context context) {

@@ -2,11 +2,9 @@ package com.emz.pathfinder.Models;
 
 import com.google.gson.annotations.SerializedName;
 
-/**
- * Created by EMZ on 30/10/2560.
- */
+import java.io.Serializable;
 
-public class Employer {
+public class Employer implements Serializable {
     @SerializedName("id")
     private int id;
     @SerializedName("name")

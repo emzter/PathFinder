@@ -191,8 +191,7 @@ public class JobPortalFragment extends Fragment{
             featuredEmpList.clear();
         }
 
-        Velocity.get(utils.JOBS_URL)
-                .withPathParam("status","loadallemp")
+        Velocity.get(utils.JOBS_URL+"loadallemp")
                 .connect(new Velocity.ResponseListener() {
                     @Override
                     public void onVelocitySuccess(Velocity.Response response) {
