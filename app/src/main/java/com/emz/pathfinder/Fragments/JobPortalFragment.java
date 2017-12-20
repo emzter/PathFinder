@@ -88,47 +88,6 @@ public class JobPortalFragment extends Fragment{
         return rootView;
     }
 
-    public void setFavoriteJob(final int position, int jid){
-        final String TAG = "FavoriteMethod";
-
-        Velocity.post(utils.UTILITIES_URL+"saveJob/"+jid)
-                .withFormData("uid", usrHelper.getUserId())
-                .connect(new Velocity.ResponseListener() {
-                    @Override
-                    public void onVelocitySuccess(Velocity.Response response) {
-                        Log.d(TAG, "FAV: "+response.body);
-                        Log.d(TAG, "FAVLINK: "+response.requestUrl);
-
-                        JsonParser parser = new JsonParser();
-                        JsonObject jsonObject = parser.parse(response.body).getAsJsonObject();
-
-                        boolean status = jsonObject.get("success").getAsBoolean();
-
-                        if(status){
-                            boolean add = jsonObject.get("add").getAsBoolean();
-                            if(add){
-                                jobList.get(position).setFavorite(true);
-                                jobAdapter.notifyItemChanged(position);
-                                Log.d(TAG, "SUCCESS ADD");
-                            }else{
-                                jobList.get(position).setFavorite(false);
-                                jobAdapter.notifyItemChanged(position);
-                                Log.d(TAG, "SUCCESS DELETE");
-                            }
-
-                        }else{
-                            Log.e(TAG, "ERROR FAVORITES");
-                        }
-                    }
-
-                    @Override
-                    public void onVelocityFailed(Velocity.Response response) {
-                        Log.e(TAG, "ERROR FAVORITES CAN'T CONNECT");
-                    }
-                });
-
-    }
-
     private void refreshItems() {
         loadAllEmp();
     }

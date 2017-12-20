@@ -4,16 +4,63 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/job_detail_main_layout"
     tools:context="com.emz.pathfinder.JobDetailActivity">
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/appBarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:layout_scrollFlags="scroll|enterAlways">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tb_job_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/kanit"
+                    android:text=""
+                    android:singleLine="true"
+                    android:layout_marginEnd="16dp"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tb_job_emp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/kanit"
+                    android:layout_marginEnd="16dp"
+                    android:text=""
+                    android:textColor="@color/white" />
+
+            </LinearLayout>
+
+        </android.support.v7.widget.Toolbar>
+
+    </android.support.design.widget.AppBarLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:paddingTop="?attr/actionBarSize">
 
         <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
             android:id="@+id/job_detail_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:background="@color/grey"
             android:layout_above="@id/control"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
@@ -27,7 +74,7 @@
                     layout="@layout/item_emp_details"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp"/>
+                    android:layout_marginBottom="16dp" />
 
                 <include
                     layout="@layout/item_job_details"
@@ -40,10 +87,10 @@
 
         <RelativeLayout
             android:id="@+id/control"
-            android:layout_alignParentBottom="true"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/white">
+            android:background="@color/white"
+            android:layout_alignParentBottom="true">
 
             <LinearLayout
                 android:id="@+id/save_btn"
@@ -80,9 +127,9 @@
                 style="@style/Widget.AppCompat.Button.Colored"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
                 android:layout_marginEnd="8dp"
-                android:padding="8dp"
-                android:layout_alignParentEnd="true">
+                android:padding="8dp">
 
                 <TextView
                     android:id="@+id/applyBtn_icon"
@@ -106,13 +153,13 @@
 
         </RelativeLayout>
 
-        <ProgressBar
-            android:id="@+id/job_detail_progressbar"
-            style="?android:attr/progressBarStyleLarge"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"/>
-
     </RelativeLayout>
+
+    <ProgressBar
+        android:id="@+id/job_detail_progressbar"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal|center_vertical"/>
+
 </android.support.design.widget.CoordinatorLayout>

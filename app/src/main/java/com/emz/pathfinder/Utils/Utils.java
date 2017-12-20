@@ -145,19 +145,23 @@ public class Utils {
         LinkedHashMap<String, Long> peroids = getPeriodsTime();
         int i = 1;
 
-        for(Map.Entry<String, Long> entry : peroids.entrySet()){
-            String key = entry.getKey();
-            Long value = entry.getValue();
-            if (different >= value) {
-                oldtime = (long) Math.floor(different / value);
-                different = different%value;
-                newtime = ((!Objects.equals(newtime, "")) ? " " : "")+oldtime+" "+key;
-                granularity--;
+        if(different == 0){
+            return context.getString(R.string.just_now);
+        }else{
+            for(Map.Entry<String, Long> entry : peroids.entrySet()){
+                String key = entry.getKey();
+                Long value = entry.getValue();
+                if (different >= value) {
+                    oldtime = (long) Math.floor(different / value);
+                    different = different%value;
+                    newtime = ((!Objects.equals(newtime, "")) ? " " : "")+oldtime+" "+key;
+                    granularity--;
+                }
+                if(granularity == 0) break;
             }
-            if(granularity == 0) break;
-        }
 
-        return newtime+" "+context.getString(R.string.ago);
+            return newtime+" "+context.getString(R.string.ago);
+        }
     }
 
     private LinkedHashMap<String, Long> getPeriodsTime(){

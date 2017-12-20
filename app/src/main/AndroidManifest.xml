@@ -56,6 +56,7 @@
         <activity
             android:name=".JobDetailActivity"
             android:label=""
+            android:theme="@style/AppTheme.NoActionBar"
             android:parentActivityName=".MainActivity" />
         <activity
             android:name=".NewPostActivity"
@@ -79,6 +80,7 @@
         </activity>
         <activity
             android:name=".PostActivity"
+            android:label="Post"
             android:parentActivityName=".MainActivity" />
         <activity
             android:name=".ProfileActivity"
@@ -117,11 +119,6 @@
             android:value="@integer/google_play_services_version"
             tools:replace="android:value" />
 
-        <activity
-            android:name=".JobApplyActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:label=""
-            android:parentActivityName=".JobDetailActivity" />
         <activity
             android:name=".VolunteerActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"

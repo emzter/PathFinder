@@ -110,6 +110,8 @@
                         android:text=""
                         android:textColor="@color/white"
                         android:textSize="16sp"
+                        android:singleLine="true"
+                        android:layout_marginEnd="16dp"
                         android:textStyle="bold"
                         android:id="@+id/profile_title_name"/>
 
@@ -118,6 +120,7 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/kanit"
                         android:textColor="@color/white"
+                        android:layout_marginEnd="16dp"
                         android:text=""
                         android:id="@+id/profile_title_email"/>
 

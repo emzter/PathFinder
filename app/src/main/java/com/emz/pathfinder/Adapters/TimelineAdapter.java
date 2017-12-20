@@ -32,8 +32,6 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private static final int VIEW_TYPE_LOADING = 0;
     private static final int VIEW_TYPE_ITEM = 1;
 
-    //TODO: Add NULL
-
     private Context context;
     private List<Posts> postsList;
     private HashMap<Integer, Users> usersList;
@@ -166,7 +164,9 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 @Override
                 public void onClick(View view) {
                     Intent postAct = new Intent(context, PostActivity.class);
-                    postAct.putExtra("id", post.getId());
+                    postAct.putExtra("post", post);
+                    postAct.putExtra("user", user);
+                    postAct.putExtra("userLists", usersList);
                     context.startActivity(postAct);
                 }
             });

@@ -112,4 +112,15 @@
     <string name="sending_application">Sending application…</string>
     <string name="cant_apply_job">Can\'t apply for the job. Please try again later.</string>
     <string name="sent">SENT</string>
+    <string name="successful_apply_job">Application has been sent.</string>
+    <string name="middle_dot">•</string>
+    <string name="comment_btn">Comment</string>
+    <string name="comment_hint">Comment your thought…</string>
+    <string name="just_now">Just now</string>
+    <string name="horizontal_devider">|</string>
+    <string name="edu_1">High School Certificate</string>
+    <string name="edu_2">Diploma of High Vocational Education</string>
+    <string name="edu_3">Bachelor Degree</string>
+    <string name="edu_4">Master Degree</string>
+    <string name="edu_5">Doctorate Degree</string>
 </resources>

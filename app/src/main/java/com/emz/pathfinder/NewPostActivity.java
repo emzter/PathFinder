@@ -91,7 +91,6 @@ public class NewPostActivity extends AppCompatActivity {
                     @Override
                     public void onVelocitySuccess(Velocity.Response response) {
                         materialDialog.dismiss();
-                        TimelineFragment.updateList();
                         finish();
                     }
 
@@ -126,6 +125,6 @@ public class NewPostActivity extends AppCompatActivity {
     }
 
     private void noConnection() {
-        
+        //TODO: NO CONNECTION
     }
 }

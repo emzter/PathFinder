@@ -3,6 +3,7 @@ package com.emz.pathfinder;
 import android.content.Intent;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.BottomSheetDialog;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -10,6 +11,8 @@ import android.text.Html;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -17,10 +20,12 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.emz.pathfinder.Models.Employer;
 import com.emz.pathfinder.Models.Jobs;
+import com.emz.pathfinder.Models.Users;
 import com.emz.pathfinder.Utils.UlTagHandler;
 import com.emz.pathfinder.Utils.UserHelper;
 import com.emz.pathfinder.Utils.Utils;
@@ -30,6 +35,8 @@ import com.rw.velocity.Velocity;
 
 import java.text.SimpleDateFormat;
 import java.util.Objects;
+
+import static com.emz.pathfinder.Utils.Ui.createSnackbar;
 
 public class JobDetailActivity extends AppCompatActivity {
 
@@ -50,6 +57,8 @@ public class JobDetailActivity extends AppCompatActivity {
             jobCapacityUnit, jobLevel, jobSalary, jobSalaryType, jobNegotiable, jobExp, jobEdu, jobCategory, jobPostedDate, favStar;
     private ImageView empLogo;
     private LinearLayout saveBtn, applyBtn;
+    private Users users;
+    private BottomSheetDialog bottomSheetDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,7 +121,7 @@ public class JobDetailActivity extends AppCompatActivity {
                             Log.d(TAG, response.body);
                             Log.d(TAG, "Emp Details GET");
                             currentEmp = response.deserialize(Employer.class);
-                            setupView();
+                            loadUser(usrHelper.getUserId());
                         }else{
                             Log.e(TAG, "Error Getting Emp Details");
                         }
@@ -125,13 +134,42 @@ public class JobDetailActivity extends AppCompatActivity {
                 });
     }
 
+    private void loadUser(String userId) {
+        Velocity.get(utils.UTILITIES_URL+"getProfile/"+userId)
+                .connect(new Velocity.ResponseListener() {
+                    @Override
+                    public void onVelocitySuccess(Velocity.Response response) {
+                        users = response.deserialize(Users.class);
+                        setupView();
+                    }
+
+                    @Override
+                    public void onVelocityFailed(Velocity.Response response) {
+                        View v = findViewById(R.id.job_detail_main_layout);
+                        createSnackbar(v, getString(R.string.connection_error));
+                    }
+                });
+    }
+
     private void setupView() {
-        getSupportActionBar().setTitle(currentJob.getName());
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        TextView tbTitle = findViewById(R.id.tb_job_title);
+        TextView tbSubTitle = findViewById(R.id.tb_job_emp);
+
+        tbTitle.setText(currentJob.getName());
+        tbSubTitle.setText(currentEmp.getName());
 
         setEmpView();
         setJobView();
 
         setFavStar();
+
+        setApplyButton();
 
         saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -140,25 +178,50 @@ public class JobDetailActivity extends AppCompatActivity {
             }
         });
 
+        jobDetailLayout.setVisibility(View.VISIBLE);
+        progressBar.setVisibility(View.GONE);
+    }
+
+    private void setApplyButton() {
         if(currentJob.isApply()){
             applyBtnIcon.setText(R.string.fa_check);
             applyBtnText.setText(R.string.sent);
+            if(applyBtn.hasOnClickListeners()){
+                applyBtn.setOnClickListener(null);
+            }
         }else{
             applyBtnIcon.setText(R.string.fa_paper_plane);
             applyBtnText.setText(R.string.apply);
             applyBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent apply = new Intent(JobDetailActivity.this, JobApplyActivity.class);
-                    apply.putExtra("job", currentJob);
-                    apply.putExtra("emp", currentEmp);
-                    startActivityForResult(apply, 0);
+                    View bottomSheetView = getLayoutInflater().inflate(R.layout.bs_job_apply, null);
+                    bottomSheetDialog = new BottomSheetDialog(JobDetailActivity.this);
+                    bottomSheetDialog.setContentView(bottomSheetView);
+
+                    TextView titleTv = bottomSheetView.findViewById(R.id.job_apply_message_title);
+                    TextView fromTv = bottomSheetView.findViewById(R.id.job_apply_message_from);
+                    TextView toTv = bottomSheetView.findViewById(R.id.job_apply_message_to);
+                    final EditText messageEt = bottomSheetView.findViewById(R.id.job_apply_message);
+
+                    Button applyButton = bottomSheetView.findViewById(R.id.apply_button);
+
+                    applyButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            String message = messageEt.getText().toString();
+                            applyJob(message);
+                        }
+                    });
+
+                    titleTv.setText("I want to apply for "+currentJob.getName());
+                    toTv.setText(currentEmp.getName());
+                    fromTv.setText(users.getFullName()+" ("+users.getEmail()+")");
+
+                    bottomSheetDialog.show();
                 }
             });
         }
-
-        jobDetailLayout.setVisibility(View.VISIBLE);
-        progressBar.setVisibility(View.GONE);
     }
 
     @Override
@@ -299,5 +362,45 @@ public class JobDetailActivity extends AppCompatActivity {
         empAboutLayout.setVisibility(View.GONE);
         empEmailLayout.setVisibility(View.GONE);
         empTelLayout.setVisibility(View.GONE);
+    }
+
+    public void applyJob(String message){
+        final MaterialDialog md = new MaterialDialog.Builder(this)
+                .title(R.string.progress_dialog_title)
+                .content(R.string.sending_application)
+                .progress(true, 0)
+                .cancelable(false)
+                .show();
+
+        Velocity.post(utils.JOBS_URL+"sendapply")
+                .withFormData("id", String.valueOf(currentJob.getId()))
+                .withFormData("message", message)
+                .withFormData("uid", usrHelper.getUserId())
+                .connect(new Velocity.ResponseListener() {
+                    @Override
+                    public void onVelocitySuccess(Velocity.Response response) {
+                        JsonParser parser = new JsonParser();
+                        JsonObject jsonObject = parser.parse(response.body).getAsJsonObject();
+
+                        boolean status = jsonObject.get("success").getAsBoolean();
+                        if(status){
+                            bottomSheetDialog.hide();
+                            currentJob.setApply(true);
+                            setApplyButton();
+                            md.dismiss();
+                            View v = findViewById(R.id.job_detail_main_layout);
+                            createSnackbar(v, getString(R.string.successful_apply_job));
+                        }else{
+                            View v = findViewById(R.id.job_detail_main_layout);
+                            createSnackbar(v, getString(R.string.cant_apply_job));
+                        }
+                    }
+
+                    @Override
+                    public void onVelocityFailed(Velocity.Response response) {
+                        View v = findViewById(R.id.job_detail_main_layout);
+                        createSnackbar(v, getString(R.string.connection_error));
+                    }
+                });
     }
 }

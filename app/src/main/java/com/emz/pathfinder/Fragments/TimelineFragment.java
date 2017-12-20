@@ -33,7 +33,6 @@ import java.util.List;
 
 public class TimelineFragment extends Fragment{
 
-    //TODO: Loadmore
     //TODO: SwipetoRefresh won't work
 
     private static final String TAG = "TimelineFragment";
@@ -43,7 +42,7 @@ public class TimelineFragment extends Fragment{
 
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private RecyclerView mRecyclerView;
-    private static TimelineAdapter mAdapter;
+    private TimelineAdapter mAdapter;
     private Utils utils;
     private UserHelper usrHelper;
 
@@ -91,6 +90,18 @@ public class TimelineFragment extends Fragment{
         return rootView;
     }
 
+    @Override
+    public void onResume() {
+        refreshItems();
+        super.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        Log.d(TAG, "OnPause of TimelineFragment");
+        super.onPause();
+    }
+
     void refreshItems(){
         if(profile){
             loadProfileTimeline(0, 10);
@@ -125,7 +136,9 @@ public class TimelineFragment extends Fragment{
                         }else if(response.body.equals("SuccessDelete")){
                             Log.d(TAG, "Doing Delete Like");
                             postsList.get(position).setLikeStatus(false);
-                            postsList.get(position).setLikeCount(postsList.get(position).getLikeCount() - 1);
+                            if(postsList.get(position).getLikeCount() != 0){
+                                postsList.get(position).setLikeCount(postsList.get(position).getLikeCount() - 1);
+                            }
                             mAdapter.notifyItemChanged(position);
                         }
                     }
@@ -188,11 +201,6 @@ public class TimelineFragment extends Fragment{
                     public void onVelocitySuccess(Velocity.Response response) {
                         Log.d(TAG, response.body);
 
-                        if(postsList.size() > 0){
-                            postsList.remove(postsList.size() - 1);
-                            mAdapter.notifyItemRemoved(postsList.size() - 1);
-                        }
-
                         if(response.body != ""){
                             Gson gson = new Gson();
                             JsonParser parser = new JsonParser();
@@ -218,6 +226,8 @@ public class TimelineFragment extends Fragment{
                                 mSwipeRefreshLayout.setRefreshing(false);
                             }
                         }else{
+                            postsList.add(null);
+                            mAdapter.notifyItemInserted(postsList.size() - 1);
                             mAdapter.setMoreDataAvailable(false);
                             mSwipeRefreshLayout.setRefreshing(false);
                         }
@@ -249,11 +259,6 @@ public class TimelineFragment extends Fragment{
                     public void onVelocitySuccess(Velocity.Response response) {
                         Log.d(TAG, response.body);
 
-                        if(postsList.size() > 0){
-                            postsList.remove(postsList.size() - 1);
-                            mAdapter.notifyItemRemoved(postsList.size() - 1);
-                        }
-
                         if(response.body != ""){
                             Gson gson = new Gson();
                             JsonParser parser = new JsonParser();
@@ -279,6 +284,8 @@ public class TimelineFragment extends Fragment{
                                 mSwipeRefreshLayout.setRefreshing(false);
                             }
                         }else{
+                            postsList.add(null);
+                            mAdapter.notifyItemInserted(postsList.size() - 1);
                             mAdapter.setMoreDataAvailable(false);
                             mSwipeRefreshLayout.setRefreshing(false);
                         }
@@ -303,10 +310,7 @@ public class TimelineFragment extends Fragment{
                     @Override
                     public void run() {
                         if(postsList.size() > 0){
-                            postsList.add(null);
-                            mAdapter.notifyItemInserted(postsList.size() - 1);
-
-                            int start = postsList.get(postsList.size() - 2).getId();
+                            int start = postsList.get(postsList.size() - 1).getId();
                             int end = start + 10;
 
                             Log.d(TAG, "POST End"+end);
@@ -323,11 +327,5 @@ public class TimelineFragment extends Fragment{
                 }, 2000);
             }
         });
-    }
-
-    public static void updateList() {
-        if(mAdapter != null){
-            mAdapter.notifyDataChanged();
-        }
     }
 }

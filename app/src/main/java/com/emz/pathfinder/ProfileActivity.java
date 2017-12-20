@@ -28,6 +28,8 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ProfileActivity extends AppCompatActivity {
 
+    //TODO: Create New Post
+
     private Toolbar toolbar;
 
     private final String TAG = "ProfileActivity";
@@ -86,17 +88,23 @@ public class ProfileActivity extends AppCompatActivity {
 
     @SuppressLint("ResourceType")
     private void bindView() {
-        Bundle bundle = new Bundle();
-        bundle.putInt("id", uid);
+        Bundle timelineBundle = new Bundle();
+        timelineBundle.putInt("id", uid);
 
         final TimelineFragment timelineFragment = new TimelineFragment();
-        timelineFragment.setArguments(bundle);
+        timelineFragment.setArguments(timelineBundle);
+
+        Bundle aboutBundle = new Bundle();
+        aboutBundle.putSerializable("currentUser", currentUser);
+
+        final ProfileAboutFragment profileAboutFragment = new ProfileAboutFragment();
+        profileAboutFragment.setArguments(aboutBundle);
 
         mPagerAdapter = new FragmentPagerAdapter(getSupportFragmentManager()) {
 
             private final Fragment[] mFragments = new Fragment[]{
                     timelineFragment,
-                    new ProfileAboutFragment(currentUser),
+                    profileAboutFragment,
                     new SearchFragment(),
             };
 
