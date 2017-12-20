@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -25,18 +26,19 @@ import com.emz.pathfinder.Utils.UserHelper;
 import com.emz.pathfinder.Utils.Utils;
 
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 
-import static com.emz.pathfinder.Utils.Ui.createSnackbar;
+public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    private static final int VIEW_TYPE_LOADING = 0;
+    private static final int VIEW_TYPE_ITEM = 1;
 
-public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.MyViewHolder> {
+    //TODO: Add NULL
 
     private Context context;
     private List<Posts> postsList;
     private HashMap<Integer, Users> usersList;
 
-    private int visibleThreshold = 5;
+    private int visibleThreshold = 1;
     private int lastVisibleItem, totalItemCount;
     private boolean loading;
     private OnLoadMoreListener onLoadMoreListener;
@@ -44,6 +46,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.MyView
 
     private Utils utils;
     private UserHelper usrHelper;
+    private boolean isMoreDataAvailable = true;
 
     public TimelineAdapter(Context context, HashMap<Integer, Users> usersList, List<Posts> postsList, RecyclerView recyclerView, TimelineFragment timelineFragment) {
         utils = new Utils(context);
@@ -61,11 +64,12 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.MyView
 
                 Log.d("TimelineAdapter", "TOTAL: "+totalItemCount+" LAST: "+lastVisibleItem);
 
-                if (!loading && totalItemCount <= (lastVisibleItem + visibleThreshold)) {
+                if (!loading && totalItemCount <= (lastVisibleItem + visibleThreshold) && isMoreDataAvailable) {
                     if (onLoadMoreListener != null) {
                         onLoadMoreListener.onLoadMore();
-                        loading = true;
+                        Log.d("TimelineAdapter", "LOADMORE");
                     }
+                    loading = true;
                 }
             }
         });
@@ -77,81 +81,98 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.MyView
     }
 
     @Override
-    public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_post_cardview, parent, false);
-        return new MyViewHolder(itemView);
+    public int getItemViewType(int position) {
+        return postsList.get(position) == null ? VIEW_TYPE_LOADING : VIEW_TYPE_ITEM;
     }
 
     @Override
-    public void onBindViewHolder(TimelineAdapter.MyViewHolder holder, int position) {
-        final Posts post = postsList.get(position);
-        final Users user = usersList.get(post.getAuthor());
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        if(viewType == VIEW_TYPE_LOADING){
+            View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_loading, parent, false);
+            return new LoadViewHolder(itemView);
+        }else if(viewType == VIEW_TYPE_ITEM){
+            View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_post_cardview, parent, false);
+            return new PostViewHolder(itemView);
+        }
+        return null;
+    }
 
-        if (post.getRecipient() == 0) {
-            holder.name2TV.setText("");
-            holder.toTV.setText("");
-        } else {
-            final Users recipient = usersList.get(post.getRecipient());
-            holder.name2TV.setText(recipient.getFname() + " " + recipient.getLname());
-            holder.toTV.setText("▶");
+    @Override
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        if(holder instanceof PostViewHolder){
+            final Posts post = postsList.get(position);
+            final Users user = usersList.get(post.getAuthor());
+
+            PostViewHolder postViewHolder = (PostViewHolder) holder;
+
+            if (post.getRecipient() == 0) {
+                postViewHolder.name2TV.setText("");
+                postViewHolder.toTV.setText("");
+            } else {
+                final Users recipient = usersList.get(post.getRecipient());
+                postViewHolder.name2TV.setText(recipient.getFullName());
+                postViewHolder.toTV.setText("▶");
+
+                View.OnClickListener openProfile = new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent profile = new Intent(context, ProfileActivity.class);
+                        profile.putExtra("id", recipient.getId());
+                        context.startActivity(profile);
+                    }
+                };
+
+                postViewHolder.name2TV.setOnClickListener(openProfile);
+            }
+
+            postViewHolder.nameTV.setText(user.getFullName());
+            postViewHolder.mainTV.setText(post.getMessage());
+            String time = utils.gettimestamp(post.getCreated());
+            postViewHolder.timestampTV.setText(time);
+            postViewHolder.likeTV.setText(" " + post.getLikeCount());
+            postViewHolder.commentTV.setText(" " + post.getCommentCount());
+
+            if (post.getLikeStatus()) {
+                postViewHolder.likeTV.setTextColor(context.getResources().getColor(R.color.liked));
+                postViewHolder.likeIcon.setTextColor(context.getResources().getColor(R.color.liked));
+            } else {
+                postViewHolder.likeTV.setTextColor(context.getResources().getColor(R.color.monsoon));
+                postViewHolder.likeIcon.setTextColor(context.getResources().getColor(R.color.monsoon));
+            }
+
+            Glide.with(context).load(utils.PROFILEPIC_URL + user.getProPic()).apply(RequestOptions.centerInsideTransform().error(R.drawable.defaultprofilepicture)).into(postViewHolder.profilePic);
 
             View.OnClickListener openProfile = new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     Intent profile = new Intent(context, ProfileActivity.class);
-                    profile.putExtra("id", recipient.getId());
+                    profile.putExtra("id", user.getId());
                     context.startActivity(profile);
                 }
             };
 
-            holder.name2TV.setOnClickListener(openProfile);
+            postViewHolder.nameTV.setOnClickListener(openProfile);
+            postViewHolder.profilePic.setOnClickListener(openProfile);
+
+            final int likePostion = position;
+            postViewHolder.likeBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    timelineFragment.createLike(likePostion, usrHelper.getUserId(), String.valueOf(post.getId()), 0);
+                }
+            });
+
+            postViewHolder.commentBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent postAct = new Intent(context, PostActivity.class);
+                    postAct.putExtra("id", post.getId());
+                    context.startActivity(postAct);
+                }
+            });
+        }else if(holder instanceof LoadViewHolder){
+            LoadViewHolder loadViewHolder = (LoadViewHolder) holder;
         }
-
-        holder.nameTV.setText(user.getFullName());
-        holder.mainTV.setText(post.getMessage());
-        String time = utils.gettimestamp(post.getCreated());
-        holder.timestampTV.setText(time);
-        holder.likeTV.setText(" " + post.getLikeCount());
-        holder.commentTV.setText(" " + post.getCommentCount());
-
-        if (post.getLikeStatus()) {
-            holder.likeTV.setTextColor(context.getResources().getColor(R.color.liked));
-            holder.likeIcon.setTextColor(context.getResources().getColor(R.color.liked));
-        } else {
-            holder.likeTV.setTextColor(context.getResources().getColor(R.color.monsoon));
-            holder.likeIcon.setTextColor(context.getResources().getColor(R.color.monsoon));
-        }
-
-        Glide.with(context).load(utils.PROFILEPIC_URL + user.getProPic()).apply(RequestOptions.centerInsideTransform().error(R.drawable.defaultprofilepicture)).into(holder.profilePic);
-
-        View.OnClickListener openProfile = new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent profile = new Intent(context, ProfileActivity.class);
-                profile.putExtra("id", user.getId());
-                context.startActivity(profile);
-            }
-        };
-
-        holder.nameTV.setOnClickListener(openProfile);
-        holder.profilePic.setOnClickListener(openProfile);
-
-        final int likePostion = position;
-        holder.likeBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                timelineFragment.createLike(likePostion, usrHelper.getUserId(), String.valueOf(post.getId()), 0);
-            }
-        });
-
-        holder.commentBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent postAct = new Intent(context, PostActivity.class);
-                postAct.putExtra("id", post.getId());
-                context.startActivity(postAct);
-            }
-        });
     }
 
     public void setOnLoadMoreListener(OnLoadMoreListener onLoadMoreListener) {
@@ -167,7 +188,16 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.MyView
         return postsList.size();
     }
 
-    class MyViewHolder extends RecyclerView.ViewHolder {
+    public void setMoreDataAvailable(boolean moreDataAvailable) {
+        isMoreDataAvailable = moreDataAvailable;
+    }
+
+    public void notifyDataChanged(){
+        notifyDataSetChanged();
+        loading = false;
+    }
+
+    class PostViewHolder extends RecyclerView.ViewHolder {
         TextView nameTV;
         TextView timestampTV;
         TextView mainTV;
@@ -181,7 +211,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.MyView
 
         LinearLayout likeBtn, commentBtn, shareBtn;
 
-        private MyViewHolder(View itemView) {
+        private PostViewHolder(View itemView) {
             super(itemView);
 
             likeBtn = itemView.findViewById(R.id.feed_button_like);
@@ -198,6 +228,16 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.MyView
             likeIcon = itemView.findViewById(R.id.likeBtnIcon);
             commentTV = itemView.findViewById(R.id.commentBtnText);
 //            shareTV = itemView.findViewById(R.id.shareBtnText);
+        }
+    }
+
+    class LoadViewHolder extends RecyclerView.ViewHolder {
+        ProgressBar progressBar;
+
+        private LoadViewHolder(View itemView) {
+            super(itemView);
+
+            progressBar = itemView.findViewById(R.id.progressBar1);
         }
     }
 }

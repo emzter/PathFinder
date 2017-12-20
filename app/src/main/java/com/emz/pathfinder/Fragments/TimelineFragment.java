@@ -173,6 +173,10 @@ public class TimelineFragment extends Fragment{
             if(postsList.size() > 0){
                 postsList.clear();
             }
+
+            if(mAdapter != null){
+                mAdapter.setMoreDataAvailable(true);
+            }
         }
         Velocity.post(utils.UTILITIES_URL+"getProfileTimeline")
                 .withFormData("id", usrHelper.getUserId())
@@ -183,6 +187,11 @@ public class TimelineFragment extends Fragment{
                     @Override
                     public void onVelocitySuccess(Velocity.Response response) {
                         Log.d(TAG, response.body);
+
+                        if(postsList.size() > 0){
+                            postsList.remove(postsList.size() - 1);
+                            mAdapter.notifyItemRemoved(postsList.size() - 1);
+                        }
 
                         if(response.body != ""){
                             Gson gson = new Gson();
@@ -209,6 +218,7 @@ public class TimelineFragment extends Fragment{
                                 mSwipeRefreshLayout.setRefreshing(false);
                             }
                         }else{
+                            mAdapter.setMoreDataAvailable(false);
                             mSwipeRefreshLayout.setRefreshing(false);
                         }
                     }
@@ -226,6 +236,9 @@ public class TimelineFragment extends Fragment{
             if(postsList.size() > 0){
                 postsList.clear();
             }
+            if(mAdapter != null){
+                mAdapter.setMoreDataAvailable(true);
+            }
         }
         Velocity.post(utils.UTILITIES_URL+"getpost")
                 .withFormData("id", usrHelper.getUserId())
@@ -235,6 +248,11 @@ public class TimelineFragment extends Fragment{
                     @Override
                     public void onVelocitySuccess(Velocity.Response response) {
                         Log.d(TAG, response.body);
+
+                        if(postsList.size() > 0){
+                            postsList.remove(postsList.size() - 1);
+                            mAdapter.notifyItemRemoved(postsList.size() - 1);
+                        }
 
                         if(response.body != ""){
                             Gson gson = new Gson();
@@ -247,7 +265,7 @@ public class TimelineFragment extends Fragment{
                                 postsList.add(posts);
                             }
 
-                            Log.d(TAG, "POST LOADDED");
+                            Log.d(TAG, "POST LOADED");
 
                             int size = postsList.size();
                             Log.d(TAG, "POSTSIZE: "+String.valueOf(size));
@@ -261,6 +279,7 @@ public class TimelineFragment extends Fragment{
                                 mSwipeRefreshLayout.setRefreshing(false);
                             }
                         }else{
+                            mAdapter.setMoreDataAvailable(false);
                             mSwipeRefreshLayout.setRefreshing(false);
                         }
                     }
@@ -284,7 +303,10 @@ public class TimelineFragment extends Fragment{
                     @Override
                     public void run() {
                         if(postsList.size() > 0){
-                            int start = postsList.get(postsList.size() - 1).getId();
+                            postsList.add(null);
+                            mAdapter.notifyItemInserted(postsList.size() - 1);
+
+                            int start = postsList.get(postsList.size() - 2).getId();
                             int end = start + 10;
 
                             Log.d(TAG, "POST End"+end);
@@ -305,7 +327,7 @@ public class TimelineFragment extends Fragment{
 
     public static void updateList() {
         if(mAdapter != null){
-            mAdapter.notifyDataSetChanged();
+            mAdapter.notifyDataChanged();
         }
     }
 }
