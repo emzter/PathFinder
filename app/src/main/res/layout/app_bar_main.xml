@@ -26,6 +26,7 @@
             android:layout_height="wrap_content"
             app:tabTextAppearance="@style/CustomTabText"
             android:background="@color/white"
+            app:tabBackground="?attr/selectableItemBackground"
             app:tabTextColor="@color/monsoon"
             app:tabSelectedTextColor="@color/colorPrimary"
             app:tabIndicatorColor="@color/colorPrimary"

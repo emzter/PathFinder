@@ -107,15 +107,17 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 postViewHolder.name2TV.setText("");
                 postViewHolder.toTV.setText("");
             } else {
-                final Users recipient = usersList.get(post.getRecipient());
+                Users recipient = usersList.get(post.getRecipient());
                 postViewHolder.name2TV.setText(recipient.getFullName());
                 postViewHolder.toTV.setText("▶");
+
+                final int reciId = recipient.getId();
 
                 View.OnClickListener openProfile = new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         Intent profile = new Intent(context, ProfileActivity.class);
-                        profile.putExtra("id", recipient.getId());
+                        profile.putExtra("id", reciId);
                         context.startActivity(profile);
                     }
                 };

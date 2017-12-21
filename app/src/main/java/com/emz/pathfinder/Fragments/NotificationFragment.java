@@ -29,6 +29,9 @@ import java.util.HashMap;
 import java.util.List;
 
 public class NotificationFragment extends Fragment{
+
+    //TODO: SET ONCLICK
+
     private static final String TAG = "NotificationFragment";
     private Utils utils;
 

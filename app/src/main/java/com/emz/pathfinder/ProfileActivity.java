@@ -10,6 +10,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -17,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.emz.pathfinder.Fragments.FriendsListFragment;
 import com.emz.pathfinder.Fragments.ProfileAboutFragment;
 import com.emz.pathfinder.Fragments.SearchFragment;
@@ -24,7 +26,12 @@ import com.emz.pathfinder.Fragments.TimelineFragment;
 import com.emz.pathfinder.Models.Users;
 import com.emz.pathfinder.Utils.UserHelper;
 import com.emz.pathfinder.Utils.Utils;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.rw.velocity.Velocity;
+
+import org.json.JSONObject;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -152,6 +159,13 @@ public class ProfileActivity extends AppCompatActivity {
         profileimage = findViewById(R.id.htab_profileImage);
         toolbar = findViewById(R.id.htab_toolbar);
         actionBtn = findViewById(R.id.add_friend_btn);
+
+        actionBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d(TAG, "ADDFRIEND: "+actionBtn.getText());
+            }
+        });
         setSupportActionBar(toolbar);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -190,33 +204,70 @@ public class ProfileActivity extends AppCompatActivity {
 
         mViewPager.setAdapter(mPagerAdapter);
 
-        Glide.with(this).load(utils.HEADERPIC_URL+currentUser.getHeaderPic()).into(headerimage);
-        Glide.with(this).load(utils.PROFILEPIC_URL+currentUser.getProPic()).into(profileimage);
+        Glide.with(this).load(utils.HEADERPIC_URL+currentUser.getHeaderPic()).apply(RequestOptions.centerCropTransform().error(R.drawable.default_header)).into(headerimage);
+        Glide.with(this).load(utils.PROFILEPIC_URL+currentUser.getProPic()).apply(RequestOptions.centerInsideTransform().error(R.drawable.defaultprofilepicture)).into(profileimage);
 
-        setActionButton();
+        setActionButton(currentUser.getFriendStatus());
 
         TabLayout tabLayout = findViewById(R.id.htab_tabs);
         tabLayout.setupWithViewPager(mViewPager);
     }
 
-    private void setActionButton() {
-        int status = currentUser.getFriendStatus();
+    private void setActionButton(int status) {
         switch (status){
             case 0:
-                actionBtn.setText("Add Friend");
+                actionBtn.setText(R.string.add_friend);
+                actionBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        addfriend();
+                    }
+                });
                 break;
             case 1:
-                actionBtn.setText("Request Sent");
+                actionBtn.setText(R.string.requeset_sent);
                 break;
             case 2:
-                actionBtn.setText("Accept Request");
+                actionBtn.setText(R.string.accept_request);
+                actionBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        addfriend();
+                    }
+                });
                 break;
             case 3:
-                actionBtn.setText("Friend");
+                actionBtn.setText(R.string.friend);
                 break;
             case 4:
-                actionBtn.setText("Edit Profile");
+                actionBtn.setVisibility(View.GONE);
                 break;
         }
+    }
+
+    private void addfriend() {
+        Velocity.post(utils.USER_URL+"add")
+                .withFormData("uid", usrHelper.getUserId())
+                .withFormData("fid", String.valueOf(currentUser.getId()))
+                .connect(new Velocity.ResponseListener() {
+                    @Override
+                    public void onVelocitySuccess(Velocity.Response response) {
+                        Gson gson = new Gson();
+                        JsonParser parser = new JsonParser();
+                        JsonObject jsonObject = parser.parse(response.body).getAsJsonObject();
+
+                        boolean status = jsonObject.get("status").getAsBoolean();
+                        if(status){
+                            int friendship = jsonObject.get("friendship").getAsInt();
+                            currentUser.setFriendStatus(friendship);
+                            setActionButton(friendship);
+                        }
+                    }
+
+                    @Override
+                    public void onVelocityFailed(Velocity.Response response) {
+
+                    }
+                });
     }
 }
