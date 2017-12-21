@@ -12,10 +12,12 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.emz.pathfinder.Fragments.FriendsListFragment;
 import com.emz.pathfinder.Fragments.ProfileAboutFragment;
 import com.emz.pathfinder.Fragments.SearchFragment;
 import com.emz.pathfinder.Fragments.TimelineFragment;
@@ -37,6 +39,7 @@ public class ProfileActivity extends AppCompatActivity {
     private ViewPager mViewPager;
     private ImageView headerimage;
     private CircleImageView profileimage;
+    private Button actionBtn;
     private int uid;
 
     private TextView nameTV, emailTV, titleNameTv, titleEmailTv;
@@ -53,6 +56,7 @@ public class ProfileActivity extends AppCompatActivity {
         if(getIntent().getExtras() != null) {
             uid = getIntent().getExtras().getInt("id");
             utils = new Utils(this);
+            usrHelper = new UserHelper(this);
             loadProfile();
         }else{
             finish();
@@ -71,7 +75,8 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     private void loadProfile() {
-        Velocity.get(utils.UTILITIES_URL+"getProfile/"+uid)
+        Velocity.post(utils.UTILITIES_URL+"getProfile/"+uid)
+                .withFormData("id", usrHelper.getUserId())
                 .connect(new Velocity.ResponseListener() {
                     @Override
                     public void onVelocitySuccess(Velocity.Response response) {
@@ -100,12 +105,15 @@ public class ProfileActivity extends AppCompatActivity {
         final ProfileAboutFragment profileAboutFragment = new ProfileAboutFragment();
         profileAboutFragment.setArguments(aboutBundle);
 
+        final FriendsListFragment friendsListFragment = new FriendsListFragment();
+        friendsListFragment.setArguments(aboutBundle);
+
         mPagerAdapter = new FragmentPagerAdapter(getSupportFragmentManager()) {
 
             private final Fragment[] mFragments = new Fragment[]{
                     timelineFragment,
                     profileAboutFragment,
-                    new SearchFragment(),
+                    friendsListFragment,
             };
 
             private final String[] mFragmentNames = new String[]{
@@ -143,6 +151,7 @@ public class ProfileActivity extends AppCompatActivity {
         headerimage = findViewById(R.id.htab_header);
         profileimage = findViewById(R.id.htab_profileImage);
         toolbar = findViewById(R.id.htab_toolbar);
+        actionBtn = findViewById(R.id.add_friend_btn);
         setSupportActionBar(toolbar);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -184,7 +193,30 @@ public class ProfileActivity extends AppCompatActivity {
         Glide.with(this).load(utils.HEADERPIC_URL+currentUser.getHeaderPic()).into(headerimage);
         Glide.with(this).load(utils.PROFILEPIC_URL+currentUser.getProPic()).into(profileimage);
 
+        setActionButton();
+
         TabLayout tabLayout = findViewById(R.id.htab_tabs);
         tabLayout.setupWithViewPager(mViewPager);
+    }
+
+    private void setActionButton() {
+        int status = currentUser.getFriendStatus();
+        switch (status){
+            case 0:
+                actionBtn.setText("Add Friend");
+                break;
+            case 1:
+                actionBtn.setText("Request Sent");
+                break;
+            case 2:
+                actionBtn.setText("Accept Request");
+                break;
+            case 3:
+                actionBtn.setText("Friend");
+                break;
+            case 4:
+                actionBtn.setText("Edit Profile");
+                break;
+        }
     }
 }

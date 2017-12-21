@@ -71,6 +71,7 @@ public class NotificationFragment extends Fragment{
 
     private void loadUsers() {
         Velocity.post(utils.UTILITIES_URL+"getAllProfiles")
+                .withFormData("id", usrHelper.getUserId())
                 .connect(new Velocity.ResponseListener() {
                     @Override
                     public void onVelocitySuccess(Velocity.Response response) {

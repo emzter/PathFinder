@@ -103,7 +103,8 @@ public class NewPostActivity extends AppCompatActivity {
     }
 
     private void loadUser(String userId) {
-        Velocity.get(utils.UTILITIES_URL+"getProfile/"+userId)
+        Velocity.post(utils.UTILITIES_URL+"getProfile/"+userId)
+                .withFormData("id", usrHelper.getUserId())
                 .connect(new Velocity.ResponseListener() {
                     @Override
                     public void onVelocitySuccess(Velocity.Response response) {

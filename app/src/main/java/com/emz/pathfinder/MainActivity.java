@@ -111,7 +111,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void loadUser(String userId) {
-        Velocity.get(utils.UTILITIES_URL+"getProfile/"+userId)
+        Velocity.post(utils.UTILITIES_URL+"getProfile/"+userId)
+                .withFormData("id", usrHelper.getUserId())
                 .connect(new Velocity.ResponseListener() {
                     @Override
                     public void onVelocitySuccess(Velocity.Response response) {
@@ -130,7 +131,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private void noConnection() {
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();

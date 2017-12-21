@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.emz.pathfinder.Models.Experiences;
 import com.emz.pathfinder.R;
+import com.emz.pathfinder.Utils.Utils;
 
 import java.util.List;
 
@@ -16,7 +17,11 @@ public class AboutExpAdapter extends RecyclerView.Adapter<AboutExpAdapter.MyView
     private Context context;
     private List<Experiences> experiencesList;
 
+    private Utils utils;
+
     public AboutExpAdapter(Context context, List<Experiences> experiencesList) {
+        utils = new Utils(context);
+
         this.context = context;
         this.experiencesList = experiencesList;
     }
@@ -34,9 +39,9 @@ public class AboutExpAdapter extends RecyclerView.Adapter<AboutExpAdapter.MyView
         holder.nameTv.setText(exp.getName());
         holder.empTv.setText(exp.getEmployer());
         if(exp.getStatus() == 1){
-            holder.periodTv.setText(exp.getStart()+" - Now");
+            holder.periodTv.setText(utils.parseDate(exp.getStart(), "yyyy-MM-dd", "MMM y")+" - Now");
         }else{
-            holder.periodTv.setText(exp.getStart()+" - "+exp.getEnd());
+            holder.periodTv.setText(utils.parseDate(exp.getStart(), "yyyy-MM-dd", "MMM y")+" - "+utils.parseDate(exp.getEnd(), "yyyy-MM-dd", "MMM y"));
         }
     }
 

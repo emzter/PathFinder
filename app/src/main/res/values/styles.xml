@@ -32,6 +32,11 @@
         <item name="windowNoTitle">true</item>
     </style>
 
+    <style name="AppTheme.ProfileNoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
     <style name="AppTheme.LikeButton" parent="Widget.AppCompat.Button.ButtonBar.AlertDialog">
         <item name="android:textColor">@color/aluminum</item>
     </style>

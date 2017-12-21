@@ -39,8 +39,12 @@ public class Users implements Serializable {
     private String line;
     @SerializedName("other_link")
     private String otherlink;
+    @SerializedName("friend_status")
+    private int friendStatus;
+    @SerializedName("friend_count")
+    private int friendCount;
 
-    public Users(int id, String guid, String email, String group, String status, String validate, String proPic, String headerPic, String fname, String lname, int sex, String birthdate, String telephone, String facebook, String twitter, String line, String otherlink) {
+    public Users(int id, String guid, String email, String group, String status, String validate, String proPic, String headerPic, String fname, String lname, int sex, String birthdate, String telephone, String facebook, String twitter, String line, String otherlink, int friendStatus, int friendCount) {
         this.id = id;
         this.guid = guid;
         this.email = email;
@@ -58,6 +62,8 @@ public class Users implements Serializable {
         this.twitter = twitter;
         this.line = line;
         this.otherlink = otherlink;
+        this.friendStatus = friendStatus;
+        this.friendCount = friendCount;
     }
 
     public int getId() {
@@ -194,6 +200,22 @@ public class Users implements Serializable {
 
     public void setOtherlink(String otherlink) {
         this.otherlink = otherlink;
+    }
+
+    public int getFriendStatus() {
+        return friendStatus;
+    }
+
+    public void setFriendStatus(int friendStatus) {
+        this.friendStatus = friendStatus;
+    }
+
+    public int getFriendCount() {
+        return friendCount;
+    }
+
+    public void setFriendCount(int friendCount) {
+        this.friendCount = friendCount;
     }
 
     public String getFullName() { return fname+" "+lname; }

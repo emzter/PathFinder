@@ -157,7 +157,7 @@ public class ProfileAboutFragment extends Fragment {
         genderTv.setText(utils.getGender(currentUser.getSex()));
 
         if(!Objects.equals(currentUser.getBirthdate(), "1900-01-01")){
-            birthdateTv.setText(currentUser.getBirthdate());
+            birthdateTv.setText(utils.parseDate(currentUser.getBirthdate(), "yyyy-MM-dd"));
             birthdateLayout.setVisibility(View.VISIBLE);
         }
         if(currentUser.getTelephone() != null){

@@ -123,4 +123,7 @@
     <string name="edu_3">Bachelor Degree</string>
     <string name="edu_4">Master Degree</string>
     <string name="edu_5">Doctorate Degree</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

@@ -151,6 +151,7 @@ public class TimelineFragment extends Fragment{
 
     private void loadUser() {
         Velocity.post(utils.UTILITIES_URL+"getAllProfiles")
+                .withFormData("id", usrHelper.getUserId())
                 .connect(new Velocity.ResponseListener() {
                     @Override
                     public void onVelocitySuccess(Velocity.Response response) {

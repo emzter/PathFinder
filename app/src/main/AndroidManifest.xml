@@ -85,7 +85,7 @@
         <activity
             android:name=".ProfileActivity"
             android:parentActivityName=".MainActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.ProfileNoActionBar" />
 
         <!-- Service -->
 
