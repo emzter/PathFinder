@@ -54,5 +54,5 @@
             tools:listitem="@layout/item_job_cardview">
 
         </android.support.v7.widget.RecyclerView>
-    </LinearLayout>\
+    </LinearLayout>
 </LinearLayout>
