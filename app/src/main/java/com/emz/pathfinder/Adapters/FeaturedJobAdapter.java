@@ -32,16 +32,14 @@ public class FeaturedJobAdapter extends RecyclerView.Adapter<FeaturedJobAdapter.
     private Context context;
     private List<Jobs> jobList;
     private LinkedHashMap<Integer, Employer> empList;
-    private JobPortalFragment jobPortalFragment;
 
     private Utils utils;
 
-    public FeaturedJobAdapter(Context context, List<Jobs> jobList, LinkedHashMap<Integer, Employer> empList, JobPortalFragment jobPortalFragment){
+    public FeaturedJobAdapter(Context context, List<Jobs> jobList, LinkedHashMap<Integer, Employer> empList){
         utils = new Utils(context);
         this.context = context;
         this.jobList = jobList;
         this.empList = empList;
-        this.jobPortalFragment = jobPortalFragment;
     }
 
     @Override

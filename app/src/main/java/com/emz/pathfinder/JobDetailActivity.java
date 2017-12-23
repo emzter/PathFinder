@@ -302,7 +302,7 @@ public class JobDetailActivity extends AppCompatActivity {
 
     private void setEmpView() {
         empName.setText(currentEmp.getName());
-        empCat.setText(String.valueOf(currentEmp.getCategory_id()));
+        empCat.setText(currentEmp.getCategory());
 
         if(!Objects.equals(currentEmp.getAbout(), "")){
             empAbout.setText(currentEmp.getAbout());

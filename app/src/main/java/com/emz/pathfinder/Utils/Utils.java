@@ -42,6 +42,7 @@ public class Utils {
     public final String VOLUNTEER_URL = "https://www.pathfinder.in.th/volunteer/";
     public final String JOBS_URL = "https://www.pathfinder.in.th/job/";
     public final String USER_URL = "https://www.pathfinder.in.th/user/";
+    public final String SEARCH_URL = "https://www.pathfinder.in.th/search/";
     public final String PROFILEPIC_URL = "https://www.pathfinder.in.th/uploads/profile_image/";
     public final String HEADERPIC_URL = "https://www.pathfinder.in.th/uploads/header_images/";
     public final String EMPPIC_URL = "https://www.pathfinder.in.th/uploads/logo_images/";

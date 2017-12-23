@@ -17,6 +17,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -220,7 +221,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         navEMailText = navHeaderView.findViewById(R.id.navEmailText);
         navNameText = navHeaderView.findViewById(R.id.navNameText);
 
-
         TabLayout tabLayout = findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
 
@@ -250,12 +250,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             @Override
             public void onPageSelected(int position) {
+
                 toolbar.setTitle(mPageNames[position]);
+
                 if(position == 1){
                     fab.setVisibility(View.VISIBLE);
                 }else{
                     fab.setVisibility(View.GONE);
                 }
+
             }
 
             @Override

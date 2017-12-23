@@ -122,7 +122,7 @@ public class JobPortalFragment extends Fragment{
 
                             if(jobRecyclerView.getAdapter() == null){
                                 Log.d(TAG, "ADAPTER SET");
-                                jobAdapter = new FeaturedJobAdapter(getContext(), jobList, empList, JobPortalFragment.this);
+                                jobAdapter = new FeaturedJobAdapter(getContext(), jobList, empList);
                                 jobRecyclerView.setAdapter(jobAdapter);
                             }else{
                                 Log.d(TAG, "POST REFRESHED");

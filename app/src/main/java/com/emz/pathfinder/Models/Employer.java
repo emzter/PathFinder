@@ -21,10 +21,10 @@ public class Employer implements Serializable {
     private String contactEmail;
     @SerializedName("section")
     private String section;
-    @SerializedName("category_id")
-    private int category_id;
+    @SerializedName("category")
+    private String category;
 
-    public Employer(int id, String name, String about, String telephone, String logo, String contactName, String contactEmail, String section, int category_id) {
+    public Employer(int id, String name, String about, String telephone, String logo, String contactName, String contactEmail, String section, String category) {
         this.id = id;
         this.name = name;
         this.about = about;
@@ -33,7 +33,7 @@ public class Employer implements Serializable {
         this.contactName = contactName;
         this.contactEmail = contactEmail;
         this.section = section;
-        this.category_id = category_id;
+        this.category = category;
     }
 
     public int getId() {
@@ -100,11 +100,11 @@ public class Employer implements Serializable {
         this.section = section;
     }
 
-    public int getCategory_id() {
-        return category_id;
+    public String getCategory() {
+        return category;
     }
 
-    public void setCategory_id(int category_id) {
-        this.category_id = category_id;
+    public void setCategory(String category) {
+        this.category = category;
     }
 }
