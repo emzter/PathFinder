@@ -208,17 +208,15 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         TextView likeIcon;
         TextView likeTV;
         TextView commentTV;
-        TextView shareTV;
         ImageView profilePic;
 
-        LinearLayout likeBtn, commentBtn, shareBtn;
+        LinearLayout likeBtn, commentBtn;
 
         private PostViewHolder(View itemView) {
             super(itemView);
 
             likeBtn = itemView.findViewById(R.id.feed_button_like);
             commentBtn = itemView.findViewById(R.id.feed_button_reply);
-//            shareBtn = itemView.findViewById(R.id.feed_button_share);
 
             nameTV = itemView.findViewById(R.id.feed_name);
             name2TV = itemView.findViewById(R.id.feed_2nd_name);
@@ -229,7 +227,6 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             likeTV = itemView.findViewById(R.id.likeBtnText);
             likeIcon = itemView.findViewById(R.id.likeBtnIcon);
             commentTV = itemView.findViewById(R.id.commentBtnText);
-//            shareTV = itemView.findViewById(R.id.shareBtnText);
         }
     }
 

@@ -13,15 +13,15 @@
             android:title="@string/home" />
         <item
             android:id="@+id/nav_profile"
-            android:icon="@drawable/ic_home_black_24dp"
+            android:icon="@drawable/ic_person_24dp"
             android:title="@string/profile" />
         <item
             android:id="@+id/nav_favjob"
-            android:icon="@drawable/ic_home_black_24dp"
+            android:icon="@drawable/ic_favorite_black_24dp"
             android:title="@string/favorite_jobs" />
         <item
             android:id="@+id/nav_location"
-            android:icon="@drawable/ic_home_black_24dp"
+            android:icon="@drawable/ic_person_pin_black_24dp"
             android:title="@string/volunteer_service" />
         <item
             android:id="@+id/nav_jobs_centre"
@@ -32,10 +32,6 @@
     <group
         android:id="@+id/menu_bottom"
         android:checkableBehavior="none">
-
-        <item
-            android:id="@+id/nav_settings"
-            android:title="@string/action_settings"/>
 
         <item
             android:id="@+id/nav_logout"

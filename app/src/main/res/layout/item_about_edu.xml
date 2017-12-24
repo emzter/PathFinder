@@ -30,7 +30,7 @@
             android:layout_marginStart="8dp"
             android:layout_toEndOf="@+id/aboutme_icon"
             android:fontFamily="@font/kanit"
-            android:text="Educations"
+            android:text="@string/educations"
             android:textAllCaps="true"
             android:textColor="@color/colorPrimary"
             android:textStyle="bold" />

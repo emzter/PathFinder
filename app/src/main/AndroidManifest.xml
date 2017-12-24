@@ -4,6 +4,7 @@
     package="com.emz.pathfinder">
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.READ_PROFILE" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
@@ -125,10 +126,15 @@
             android:name=".VolunteerActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:parentActivityName=".MainActivity" />
-        <activity android:name=".EmployerDetailActivity"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".JobsCentreActivity"
+        <activity
+            android:name=".EmployerDetailActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".JobsCentreActivity"
             android:label="Jobs Centre"
+            android:parentActivityName=".MainActivity" />
+        <activity android:name=".FavJobActivity"
+            android:label="My Favorite Jobs"
             android:parentActivityName=".MainActivity"/>
     </application>
 

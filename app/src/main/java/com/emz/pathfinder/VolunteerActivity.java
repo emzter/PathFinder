@@ -1,18 +1,14 @@
 package com.emz.pathfinder;
 
-import android.*;
 import android.Manifest;
-import android.app.Service;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
-import android.location.LocationManager;
-import android.os.Build;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.ActivityCompat;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -25,9 +21,9 @@ import android.widget.TextView;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.bumptech.glide.Glide;
+import com.emz.pathfinder.Models.Users;
 import com.emz.pathfinder.Models.Volunteer;
 import com.emz.pathfinder.Models.VolunteerCategory;
-import com.emz.pathfinder.Utils.Ui;
 import com.emz.pathfinder.Utils.UserHelper;
 import com.emz.pathfinder.Utils.Utils;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -45,7 +41,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.rw.velocity.Velocity;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -60,6 +55,8 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import io.nlopez.smartlocation.OnLocationUpdatedListener;
 import io.nlopez.smartlocation.SmartLocation;
 import io.nlopez.smartlocation.location.config.LocationParams;
+
+import static com.emz.pathfinder.Utils.Ui.createSnackbar;
 
 public class VolunteerActivity extends AppCompatActivity implements OnMapReadyCallback, OnLocationUpdatedListener {
 
@@ -79,18 +76,28 @@ public class VolunteerActivity extends AppCompatActivity implements OnMapReadyCa
     private MaterialDialog materialDialog;
 
     @BindView(R.id.order_profile_pic)
-    private CircleImageView volunteerProfilePic;
+    public CircleImageView volunteerProfilePic;
 
     @BindView(R.id.order_name)
-    private TextView orderName;
+    public TextView orderName;
 
     @BindView(R.id.order_body)
-    private RelativeLayout volunteerProfile;
+    public RelativeLayout volunteerProfile;
 
     @BindView(R.id.request_button)
-    private Button requestButton;
+    public Button requestButton;
+
+    @BindView(R.id.map_view)
+    CoordinatorLayout mapView;
 
     private ScheduledExecutorService orderExcutorService;
+
+    private Volunteer volunteer;
+    private Users users;
+
+    private int myVolunteer = 0;
+    private int myorder = 0;
+    private float myRatings = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,8 +114,40 @@ public class VolunteerActivity extends AppCompatActivity implements OnMapReadyCa
 
         getAllCat();
 
+        lodeUser();
+
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+    }
+
+    private void lodeUser() {
+        Velocity.post(utils.UTILITIES_URL+"getProfile/"+usrHelper.getUserId())
+                .withFormData("id", usrHelper.getUserId())
+                .connect(new Velocity.ResponseListener() {
+                    @Override
+                    public void onVelocitySuccess(Velocity.Response response) {
+                        users = response.deserialize(Users.class);
+                        Log.d(TAG, "ORDER: "+users.getOnOnder());
+                        if(users.getOnOnder() != 0){
+                            materialDialog = new MaterialDialog.Builder(VolunteerActivity.this)
+                                    .title(R.string.progress_dialog_title)
+                                    .content(R.string.loading)
+                                    .progress(true, 0)
+                                    .canceledOnTouchOutside(false)
+                                    .autoDismiss(false)
+                                    .show();
+
+                            myorder = users.getOnOnder();
+
+                            checkOrderStatus();
+                        }
+                    }
+
+                    @Override
+                    public void onVelocityFailed(Velocity.Response response) {
+                        Log.e("TEST", String.valueOf(R.string.no_internet_connection));
+                    }
+                });
     }
 
     @Override
@@ -175,8 +214,8 @@ public class VolunteerActivity extends AppCompatActivity implements OnMapReadyCa
         }else{
             myMarker = mMap.addMarker(new MarkerOptions().position(current));
             myMarker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.mymarkersmall));
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(current, 15.5f));
         }
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(current, 15.5f));
 
         if(executorService == null){
             Log.d(TAG, "LOCATIONUPDATE: 1");
@@ -205,7 +244,7 @@ public class VolunteerActivity extends AppCompatActivity implements OnMapReadyCa
 
                     @Override
                     public void onVelocityFailed(Velocity.Response response) {
-                        //TODO: Can't Connect to the Server
+                        createSnackbar(mapView, getResources().getString(R.string.connection_error));
                     }
                 });
     }
@@ -217,14 +256,35 @@ public class VolunteerActivity extends AppCompatActivity implements OnMapReadyCa
             if(vol.isOnline()){
                 if(isInBound(latlng)){
                     if(currentMarker != null){
-                        currentMarker.setPosition(latlng);
+                        if(vol.getId() == myVolunteer){
+                            currentMarker.setPosition(latlng);
+                            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latlng, 15.5f));
+                        }else{
+                            currentMarker.setPosition(latlng);
+                        }
+
                     }else{
-                        Marker marker = mMap.addMarker(new MarkerOptions().position(latlng));
-                        marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.car_marker));
-                        marker.setRotation(5);
-                        volMarker.put(vol.getId(), marker);
+                        if(vol.getId() == myVolunteer){
+                            Marker marker = mMap.addMarker(new MarkerOptions().position(latlng));
+                            setMakerIcon(vol.getCategory(), marker);
+                            marker.setRotation(5);
+                            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latlng, 15.5f));
+                            volMarker.put(vol.getId(), marker);
+                        }else{
+                            Marker marker = mMap.addMarker(new MarkerOptions().position(latlng));
+                            setMakerIcon(vol.getCategory(), marker);
+                            marker.setRotation(5);
+                            volMarker.put(vol.getId(), marker);
+                        }
                     }
                 }else{
+                    if(vol.getId() == myVolunteer){
+                        Marker marker = mMap.addMarker(new MarkerOptions().position(latlng));
+                        setMakerIcon(vol.getCategory(), marker);
+                        marker.setRotation(5);
+                        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latlng, 15.5f));
+                        volMarker.put(vol.getId(), marker);
+                    }
                     if(currentMarker != null){
                         currentMarker.remove();
                         volMarker.remove(vol.getId());
@@ -236,6 +296,23 @@ public class VolunteerActivity extends AppCompatActivity implements OnMapReadyCa
                     volMarker.remove(vol.getId());
                 }
             }
+        }
+    }
+
+    private void setMakerIcon(int category, Marker marker) {
+        switch (category){
+            case 1:
+                marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.marker1));
+                break;
+            case 2:
+                marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.marker2));
+                break;
+            case 3:
+                marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.marker3));
+                break;
+            case 4:
+                marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.marker4));
+                break;
         }
     }
 
@@ -256,7 +333,7 @@ public class VolunteerActivity extends AppCompatActivity implements OnMapReadyCa
         executorService.scheduleAtFixedRate(new Runnable() {
             @Override
             public void run() {
-                (VolunteerActivity.this).runOnUiThread(new Runnable() {
+                runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         getInRangeVolunteer();
@@ -298,7 +375,7 @@ public class VolunteerActivity extends AppCompatActivity implements OnMapReadyCa
 
                         boolean status = jsonObj.get("status").getAsBoolean();
                         if(status){
-                            final int orderId = jsonObj.get("order_id").getAsInt();
+                            myorder = jsonObj.get("order_id").getAsInt();
                             materialDialog = new MaterialDialog.Builder(VolunteerActivity.this)
                                     .title(R.string.progress_dialog_title)
                                     .content(R.string.requesting_a_volunteer)
@@ -309,11 +386,11 @@ public class VolunteerActivity extends AppCompatActivity implements OnMapReadyCa
                                     .onNegative(new MaterialDialog.SingleButtonCallback() {
                                         @Override
                                         public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                            cancelOrder(orderId);
+                                            cancelOrder();
                                         }
                                     })
                                     .show();
-                            checkOrderStatus(orderId);
+                            checkOrderStatus();
                         }
 
                         Log.d(TAG, "VOLUNTEER-REQUEST: Sent Order");
@@ -321,12 +398,12 @@ public class VolunteerActivity extends AppCompatActivity implements OnMapReadyCa
 
                     @Override
                     public void onVelocityFailed(Velocity.Response response) {
-                        //TODO: Can't Connect to the Server
+                        createSnackbar(mapView, getResources().getString(R.string.connection_error));
                     }
                 });
     }
 
-    private void checkOrderStatus(final int orderId) {
+    private void checkOrderStatus() {
 //        ORDER STATUS (0: Placing, 1: Accepted, 2: On Duty, 3: Completed, 4: Canceled)
         orderExcutorService = Executors.newSingleThreadScheduledExecutor();
         orderExcutorService.scheduleAtFixedRate(new Runnable() {
@@ -335,7 +412,7 @@ public class VolunteerActivity extends AppCompatActivity implements OnMapReadyCa
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        Velocity.get(utils.VOLUNTEER_URL+"checkOrderStatus/"+orderId)
+                        Velocity.get(utils.VOLUNTEER_URL+"checkOrderStatus/"+myorder)
                                 .connect(new Velocity.ResponseListener() {
                                     @Override
                                     public void onVelocitySuccess(Velocity.Response response) {
@@ -355,7 +432,7 @@ public class VolunteerActivity extends AppCompatActivity implements OnMapReadyCa
 
                                     @Override
                                     public void onVelocityFailed(Velocity.Response response) {
-                                        //TODO: Can't Connect to the Server
+                                        createSnackbar(mapView, getResources().getString(R.string.connection_error));
                                     }
                                 });
                     }
@@ -365,13 +442,15 @@ public class VolunteerActivity extends AppCompatActivity implements OnMapReadyCa
     }
 
     private void orderAccepted(int vid) {
-        //TODO: When order is accept show volunteer profile
         Velocity.get(utils.VOLUNTEER_URL+"getUserDetail/"+vid)
                 .connect(new Velocity.ResponseListener() {
                     @Override
                     public void onVelocitySuccess(Velocity.Response response) {
+                        volunteer = response.deserialize(Volunteer.class);
+
+                        myorder = volunteer.getOnOrder();
+
                         materialDialog.dismiss();
-                        final Volunteer volunteer = response.deserialize(Volunteer.class);
                         materialDialog = new MaterialDialog.Builder(VolunteerActivity.this)
                                 .title("We found your volunteer!")
                                 .customView(R.layout.dialog_volunteer_profile, false)
@@ -379,7 +458,7 @@ public class VolunteerActivity extends AppCompatActivity implements OnMapReadyCa
                                 .onPositive(new MaterialDialog.SingleButtonCallback() {
                                     @Override
                                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                        trackOrder(volunteer);
+                                        trackOrder();
                                     }
                                 })
                                 .show();
@@ -388,33 +467,155 @@ public class VolunteerActivity extends AppCompatActivity implements OnMapReadyCa
                         CircleImageView propic = customView.findViewById(R.id.dialog_profile_pic);
                         TextView name = customView.findViewById(R.id.dialog_name);
                         TextView email = customView.findViewById(R.id.dialog_email);
-                        RatingBar rating = customView.findViewById(R.id.dialog_rating);
 
                         Glide.with(getBaseContext()).load(utils.PROFILEPIC_URL+volunteer.getProPic()).into(propic);
                         name.setText(volunteer.getFullName());
                         email.setText(volunteer.getEmail());
-                        rating.setRating(volunteer.getRating());
-
-                        //TODO: Show rating and markmap
                     }
 
                     @Override
                     public void onVelocityFailed(Velocity.Response response) {
-                        //TODO: Can't Connect to the Server
+                        createSnackbar(mapView, getResources().getString(R.string.connection_error));
                     }
                 });
     }
 
-    private void trackOrder(Volunteer volunteer) {
+    private void trackOrder() {
+        Log.d(TAG, "ESSERVICE: "+orderExcutorService.isShutdown());
         requestButton.setVisibility(View.GONE);
-        volunteerProfile.setVisibility(View.INVISIBLE);
+        volunteerProfile.setVisibility(View.VISIBLE);
 
-        orderName.setText(volunteer.getFirstName());
+        Log.d(TAG, "trackOrder: "+volunteer.getFirstName().toString());
+
+        orderName.setText(volunteer.getFullName());
         Glide.with(getBaseContext()).load(utils.PROFILEPIC_URL+volunteer.getProPic()).into(volunteerProfilePic);
+
+        myVolunteer = volunteer.getId();
+
+        Marker volunteerMark = volMarker.get(myVolunteer);
+
+        if(volunteerMark != null){
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(volunteerMark.getPosition(), 15.5f));
+        }
+
+        orderExcutorService = Executors.newSingleThreadScheduledExecutor();
+        orderExcutorService.scheduleAtFixedRate(new Runnable() {
+            @Override
+            public void run() {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Velocity.get(utils.VOLUNTEER_URL+"checkOrderStatus/"+volunteer.getOnOrder())
+                                .connect(new Velocity.ResponseListener() {
+                                    @Override
+                                    public void onVelocitySuccess(Velocity.Response response) {
+                                        JsonParser parser = new JsonParser();
+                                        JsonObject jsonObj = parser.parse(response.body).getAsJsonObject();
+
+                                        boolean status = jsonObj.get("status").getAsBoolean();
+                                        if(!status){
+                                            int now = jsonObj.get("now").getAsInt();
+                                            if(now == 3){
+                                                if(orderExcutorService != null){
+                                                    orderExcutorService.shutdownNow();
+                                                }
+
+                                                materialDialog = new MaterialDialog.Builder(VolunteerActivity.this)
+                                                        .title(R.string.job_done_dialog_title)
+                                                        .content(R.string.job_done_dialog_content)
+                                                        .positiveText(R.string.yes_btn)
+                                                        .onPositive(new MaterialDialog.SingleButtonCallback() {
+                                                            @Override
+                                                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                                                voteUser();
+                                                            }
+                                                        })
+                                                        .show();
+
+                                                View customView = materialDialog.getCustomView();
+                                                CircleImageView propic = customView.findViewById(R.id.dialog_profile_pic);
+                                                TextView name = customView.findViewById(R.id.dialog_name);
+                                                TextView email = customView.findViewById(R.id.dialog_email);
+
+                                                Glide.with(getBaseContext()).load(utils.PROFILEPIC_URL+volunteer.getProPic()).into(propic);
+                                                name.setText(volunteer.getFullName());
+                                                email.setText(volunteer.getEmail());
+                                            }else if(now == 4){
+                                                materialDialog = new MaterialDialog.Builder(VolunteerActivity.this)
+                                                        .title(R.string.order_cancelled_title)
+                                                        .content(R.string.order_cancelled_content)
+                                                        .positiveText(R.string.yes_btn)
+                                                        .showListener(new DialogInterface.OnShowListener() {
+                                                            @Override
+                                                            public void onShow(DialogInterface dialogInterface) {
+                                                                resetUi();
+                                                            }
+                                                        })
+                                                        .show();
+                                                Log.d(TAG, "ESSERVICE: "+orderExcutorService.isShutdown());
+                                            }
+                                        }
+
+                                        Log.d(TAG, "VOLUNTEER-TRACKING: Status Checking");
+                                    }
+
+                                    @Override
+                                    public void onVelocityFailed(Velocity.Response response) {
+                                        createSnackbar(mapView, getResources().getString(R.string.connection_error));
+                                    }
+                                });
+                    }
+                });
+            }
+        }, 0, 5, TimeUnit.SECONDS);
     }
 
-    private void cancelOrder(int orderId) {
-        Velocity.post(utils.VOLUNTEER_URL+"setOrderStatus/"+orderId)
+    private void voteUser(){
+        Velocity.post(utils.VOLUNTEER_URL+"setRating")
+                .withFormData("id", usrHelper.getUserId())
+                .withFormData("rating", String.valueOf(myRatings))
+                .withFormData("volunteer_id", String.valueOf(volunteer.getId()))
+                .connect(new Velocity.ResponseListener() {
+                    @Override
+                    public void onVelocitySuccess(Velocity.Response response) {
+                        JsonParser parser = new JsonParser();
+                        JsonObject jsonObj = parser.parse(response.body).getAsJsonObject();
+                        boolean status = jsonObj.get("status").getAsBoolean();
+                        if(status){
+                            resetUi();
+                        }else{
+                            resetUi();
+                            createSnackbar(mapView, "Failed to vote volunteer");
+                        }
+                    }
+
+                    @Override
+                    public void onVelocityFailed(Velocity.Response response) {
+                        createSnackbar(mapView, getResources().getString(R.string.connection_error));
+                    }
+                });
+    }
+
+    private void resetUi() {
+        myVolunteer = 0;
+        myorder = 0;
+
+        if(orderExcutorService != null){
+            orderExcutorService.shutdownNow();
+        }
+
+        if(requestButton.getVisibility() == View.GONE){
+            requestButton.setVisibility(View.VISIBLE);
+        }
+
+        if(volunteerProfile.getVisibility() == View.VISIBLE){
+            volunteerProfile.setVisibility(View.GONE);
+        }
+
+    }
+
+    public void cancelOrder() {
+        Velocity.post(utils.VOLUNTEER_URL+"setOrderStatus/"+myorder)
                 .withFormData("status", String.valueOf(4))
                 .connect(new Velocity.ResponseListener() {
                     @Override
@@ -432,9 +633,46 @@ public class VolunteerActivity extends AppCompatActivity implements OnMapReadyCa
 
                     @Override
                     public void onVelocityFailed(Velocity.Response response) {
-                        //TODO: Can't Connect to the Server
+                        createSnackbar(mapView, getResources().getString(R.string.connection_error));
                     }
                 });
+    }
+
+    @OnClick(R.id.btn_cancel)
+    public void cancelOnProgressOrder() {
+        new MaterialDialog.Builder(this)
+                .title(R.string.cancel_order_dialog_title)
+                .content(R.string.cancel_order_dialog_content)
+                .negativeText(R.string.no_btn)
+                .positiveText(R.string.yes_btn)
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        Velocity.post(utils.VOLUNTEER_URL+"setOrderStatus/"+myorder)
+                                .withFormData("volunteer_id", String.valueOf(volunteer.getId()))
+                                .withFormData("status", String.valueOf(4))
+                                .connect(new Velocity.ResponseListener() {
+                                    @Override
+                                    public void onVelocitySuccess(Velocity.Response response) {
+                                        JsonParser parser = new JsonParser();
+                                        JsonObject jsonObj = parser.parse(response.body).getAsJsonObject();
+
+                                        boolean status = jsonObj.get("status").getAsBoolean();
+                                        if(status){
+                                            Log.d(TAG, "VOLUNTEER-REQUEST: Order Canceled");
+                                            materialDialog.dismiss();
+                                            orderExcutorService.shutdown();
+                                            resetUi();
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onVelocityFailed(Velocity.Response response) {
+                                        createSnackbar(mapView, getResources().getString(R.string.connection_error));
+                                    }
+                                });
+                    }
+                }).show();
     }
 
     private void onLocationServiceUnavailable() {
@@ -471,7 +709,7 @@ public class VolunteerActivity extends AppCompatActivity implements OnMapReadyCa
 
                     @Override
                     public void onVelocityFailed(Velocity.Response response) {
-                        //TODO: Can't Connect to the Server
+                        createSnackbar(mapView, getResources().getString(R.string.connection_error));
                     }
                 });
     }

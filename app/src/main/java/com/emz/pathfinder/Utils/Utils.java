@@ -198,7 +198,7 @@ public class Utils {
                 if(granularity == 0) break;
             }
 
-            return newtime+" "+context.getString(R.string.ago);
+            return newtime+context.getString(R.string.ago);
         }
     }
 

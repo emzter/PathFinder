@@ -29,7 +29,7 @@
             android:layout_marginStart="8dp"
             android:layout_toEndOf="@+id/job_icon"
             android:fontFamily="@font/kanit"
-            android:text="Jobs Centre"
+            android:text="@string/jobs_centre"
             android:textAllCaps="true"
             android:textColor="@color/colorPrimary"
             android:textStyle="bold" />

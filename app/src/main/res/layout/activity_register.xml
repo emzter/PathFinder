@@ -47,17 +47,18 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <TextView
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
+            android:id="@+id/register_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
             android:layout_marginBottom="8dp"
             android:layout_marginTop="40dp"
+            android:fontFamily="@font/noto_sans_thai_ui"
             android:text="@string/register_title"
             android:textColor="@color/white"
             android:textSize="18sp"
-            android:textStyle="bold"
-            android:id="@+id/register_title"/>
+            android:textStyle="bold" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -80,6 +81,7 @@
                     android:id="@+id/register_input_email"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:fontFamily="@font/noto_sans_thai_ui"
                     android:hint="@string/email"
                     android:inputType="textEmailAddress"
                     android:textColor="@color/white" />
@@ -102,9 +104,10 @@
                         android:id="@+id/register_input_password"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:fontFamily="@font/noto_sans_thai_ui"
                         android:hint="@string/password"
                         android:inputType="textPassword"
-                        android:textColor="@color/white"/>
+                        android:textColor="@color/white" />
                 </android.support.design.widget.TextInputLayout>
 
                 <android.support.design.widget.TextInputLayout
@@ -120,9 +123,10 @@
                         android:id="@+id/register_input_confirm_password"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:fontFamily="@font/noto_sans_thai_ui"
                         android:hint="@string/confirm_password"
                         android:inputType="textPassword"
-                        android:textColor="@color/white"/>
+                        android:textColor="@color/white" />
                 </android.support.design.widget.TextInputLayout>
 
             </LinearLayout>
@@ -144,9 +148,10 @@
                         android:id="@+id/register_input_name"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:fontFamily="@font/noto_sans_thai_ui"
                         android:hint="@string/name"
                         android:inputType="text"
-                        android:textColor="@color/white"/>
+                        android:textColor="@color/white" />
                 </android.support.design.widget.TextInputLayout>
 
                 <android.support.design.widget.TextInputLayout
@@ -162,9 +167,10 @@
                         android:id="@+id/register_input_lastname"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:fontFamily="@font/noto_sans_thai_ui"
                         android:hint="@string/last_name"
                         android:inputType="text"
-                        android:textColor="@color/white"/>
+                        android:textColor="@color/white" />
                 </android.support.design.widget.TextInputLayout>
 
             </LinearLayout>
@@ -178,6 +184,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:backgroundTint="@color/colorPrimary"
+            android:fontFamily="@font/noto_sans_thai_ui"
             android:padding="12dp"
             android:text="@string/register"
             android:textColor="@color/white"

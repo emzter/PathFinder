@@ -67,7 +67,7 @@
                         android:layout_marginStart="8dp"
                         android:layout_toEndOf="@+id/job_icon"
                         android:fontFamily="@font/kanit"
-                        android:text="Jobs"
+                        android:text="@string/jobs"
                         android:textAllCaps="true"
                         android:textColor="@color/colorPrimary"
                         android:textStyle="bold" />
@@ -112,7 +112,7 @@
                         android:layout_marginStart="8dp"
                         android:layout_toEndOf="@+id/user_icon"
                         android:fontFamily="@font/kanit"
-                        android:text="Users"
+                        android:text="@string/users"
                         android:textAllCaps="true"
                         android:textColor="@color/colorPrimary"
                         android:textStyle="bold" />
@@ -157,7 +157,7 @@
                         android:layout_marginStart="8dp"
                         android:layout_toEndOf="@+id/emp_icon"
                         android:fontFamily="@font/kanit"
-                        android:text="Employers"
+                        android:text="@string/employers"
                         android:textAllCaps="true"
                         android:textColor="@color/colorPrimary"
                         android:textStyle="bold" />

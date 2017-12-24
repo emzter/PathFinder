@@ -144,7 +144,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 onActionProfileClicked();
                 break;
             case R.id.nav_favjob:
-                onActionLocationClicked();
+                onActionFavJobsClicked();
                 break;
             case R.id.nav_location:
                 onActionLocationClicked();
@@ -174,6 +174,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private void onFabNewPostClicked() {
         Intent intent = new Intent(this, NewPostActivity.class);
+        startActivity(intent);
+    }
+
+    private void onActionFavJobsClicked() {
+        Intent intent = new Intent(this, FavJobActivity.class);
         startActivity(intent);
     }
 
@@ -248,10 +253,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             private final String[] mPageNames = new String[]{
-                    "Home",
-                    "Timeline",
-                    "Search",
-                    "Notifications"
+                    getString(R.string.home),
+                    getString(R.string.timeline),
+                    getString(R.string.search_title),
+                    getString(R.string.notifications)
             };
 
             @Override

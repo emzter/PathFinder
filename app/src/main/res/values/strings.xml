@@ -1,7 +1,6 @@
 <resources>
     <string name="app_name">PathFinder</string>
     <string name="AppTitle">PathFinder</string>
-    <string name="login">Log In</string>
     <string name="email">E-Mail Address</string>
     <string name="password">Password</string>
     <string name="AuthenticatingText">Authenticating…</string>
@@ -63,7 +62,7 @@
     <string name="hours">hrs</string>
     <string name="minutes">mins</string>
     <string name="seconds">secs</string>
-    <string name="ago">ago</string>
+    <string name="ago"> ago</string>
     <string name="loved_your_post">loved your post.</string>
     <string name="comment_post">commented on your post.</string>
     <string name="loved_comment">loved your comment.</string>
@@ -134,4 +133,24 @@
     <string name="jobs_centre">Jobs Centre</string>
     <string name="employers_centre">Employers Centre</string>
     <string name="favorite_jobs">Favorite Jobs</string>
+    <string name="loading">Loading…</string>
+    <string name="cancel_order_dialog_content">Are you sure you want to cancel this order?</string>
+    <string name="cancel_order_dialog_title">Cancel This Order</string>
+    <string name="no_btn">NO</string>
+    <string name="yes_btn">YES</string>
+    <string name="job_done_dialog_title">Thanks for using the app!</string>
+    <string name="job_done_dialog_content">Your request has been done. Thanks you for useing the app!</string>
+    <string name="order_cancelled_title">Sorry! The order has been cancelled.</string>
+    <string name="order_cancelled_content">The order has been cancelled.</string>
+    <string name="login">Log in</string>
+    <string name="call_volunteer">CALL VOLUNTEER</string>
+    <string name="featured_employers">Featured Employers</string>
+    <string name="featured_jobs">Featured Jobs</string>
+    <string name="jobs">Jobs</string>
+    <string name="users">Users</string>
+    <string name="employers">Employers</string>
+    <string name="educations">Educations</string>
+    <string name="experiences">Experiences</string>
+    <string name="details">Details</string>
+    <string name="search_title">Search</string>
 </resources>

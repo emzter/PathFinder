@@ -37,7 +37,7 @@
                 android:layout_marginStart="8dp"
                 android:fontFamily="@font/kanit"
                 android:gravity="center_vertical"
-                android:text="Featured Employers"
+                android:text="@string/featured_employers"
                 android:textAllCaps="true"
                 android:textStyle="bold"
                 android:textColor="@color/colorPrimary"

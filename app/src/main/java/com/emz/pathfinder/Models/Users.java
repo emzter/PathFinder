@@ -15,6 +15,8 @@ public class Users implements Serializable {
     private String group;
     @SerializedName("status")
     private String status;
+    @SerializedName("on_order")
+    private int onOnder;
     @SerializedName("validate")
     private String validate;
     @SerializedName("profile_image")
@@ -44,12 +46,13 @@ public class Users implements Serializable {
     @SerializedName("friend_count")
     private int friendCount;
 
-    public Users(int id, String guid, String email, String group, String status, String validate, String proPic, String headerPic, String fname, String lname, int sex, String birthdate, String telephone, String facebook, String twitter, String line, String otherlink, int friendStatus, int friendCount) {
+    public Users(int id, String guid, String email, String group, String status, int onOnder, String validate, String proPic, String headerPic, String fname, String lname, int sex, String birthdate, String telephone, String facebook, String twitter, String line, String otherlink, int friendStatus, int friendCount) {
         this.id = id;
         this.guid = guid;
         this.email = email;
         this.group = group;
         this.status = status;
+        this.onOnder = onOnder;
         this.validate = validate;
         this.proPic = proPic;
         this.headerPic = headerPic;
@@ -216,6 +219,14 @@ public class Users implements Serializable {
 
     public void setFriendCount(int friendCount) {
         this.friendCount = friendCount;
+    }
+
+    public int getOnOnder() {
+        return onOnder;
+    }
+
+    public void setOnOnder(int onOnder) {
+        this.onOnder = onOnder;
     }
 
     public String getFullName() { return fname+" "+lname; }

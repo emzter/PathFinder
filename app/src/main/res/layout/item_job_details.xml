@@ -27,7 +27,7 @@
             android:layout_marginStart="8dp"
             android:layout_toEndOf="@+id/emp_detail_title_icon"
             android:fontFamily="@font/kanit"
-            android:text="Details"
+            android:text="@string/details"
             android:textAllCaps="true"
             android:textColor="@color/colorPrimary"
             android:textStyle="bold" />
