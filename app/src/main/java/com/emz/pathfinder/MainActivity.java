@@ -152,9 +152,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.nav_jobs_centre:
                 onActionJobsCentreClicked();
                 break;
-            case R.id.nav_employer_centre:
-                onActionEmpCentreClicked();
-                break;
             case R.id.nav_logout:
                 onActionLogoutClicked();
                 break;
@@ -182,10 +179,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private void onActionJobsCentreClicked() {
         Intent intent = new Intent(this, JobsCentreActivity.class);
-        startActivity(intent);
-    }
-    private void onActionEmpCentreClicked() {
-        Intent intent = new Intent(this, NewPostActivity.class);
         startActivity(intent);
     }
 

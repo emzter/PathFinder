@@ -17,7 +17,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.RatingBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.DialogAction;
@@ -51,6 +53,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -74,6 +77,18 @@ public class VolunteerActivity extends AppCompatActivity implements OnMapReadyCa
     private Marker myMarker;
     private ScheduledExecutorService executorService;
     private MaterialDialog materialDialog;
+
+    @BindView(R.id.order_profile_pic)
+    private CircleImageView volunteerProfilePic;
+
+    @BindView(R.id.order_name)
+    private TextView orderName;
+
+    @BindView(R.id.order_body)
+    private RelativeLayout volunteerProfile;
+
+    @BindView(R.id.request_button)
+    private Button requestButton;
 
     private ScheduledExecutorService orderExcutorService;
 
@@ -356,11 +371,17 @@ public class VolunteerActivity extends AppCompatActivity implements OnMapReadyCa
                     @Override
                     public void onVelocitySuccess(Velocity.Response response) {
                         materialDialog.dismiss();
-                        Volunteer volunteer = response.deserialize(Volunteer.class);
+                        final Volunteer volunteer = response.deserialize(Volunteer.class);
                         materialDialog = new MaterialDialog.Builder(VolunteerActivity.this)
                                 .title("We found your volunteer!")
                                 .customView(R.layout.dialog_volunteer_profile, false)
                                 .positiveText("OK")
+                                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                                    @Override
+                                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                        trackOrder(volunteer);
+                                    }
+                                })
                                 .show();
 
                         View customView = materialDialog.getCustomView();
@@ -382,6 +403,14 @@ public class VolunteerActivity extends AppCompatActivity implements OnMapReadyCa
                         //TODO: Can't Connect to the Server
                     }
                 });
+    }
+
+    private void trackOrder(Volunteer volunteer) {
+        requestButton.setVisibility(View.GONE);
+        volunteerProfile.setVisibility(View.INVISIBLE);
+
+        orderName.setText(volunteer.getFirstName());
+        Glide.with(getBaseContext()).load(utils.PROFILEPIC_URL+volunteer.getProPic()).into(volunteerProfilePic);
     }
 
     private void cancelOrder(int orderId) {

@@ -23,24 +23,10 @@
             android:id="@+id/nav_location"
             android:icon="@drawable/ic_home_black_24dp"
             android:title="@string/volunteer_service" />
-    </group>
-
-    <group
-        android:id="@+id/menu_middle"
-        android:checkableBehavior="none">
-
-        <item android:title="@string/job_portal">
-            <menu>
-                <item
-                    android:id="@+id/nav_jobs_centre"
-                    android:icon="@drawable/ic_menu_share"
-                    android:title="@string/jobs_centre" />
-                <item
-                    android:id="@+id/nav_employer_centre"
-                    android:icon="@drawable/ic_menu_share"
-                    android:title="@string/employers_centre" />
-            </menu>
-        </item>
+        <item
+            android:id="@+id/nav_jobs_centre"
+            android:icon="@drawable/ic_menu_share"
+            android:title="@string/jobs_centre" />
     </group>
 
     <group
