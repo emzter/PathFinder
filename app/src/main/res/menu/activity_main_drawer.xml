@@ -18,7 +18,7 @@
         <item
             android:id="@+id/nav_favjob"
             android:icon="@drawable/ic_home_black_24dp"
-            android:title="Favorite Jobs" />
+            android:title="@string/favorite_jobs" />
         <item
             android:id="@+id/nav_location"
             android:icon="@drawable/ic_home_black_24dp"
@@ -32,17 +32,13 @@
         <item android:title="@string/job_portal">
             <menu>
                 <item
-                    android:id="@+id/nav_recommend"
+                    android:id="@+id/nav_jobs_centre"
                     android:icon="@drawable/ic_menu_share"
-                    android:title="Featured" />
+                    android:title="@string/jobs_centre" />
                 <item
-                    android:id="@+id/nav_categories"
+                    android:id="@+id/nav_employer_centre"
                     android:icon="@drawable/ic_menu_share"
-                    android:title="Categories" />
-                <item
-                    android:id="@+id/nav_employer"
-                    android:icon="@drawable/ic_menu_share"
-                    android:title="Employer" />
+                    android:title="@string/employers_centre" />
             </menu>
         </item>
     </group>
@@ -53,11 +49,11 @@
 
         <item
             android:id="@+id/nav_settings"
-            android:title="@string/action_settings"></item>
+            android:title="@string/action_settings"/>
 
         <item
             android:id="@+id/nav_logout"
-            android:title="@string/action_logout"></item>
+            android:title="@string/action_logout"/>
     </group>
 
 </menu>

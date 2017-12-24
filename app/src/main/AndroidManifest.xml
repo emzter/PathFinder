@@ -48,7 +48,7 @@
         <activity
             android:name=".MainActivity"
             android:label="@string/home"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.ProfileNoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
@@ -56,12 +56,14 @@
         <activity
             android:name=".JobDetailActivity"
             android:label=""
-            android:theme="@style/AppTheme.NoActionBar"
-            android:parentActivityName=".MainActivity" />
+            android:parentActivityName=".MainActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".NewPostActivity"
             android:label="Create New Post"
-            android:parentActivityName=".MainActivity">
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/AppTheme.ProfileNoActionBar">
             <intent-filter>
                 <action android:name="OPEN_NEWPOST_ACTIVITY" />
 
@@ -123,6 +125,11 @@
             android:name=".VolunteerActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:parentActivityName=".MainActivity" />
+        <activity android:name=".EmployerDetailActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".JobsCentreActivity"
+            android:label="Jobs Centre"
+            android:parentActivityName=".MainActivity"/>
     </application>
 
 </manifest>

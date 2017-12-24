@@ -3,7 +3,11 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:id="@+id/notiCard"
+    android:clickable="true"
+    android:focusable="true"
+    android:background="?attr/selectableItemBackground">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -16,7 +20,6 @@
             android:layout_height="@dimen/feed_item_profile_pic"
             android:layout_alignParentStart="true"
             android:layout_margin="8dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/profile_picture"
             android:scaleType="fitXY" />
 
@@ -50,10 +53,5 @@
             android:textSize="14sp" />
 
     </RelativeLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/feed_item_border" />
 
 </LinearLayout>

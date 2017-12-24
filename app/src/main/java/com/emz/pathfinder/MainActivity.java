@@ -143,8 +143,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.nav_profile:
                 onActionProfileClicked();
                 break;
+            case R.id.nav_favjob:
+                onActionLocationClicked();
+                break;
             case R.id.nav_location:
                 onActionLocationClicked();
+                break;
+            case R.id.nav_jobs_centre:
+                onActionJobsCentreClicked();
+                break;
+            case R.id.nav_employer_centre:
+                onActionEmpCentreClicked();
                 break;
             case R.id.nav_logout:
                 onActionLogoutClicked();
@@ -167,6 +176,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void onFabNewPostClicked() {
+        Intent intent = new Intent(this, NewPostActivity.class);
+        startActivity(intent);
+    }
+
+    private void onActionJobsCentreClicked() {
+        Intent intent = new Intent(this, JobsCentreActivity.class);
+        startActivity(intent);
+    }
+    private void onActionEmpCentreClicked() {
         Intent intent = new Intent(this, NewPostActivity.class);
         startActivity(intent);
     }

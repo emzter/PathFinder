@@ -5,41 +5,41 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/grey">
 
-    <LinearLayout
-        android:id="@+id/searchInputLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:padding="8dp"
-        android:background="@color/white"
-        android:layout_marginBottom="16dp">
-
-        <EditText
-            android:drawableStart="@drawable/ic_search_black_24dp"
-            android:drawablePadding="8dp"
-            android:id="@+id/search_input"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/search_hint"
-            android:inputType="text"
-            android:paddingEnd="8dp"
-            android:paddingStart="8dp"
-            android:singleLine="true" />
-
-    </LinearLayout>
-
     <android.support.v4.widget.NestedScrollView
         android:id="@+id/mainList"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/searchInputLayout">
+        android:layout_height="wrap_content">
 
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 
             <LinearLayout
+                android:id="@+id/searchInputLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_marginBottom="16dp"
+                android:background="@color/white"
+                android:padding="8dp">
+
+                <EditText
+                    android:id="@+id/search_input"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:drawablePadding="8dp"
+                    android:drawableStart="@drawable/ic_search_black_24dp"
+                    android:hint="@string/search_hint"
+                    android:inputType="text"
+                    android:paddingEnd="8dp"
+                    android:paddingStart="8dp"
+                    android:singleLine="true" />
+
+            </LinearLayout>
+
+            <LinearLayout
                 android:id="@+id/jobSearchList"
+                android:layout_below="@id/searchInputLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"

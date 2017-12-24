@@ -40,11 +40,14 @@ import org.w3c.dom.Comment;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 public class PostActivity extends AppCompatActivity {
 
     private static final String TAG = PostActivity.class.getSimpleName();
+
+    private int postId;
     private Posts post;
     private HashMap<Integer, Users> usersList;
 
@@ -73,14 +76,67 @@ public class PostActivity extends AppCompatActivity {
         handler = new Handler();
 
         if(getIntent().getExtras() != null){
-            post = (Posts) getIntent().getExtras().get("post");
-            usersList = (HashMap<Integer, Users>) getIntent().getExtras().get("userLists");
             commentsList = new ArrayList<>();
-
-            bindView();
+            if(getIntent().getExtras().get("post") != null){
+                post = (Posts) getIntent().getExtras().get("post");
+                usersList = (HashMap<Integer, Users>) getIntent().getExtras().get("userLists");
+                bindView();
+            }else{
+                postId = getIntent().getExtras().getInt("postid");
+                Log.d(TAG, "POSTID: "+postId);
+                usersList = new HashMap<>();
+                loadPost();
+            }
         }else{
             finish();
         }
+    }
+
+    private void loadPost() {
+        Velocity.post(utils.UTILITIES_URL+"getPostById/"+postId)
+                .withFormData("id", usrHelper.getUserId())
+                .connect(new Velocity.ResponseListener() {
+                    @Override
+                    public void onVelocitySuccess(Velocity.Response response) {
+                        Log.d(TAG, "GET POST DETAIL");
+                        post = response.deserialize(Posts.class);
+                        loadUserList();
+                    }
+
+                    @Override
+                    public void onVelocityFailed(Velocity.Response response) {
+                        Log.d(TAG, "FAILED TO GET POST DETAIL");
+                        //TODO: Connection Failed
+                    }
+                });
+    }
+
+    private void loadUserList() {
+        Velocity.post(utils.UTILITIES_URL+"getAllProfiles")
+                .withFormData("id", usrHelper.getUserId())
+                .connect(new Velocity.ResponseListener() {
+                    @Override
+                    public void onVelocitySuccess(Velocity.Response response) {
+                        Gson gson = new Gson();
+                        JsonParser parser = new JsonParser();
+                        JsonArray jsonArray = parser.parse(response.body).getAsJsonArray();
+
+                        for(int i = 0; i < jsonArray.size(); i++) {
+                            JsonElement mJson = jsonArray.get(i);
+                            Users user = gson.fromJson(mJson, Users.class);
+                            usersList.put(user.getId(), user);
+                        }
+
+                        Log.d(TAG, "USERS LOADDED");
+
+                        bindView();
+                    }
+
+                    @Override
+                    public void onVelocityFailed(Velocity.Response response) {
+                        Log.e(TAG, getResources().getString(R.string.no_internet_connection));
+                    }
+                });
     }
 
     @Override

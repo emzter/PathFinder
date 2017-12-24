@@ -127,4 +127,11 @@
     <string name="accept_request">Accept Request</string>
     <string name="friend">Friend</string>
     <string name="edit_profile">Edit Profile</string>
+    <string name="noti_friend_add">want to add your as friend.</string>
+    <string name="noti_friend_accept">accepted your friend request</string>
+    <string name="noti_relative_add">want to add your as relative.</string>
+    <string name="noti_relative_accept">accepted your relative request</string>
+    <string name="jobs_centre">Jobs Centre</string>
+    <string name="employers_centre">Employers Centre</string>
+    <string name="favorite_jobs">Favorite Jobs</string>
 </resources>

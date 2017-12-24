@@ -3,6 +3,7 @@ package com.emz.pathfinder.Adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,6 +18,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.emz.pathfinder.Fragments.JobPortalFragment;
 import com.emz.pathfinder.Fragments.TimelineFragment;
 import com.emz.pathfinder.JobDetailActivity;
+import com.emz.pathfinder.Listeners.OnLoadMoreListener;
 import com.emz.pathfinder.Models.Employer;
 import com.emz.pathfinder.Models.Jobs;
 import com.emz.pathfinder.PostActivity;
@@ -33,10 +35,39 @@ public class FeaturedJobAdapter extends RecyclerView.Adapter<FeaturedJobAdapter.
     private List<Jobs> jobList;
     private LinkedHashMap<Integer, Employer> empList;
 
+    private int visibleThreshold = 1;
+    private int lastVisibleItem, totalItemCount;
+    private boolean loading;
+    private OnLoadMoreListener onLoadMoreListener;
+    private boolean isMoreDataAvailable = true;
+
     private Utils utils;
 
-    public FeaturedJobAdapter(Context context, List<Jobs> jobList, LinkedHashMap<Integer, Employer> empList){
+    public FeaturedJobAdapter(Context context, List<Jobs> jobList, LinkedHashMap<Integer, Employer> empList, RecyclerView recyclerView){
         utils = new Utils(context);
+
+        final LinearLayoutManager linearLayoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+                totalItemCount = linearLayoutManager.getItemCount();
+                lastVisibleItem = linearLayoutManager.findLastVisibleItemPosition();
+
+                Log.d("TimelineAdapter", "TOTAL: "+totalItemCount+" LAST: "+lastVisibleItem);
+
+                if (!loading && totalItemCount <= (lastVisibleItem + visibleThreshold) && isMoreDataAvailable) {
+                    if (onLoadMoreListener != null) {
+                        onLoadMoreListener.onLoadMore();
+                        Log.d("TimelineAdapter", "LOADMORE");
+                    }
+                    loading = true;
+                }
+            }
+        });
+
         this.context = context;
         this.jobList = jobList;
         this.empList = empList;
@@ -73,6 +104,18 @@ public class FeaturedJobAdapter extends RecyclerView.Adapter<FeaturedJobAdapter.
     @Override
     public int getItemCount() {
         return jobList.size();
+    }
+
+    public void setOnLoadMoreListener(OnLoadMoreListener onLoadMoreListener) {
+        this.onLoadMoreListener = onLoadMoreListener;
+    }
+
+    public void setLoaded() {
+        loading = false;
+    }
+
+    public void setMoreDataAvailable(boolean moreDataAvailable) {
+        isMoreDataAvailable = moreDataAvailable;
     }
 
     class MyViewHolder extends RecyclerView.ViewHolder {

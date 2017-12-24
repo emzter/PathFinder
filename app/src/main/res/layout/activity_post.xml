@@ -11,6 +11,7 @@
         android:layout_height="wrap_content"
         android:background="@color/white"
         android:orientation="vertical"
+        android:layout_alignParentTop="true"
         android:layout_above="@id/bottomLayout">
 
         <include layout="@layout/item_post_cardview" />
@@ -23,7 +24,7 @@
         <android.support.v7.widget.RecyclerView
             android:id="@+id/commentRecyclerView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:scrollbars="none"
             tools:listitem="@layout/item_post_comment" />
 

@@ -16,6 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.emz.pathfinder.Adapters.EmployerAdapter;
 import com.emz.pathfinder.Adapters.FeaturedEmpAdapter;
 import com.emz.pathfinder.Adapters.FeaturedJobAdapter;
 import com.emz.pathfinder.Adapters.FriendsListAdapter;
@@ -36,6 +37,7 @@ import com.rw.velocity.Velocity;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Objects;
 
 public class SearchFragment extends Fragment{
     private static final String TAG = "SearchFragment";
@@ -45,6 +47,7 @@ public class SearchFragment extends Fragment{
     private RecyclerView jobRecyclerView, userRecyclerView, empRecyclerView;
     private FeaturedJobAdapter featuredJobAdapter;
     private FriendsListAdapter friendsListAdapter;
+    private EmployerAdapter employerAdapter;
     private ProgressBar progressBar;
     private TextView resultTv;
     private EditText searchInput;
@@ -80,7 +83,9 @@ public class SearchFragment extends Fragment{
             @Override
             public void afterTextChanged(Editable editable) {
                 String query = editable.toString();
-                doSearch(query);
+                if(!Objects.equals(query, "")){
+                    doSearch(query);
+                }
             }
 
             @Override
@@ -178,15 +183,11 @@ public class SearchFragment extends Fragment{
 
     private void setAdapter() {
         if(jobsList.size() > 0){
-            featuredJobAdapter = new FeaturedJobAdapter(getContext(), jobsList, empList);
+            featuredJobAdapter = new FeaturedJobAdapter(getContext(), jobsList, empList, jobRecyclerView);
             jobRecyclerView.setAdapter(featuredJobAdapter);
 
             if(jobSearchList.getVisibility() != View.VISIBLE){
                 jobSearchList.setVisibility(View.VISIBLE);
-            }
-
-            if(mainList.getVisibility() != View.VISIBLE){
-                mainList.setVisibility(View.VISIBLE);
             }
         }else{
             if(jobSearchList.getVisibility() == View.VISIBLE){
@@ -201,28 +202,24 @@ public class SearchFragment extends Fragment{
             if(userSearchList.getVisibility() != View.VISIBLE){
                 userSearchList.setVisibility(View.VISIBLE);
             }
-
-            if(mainList.getVisibility() != View.VISIBLE){
-                mainList.setVisibility(View.VISIBLE);
-            }
         }else{
             if(userSearchList.getVisibility() == View.VISIBLE){
                 userSearchList.setVisibility(View.GONE);
             }
         }
 
-//        if(jobsList.size() > 0){
-//            featuredJobAdapter = new FeaturedJobAdapter(getContext(), jobsList, empList);
-//            jobRecyclerView.setAdapter(featuredJobAdapter);
-//
-//            if(userSearchList.getVisibility() != View.VISIBLE){
-//                userSearchList.setVisibility(View.VISIBLE);
-//            }
-//
-//            if(mainList.getVisibility() != View.VISIBLE){
-//                mainList.setVisibility(View.VISIBLE);
-//            }
-//        }
+        if(employerList.size() > 0){
+            employerAdapter = new EmployerAdapter(getContext(), employerList);
+            empRecyclerView.setAdapter(employerAdapter);
+
+            if(empSearchList.getVisibility() != View.VISIBLE){
+                empSearchList.setVisibility(View.VISIBLE);
+            }
+        }else{
+            if(empSearchList.getVisibility() == View.VISIBLE){
+                empSearchList.setVisibility(View.GONE);
+            }
+        }
 
         progressBar.setVisibility(View.GONE);
     }

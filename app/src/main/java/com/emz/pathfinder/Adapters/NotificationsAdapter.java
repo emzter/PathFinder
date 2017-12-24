@@ -1,17 +1,21 @@
 package com.emz.pathfinder.Adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.emz.pathfinder.Models.Notifications;
 import com.emz.pathfinder.Models.Users;
+import com.emz.pathfinder.PostActivity;
+import com.emz.pathfinder.ProfileActivity;
 import com.emz.pathfinder.R;
 import com.emz.pathfinder.Utils.Utils;
 
@@ -41,11 +45,14 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
         Notifications noti = notificationList.get(position);
-        Users user = userLists.get(noti.getSender());
-        holder.nameTV.setText(user.getFname()+" "+user.getLname());
-        holder.setStatusText(noti.getType());
-        holder.timeTV.setText(utils.gettimestamp(noti.getCreated()));
-        Glide.with(context).load(utils.PROFILEPIC_URL+user.getProPic()).apply(RequestOptions.centerInsideTransform().error(R.drawable.defaultprofilepicture)).into(holder.proPic);
+        if(noti.getSender() != 0) {
+            Users user = userLists.get(noti.getSender());
+            holder.nameTV.setText(user.getFullName());
+            holder.setStatusText(noti.getType());
+            holder.setOnClickListener(noti.getType(), noti.getRef());
+            holder.timeTV.setText(utils.gettimestamp(noti.getCreated()));
+            Glide.with(context).load(utils.PROFILEPIC_URL + user.getProPic()).apply(RequestOptions.centerInsideTransform().error(R.drawable.defaultprofilepicture)).into(holder.proPic);
+        }
     }
 
     @Override
@@ -54,19 +61,21 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
     }
 
     class MyViewHolder extends RecyclerView.ViewHolder {
+        LinearLayout notiCard;
         ImageView proPic;
         TextView nameTV, statusTV, timeTV;
 
-        private MyViewHolder(View itemView) {
+        MyViewHolder(View itemView) {
             super(itemView);
 
+            notiCard = itemView.findViewById(R.id.notiCard);
             proPic = itemView.findViewById(R.id.noti_profile_pic);
             nameTV = itemView.findViewById(R.id.noti_name);
             statusTV = itemView.findViewById(R.id.noti_status);
             timeTV = itemView.findViewById(R.id.noti_timestamp);
         }
 
-        public void setStatusText(String status){
+        void setStatusText(String status){
             if(statusTV == null) return;
             String newmessage = "";
 
@@ -92,9 +101,86 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
                 case "dis.callhelp":
                     newmessage = context.getString(R.string.noti_callhelp);
                     break;
+                case "friend.add":
+                    newmessage = context.getString(R.string.noti_friend_add);
+                    break;
+                case "friend.accept":
+                    newmessage = context.getString(R.string.noti_friend_accept);
+                    break;
+                case "relative.add":
+                    newmessage = context.getString(R.string.noti_relative_add);
+                    break;
+                case "relative.accept":
+                    newmessage = context.getString(R.string.noti_relative_accept);
+                    break;
             }
 
             statusTV.setText(newmessage);
+        }
+
+        void setOnClickListener(final String status, final String ref){
+            notiCard.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    setStartActivity(status, ref);
+                }
+            });
+        }
+
+        void setStartActivity(String status, String ref) {
+            Intent intent;
+            switch (status){
+                case "post.like":
+                    intent = new Intent(context, PostActivity.class);
+                    intent.putExtra("postid", Integer.parseInt(ref.replaceAll("\\d", "")));
+                    context.startActivity(intent);
+                    break;
+                case "post.comment":
+                    intent = new Intent(context, PostActivity.class);
+                    intent.putExtra("postid", Integer.parseInt(ref.replaceAll("\\d", "")));
+                    context.startActivity(intent);
+                    break;
+                case "post.comment.like":
+                    intent = new Intent(context, PostActivity.class);
+                    intent.putExtra("postid", Integer.parseInt(ref.replaceAll("\\d", "")));
+                    context.startActivity(intent);
+                    break;
+                case "tag.post":
+                    intent = new Intent(context, PostActivity.class);
+                    intent.putExtra("postid", Integer.parseInt(ref.replaceAll("\\d", "")));
+                    context.startActivity(intent);
+                    break;
+                case "tag.comment":
+                    intent = new Intent(context, PostActivity.class);
+                    intent.putExtra("postid", Integer.parseInt(ref.replaceAll("[\\D]", "")));
+                    context.startActivity(intent);
+                    break;
+                case "post.feed":
+                    intent = new Intent(context, PostActivity.class);
+                    intent.putExtra("postid", Integer.parseInt(ref.replaceAll("[\\D]", "")));
+                    context.startActivity(intent);
+                    break;
+                case "friend.add":
+                    intent = new Intent(context, ProfileActivity.class);
+                    intent.putExtra("id", Integer.parseInt(ref.replaceAll("[\\D]", "")));
+                    context.startActivity(intent);
+                    break;
+                case "friend.accept":
+                    intent = new Intent(context, ProfileActivity.class);
+                    intent.putExtra("id", Integer.parseInt(ref.replaceAll("[\\D]", "")));
+                    context.startActivity(intent);
+                    break;
+                case "relative.add":
+                    intent = new Intent(context, ProfileActivity.class);
+                    intent.putExtra("id", Integer.parseInt(ref.replaceAll("[\\D]", "")));
+                    context.startActivity(intent);
+                    break;
+                case "relative.accept":
+                    intent = new Intent(context, ProfileActivity.class);
+                    intent.putExtra("id", Integer.parseInt(ref.replaceAll("[\\D]", "")));
+                    context.startActivity(intent);
+                    break;
+            }
         }
     }
 }

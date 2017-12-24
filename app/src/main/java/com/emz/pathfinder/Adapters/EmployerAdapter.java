@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -18,32 +19,37 @@ import com.emz.pathfinder.Utils.Utils;
 
 import java.util.List;
 
-public class FeaturedEmpAdapter extends RecyclerView.Adapter<FeaturedEmpAdapter.MyViewHolder> {
-
+public class EmployerAdapter extends RecyclerView.Adapter<EmployerAdapter.MyViewHolder> {
     private Context context;
-    private List<Employer> empList;
+    private List<Employer> employerList;
 
     private Utils utils;
 
-    public FeaturedEmpAdapter(Context context, List<Employer> empList) {
+    public EmployerAdapter(Context context, List<Employer> employerList) {
         utils = new Utils(context);
 
         this.context = context;
-        this.empList = empList;
+        this.employerList = employerList;
     }
 
     @Override
-    public FeaturedEmpAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_employer, parent, false);
-        return new FeaturedEmpAdapter.MyViewHolder(itemView);
+    public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(context).inflate(R.layout.item_emp_card, parent, false);
+        return new MyViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(FeaturedEmpAdapter.MyViewHolder holder, int position) {
-        Employer emp = empList.get(position);
-        Glide.with(context).load(utils.EMPPIC_URL+emp.getLogo()).apply(RequestOptions.centerInsideTransform().error(R.drawable.default_emp_logo)).into(holder.empLogo);
+    public void onBindViewHolder(MyViewHolder holder, int position) {
+        Employer emp = employerList.get(position);
+
+        holder.nameTv.setText(emp.getName());
+        holder.catTv.setText(emp.getCategory());
+        holder.phoneTv.setText(emp.getTelephone());
+
+        Glide.with(context).load(utils.EMPPIC_URL + emp.getLogo()).apply(RequestOptions.centerInsideTransform().error(R.drawable.default_emp_logo)).into(holder.logo);
 
         final int id = emp.getId();
+
         holder.empCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -56,17 +62,23 @@ public class FeaturedEmpAdapter extends RecyclerView.Adapter<FeaturedEmpAdapter.
 
     @Override
     public int getItemCount() {
-        return empList.size();
+        return employerList.size();
     }
 
     class MyViewHolder extends RecyclerView.ViewHolder {
+
         RelativeLayout empCard;
-        ImageView empLogo;
+        TextView nameTv, catTv, phoneTv;
+        ImageView logo;
+
         MyViewHolder(View itemView) {
             super(itemView);
 
-            empCard = itemView.findViewById(R.id.empCard);
-            empLogo = itemView.findViewById(R.id.emp_logo);
+            empCard = itemView.findViewById(R.id.emp_card);
+            nameTv = itemView.findViewById(R.id.nameTv);
+            catTv = itemView.findViewById(R.id.categoryTv);
+            phoneTv = itemView.findViewById(R.id.telephoneTv);
+            logo = itemView.findViewById(R.id.emp_logo);
         }
     }
 }
