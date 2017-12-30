@@ -468,7 +468,7 @@ public class VolunteerActivity extends AppCompatActivity implements OnMapReadyCa
                         TextView name = customView.findViewById(R.id.dialog_name);
                         TextView email = customView.findViewById(R.id.dialog_email);
 
-                        Glide.with(getBaseContext()).load(utils.PROFILEPIC_URL+volunteer.getProPic()).into(propic);
+                        Glide.with(getBaseContext()).load(utils.VOLUNTEERPIC_URL+volunteer.getProPic()).into(propic);
                         name.setText(volunteer.getFullName());
                         email.setText(volunteer.getEmail());
                     }
@@ -488,7 +488,7 @@ public class VolunteerActivity extends AppCompatActivity implements OnMapReadyCa
         Log.d(TAG, "trackOrder: "+volunteer.getFirstName().toString());
 
         orderName.setText(volunteer.getFullName());
-        Glide.with(getBaseContext()).load(utils.PROFILEPIC_URL+volunteer.getProPic()).into(volunteerProfilePic);
+        Glide.with(getBaseContext()).load(utils.VOLUNTEERPIC_URL+volunteer.getProPic()).into(volunteerProfilePic);
 
         myVolunteer = volunteer.getId();
 
@@ -537,7 +537,7 @@ public class VolunteerActivity extends AppCompatActivity implements OnMapReadyCa
                                                 TextView name = customView.findViewById(R.id.dialog_name);
                                                 TextView email = customView.findViewById(R.id.dialog_email);
 
-                                                Glide.with(getBaseContext()).load(utils.PROFILEPIC_URL+volunteer.getProPic()).into(propic);
+                                                Glide.with(getBaseContext()).load(utils.VOLUNTEERPIC_URL+volunteer.getProPic()).into(propic);
                                                 name.setText(volunteer.getFullName());
                                                 email.setText(volunteer.getEmail());
                                             }else if(now == 4){
