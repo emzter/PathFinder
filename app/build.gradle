@@ -55,9 +55,12 @@ dependencies {
 
     compile 'com.github.afollestad:material-dialogs:0.9.6.0'
 
+    compile 'com.github.fcannizzaro:material-stepper:1.2.2'
+
     compile 'com.jakewharton:butterknife:8.8.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
 }
+
 
 
 

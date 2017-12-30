@@ -151,4 +151,5 @@
     <string name="experiences">การทำงาน</string>
     <string name="details">รายละเอียด</string>
     <string name="search_title">ค้นหา</string>
+    <string name="create_profile_title">Create Profile</string>
 </resources>
