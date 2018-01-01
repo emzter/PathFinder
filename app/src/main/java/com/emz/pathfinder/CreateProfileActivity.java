@@ -70,8 +70,6 @@ public class CreateProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_profile);
 
-        Velocity.initialize(3);
-
         myCalendar = Calendar.getInstance();
 
         utils = new Utils(this);
@@ -181,10 +179,10 @@ public class CreateProfileActivity extends AppCompatActivity {
                 new MaterialDialog.Builder(CreateProfileActivity.this)
                         .title("Explain how is your disability")
                         .items(disabilityOptions)
-                        .itemsCallbackSingleChoice(gender, new MaterialDialog.ListCallbackSingleChoice() {
+                        .itemsCallbackSingleChoice(disability, new MaterialDialog.ListCallbackSingleChoice() {
                             @Override
                             public boolean onSelection(MaterialDialog dialog, View itemView, int which, CharSequence text) {
-                                disability = which;
+                                disability = which + 1;
                                 setDisabilityText();
                                 return true;
                             }
@@ -220,7 +218,7 @@ public class CreateProfileActivity extends AppCompatActivity {
     }
 
     private void setDisabilityText() {
-        disabilityEt.setText(disabilityOptions.get(disability));
+        disabilityEt.setText(disabilityOptions.get(disability - 1));
     }
 
     private void setGenderText() {
@@ -259,7 +257,7 @@ public class CreateProfileActivity extends AppCompatActivity {
             String fileName = newProfilePic.getName();
             Log.d(TAG, "UPDATEWITHFILE: "+fileName);
 
-            Velocity.upload(utils.USER_URL+"editProfilePic/"+usrHelper.getUserId()+"/"+fileName)
+            Velocity.upload(utils.USER_URL+"editprofilepic/"+usrHelper.getUserId()+"/"+fileName)
                     .setUploadSource("file", "image/*", newProfilePic.getAbsolutePath())
                     .connect(new Velocity.ResponseListener() {
                         @Override
@@ -273,7 +271,7 @@ public class CreateProfileActivity extends AppCompatActivity {
 
                             boolean status = jsonObject.get("status").getAsBoolean();
                             if(status){
-                                hasfile = false;
+                                startMainActivity();
                             }else{
                                 createSnackbar(mainView, "Failed to create profile. Please try again later.");
                                 md.dismiss();
@@ -298,7 +296,9 @@ public class CreateProfileActivity extends AppCompatActivity {
                 .withFormData("lastname", lastname)
                 .withFormData("gender", String.valueOf(gender))
                 .withFormData("birthday", birthDate)
+                .withFormData("disability", String.valueOf(disability))
                 .withFormData("telephone", telephone)
+                .withFormData("exp", String.valueOf(-1))
                 .connect(new Velocity.ResponseListener() {
                     @Override
                     public void onVelocitySuccess(Velocity.Response response) {
@@ -307,7 +307,9 @@ public class CreateProfileActivity extends AppCompatActivity {
 
                         boolean status = jsonObject.get("status").getAsBoolean();
                         if(status){
-                            startMainActivity();
+                            if(!hasfile) {
+//                                startMainActivity();
+                            }
                         }else{
                             if(!hasfile){
                                 createSnackbar(mainView, "Failed to create profile. Please try again later.");
@@ -331,7 +333,7 @@ public class CreateProfileActivity extends AppCompatActivity {
     }
 
     private void validateForm() {
-
+        //TODO: Validate Form
     }
 
     @Override
