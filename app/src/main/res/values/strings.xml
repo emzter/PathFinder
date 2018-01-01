@@ -155,4 +155,5 @@
     <string name="search_title">Search</string>
     <string name="create_profile_title">Create Profile</string>
     <string name="disability">Disability</string>
+    <string name="completing">Completing...</string>
 </resources>

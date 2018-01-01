@@ -60,7 +60,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.btn_register:
+            case R.id.btn_create_profile:
                 register();
                 break;
         }
@@ -94,7 +94,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         cpassTv = findViewById(R.id.register_input_confirm_password);
         fnameTv = findViewById(R.id.register_input_name);
         lnameTv = findViewById(R.id.register_input_lastname);
-        registerBtn = findViewById(R.id.btn_register);
+        registerBtn = findViewById(R.id.btn_create_profile);
         registerBtn.setOnClickListener(this);
     }
 

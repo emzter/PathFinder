@@ -118,6 +118,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     @Override
                     public void onVelocitySuccess(Velocity.Response response) {
                         users = response.deserialize(Users.class);
+
+                        if(users.getStatus() == 0){
+                            createProfile();
+                        }
+
                         setupView();
                     }
 
@@ -127,6 +132,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         Log.e("TEST", String.valueOf(R.string.no_internet_connection));
                     }
                 });
+    }
+
+    private void createProfile() {
+        Intent intent = new Intent(this, CreateProfileActivity.class);
+        intent.putExtra("user", users);
+        startActivity(intent);
+        finish();
     }
 
     private void noConnection() {

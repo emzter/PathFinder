@@ -1,19 +1,22 @@
 package com.emz.pathfinder;
 
+import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.bumptech.glide.Glide;
-import com.emz.pathfinder.Models.VolunteerCategory;
+import com.emz.pathfinder.Models.Users;
+import com.emz.pathfinder.Utils.UserHelper;
 import com.emz.pathfinder.Utils.Utils;
-import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -21,26 +24,46 @@ import com.google.gson.JsonParser;
 import com.rw.velocity.Velocity;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Locale;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import pl.aprilapps.easyphotopicker.DefaultCallback;
 import pl.aprilapps.easyphotopicker.EasyImage;
 
+import static com.emz.pathfinder.Utils.Ui.createSnackbar;
+
 public class CreateProfileActivity extends AppCompatActivity {
+
+    private static final String FRAG_TAG_DATE_PICKER = "DATEPICKER";
+    private static final String TAG = CreateProfileActivity.class.getSimpleName();
 
     private CircleImageView profilePic;
     private ImageView cameraIcon;
-    private TextView genderText, birthDateText, disabilityText;
-    private EditText nameEt, lastNameEt;
-    private LinearLayout genderPicker, birthdatePicker, disabilityPicker;
+    private EditText nameEt, lastNameEt, birthdateEt, genderEt, disabilityEt, telephoneEt;
+    private Button createProfileBtn;
+
+    private File newProfilePic;
 
     private MaterialDialog materialDialog;
 
     private Utils utils;
 
+    private Calendar myCalendar;
+
     private int gender = -1, disability = -1;
+    private String birthDate;
     ArrayList<String> disabilityOptions = new ArrayList<>();
+    private boolean hasfile = false;
+    private FileInputStream inputStream;
+    private UserHelper usrHelper;
+    private CoordinatorLayout mainView;
+
+    private Users user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,8 +72,19 @@ public class CreateProfileActivity extends AppCompatActivity {
 
         Velocity.initialize(3);
 
-        utils = new Utils(this);
+        myCalendar = Calendar.getInstance();
 
+        utils = new Utils(this);
+        usrHelper = new UserHelper(this);
+
+        if(!usrHelper.getLoginStatus()){
+            Intent intent = new Intent(this, StartActivity.class);
+            startActivity(intent);
+            finish();
+        }
+        if(getIntent().getExtras() != null){
+            user = (Users) getIntent().getExtras().get("user");
+        }
         getDisabilityType();
     }
 
@@ -83,15 +117,30 @@ public class CreateProfileActivity extends AppCompatActivity {
         cameraIcon = findViewById(R.id.cameraIcon);
         nameEt = findViewById(R.id.input_name);
         lastNameEt = findViewById(R.id.input_lastname);
-        genderPicker = findViewById(R.id.gender_picker);
-        birthdatePicker = findViewById(R.id.birthdate_picker);
-        disabilityPicker = findViewById(R.id.disability_picker);
-        genderText = findViewById(R.id.gender_text);
-        birthDateText = findViewById(R.id.birthdate_text);
-        disabilityText = findViewById(R.id.disability_text);
+        birthdateEt = findViewById(R.id.input_birthdate);
+        genderEt = findViewById(R.id.input_gender);
+        disabilityEt = findViewById(R.id.input_disability);
+        telephoneEt = findViewById(R.id.input_telephone);
+        createProfileBtn = findViewById(R.id.btn_create_profile);
+        mainView = findViewById(R.id.create_profile_view);
     }
 
     private void setupView() {
+        final DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                myCalendar.set(Calendar.YEAR, year);
+                myCalendar.set(Calendar.MONTH, monthOfYear);
+                myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                updateLabel();
+            }
+        };
+
+        if(user != null){
+            nameEt.setText(user.getFname());
+            lastNameEt.setText(user.getLname());
+        }
+
         profilePic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -106,10 +155,10 @@ public class CreateProfileActivity extends AppCompatActivity {
             }
         });
 
-        genderPicker.setOnClickListener(new View.OnClickListener() {
+        genderEt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                materialDialog = new MaterialDialog.Builder(CreateProfileActivity.this)
+                new MaterialDialog.Builder(CreateProfileActivity.this)
                         .title("Select your gender")
                         .items(R.array.gender_array)
                         .itemsCallbackSingleChoice(gender, new MaterialDialog.ListCallbackSingleChoice() {
@@ -126,16 +175,17 @@ public class CreateProfileActivity extends AppCompatActivity {
             }
         });
 
-        disabilityPicker.setOnClickListener(new View.OnClickListener() {
+        disabilityEt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                materialDialog = new MaterialDialog.Builder(CreateProfileActivity.this)
+                new MaterialDialog.Builder(CreateProfileActivity.this)
                         .title("Explain how is your disability")
                         .items(disabilityOptions)
                         .itemsCallbackSingleChoice(gender, new MaterialDialog.ListCallbackSingleChoice() {
                             @Override
                             public boolean onSelection(MaterialDialog dialog, View itemView, int which, CharSequence text) {
                                 disability = which;
+                                setDisabilityText();
                                 return true;
                             }
                         })
@@ -144,17 +194,144 @@ public class CreateProfileActivity extends AppCompatActivity {
                         .show();
             }
         });
-//        String[] genderArray = getResources().getStringArray(R.array.gender_array);
-//        ArrayAdapter<String> adapterGender = new ArrayAdapter<String>(this, R.layout.spinner_text_item, genderArray);
-//        genderSpinner.setAdapter(adapterGender);
+
+        birthdateEt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new DatePickerDialog(CreateProfileActivity.this, date, myCalendar.get(Calendar.YEAR), myCalendar.get(Calendar.MONTH), myCalendar.get(Calendar.DAY_OF_MONTH)).show();
+            }
+        });
+
+        createProfileBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                createProfile();
+            }
+        });
+    }
+
+    private void updateLabel() {
+        String myFormat = "dd/MM/yyyy";
+        String mysqlFormat = "yyyy-MM-dd";
+        SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.ENGLISH);
+        SimpleDateFormat mdf = new SimpleDateFormat(mysqlFormat, Locale.ENGLISH);
+        birthdateEt.setText(sdf.format(myCalendar.getTime()));
+        birthDate = mdf.format(myCalendar.getTime());
+    }
+
+    private void setDisabilityText() {
+        disabilityEt.setText(disabilityOptions.get(disability));
     }
 
     private void setGenderText() {
         if(gender == 0){
-            genderText.setText(R.string.male);
+            genderEt.setText(R.string.male);
         }else if(gender == 1){
-            genderText.setText(R.string.female);
+            genderEt.setText(R.string.female);
         }
+    }
+
+    private void createProfile(){
+        final MaterialDialog md = new MaterialDialog.Builder(CreateProfileActivity.this)
+                .title(R.string.progress_dialog_title)
+                .content(R.string.completing)
+                .progress(true, 0)
+                .cancelable(false)
+                .show();
+
+        validateForm();
+
+        String firstname = nameEt.getText().toString();
+        String lastname = lastNameEt.getText().toString();
+        String telephone = telephoneEt.getText().toString();
+
+        if(newProfilePic != null){
+            hasfile = true;
+            try {
+                inputStream = new FileInputStream(newProfilePic);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+
+        if(newProfilePic != null){
+            //TODO: Add Upload Profile Link
+            String fileName = newProfilePic.getName();
+            Log.d(TAG, "UPDATEWITHFILE: "+fileName);
+
+            Velocity.upload(utils.USER_URL+"editProfilePic/"+usrHelper.getUserId()+"/"+fileName)
+                    .setUploadSource("file", "image/*", newProfilePic.getAbsolutePath())
+                    .connect(new Velocity.ResponseListener() {
+                        @Override
+                        public void onVelocitySuccess(Velocity.Response response) {
+                            startMainActivity();
+
+                            Log.d(TAG, "UPDATEWITHFILE: "+response.body);
+
+                            JsonParser parser = new JsonParser();
+                            JsonObject jsonObject = parser.parse(response.body).getAsJsonObject();
+
+                            boolean status = jsonObject.get("status").getAsBoolean();
+                            if(status){
+                                hasfile = false;
+                            }else{
+                                createSnackbar(mainView, "Failed to create profile. Please try again later.");
+                                md.dismiss();
+                            }
+                        }
+
+                        @Override
+                        public void onVelocityFailed(Velocity.Response response) {
+                            createSnackbar(mainView, getResources().getString(R.string.no_internet_connection));
+                            md.dismiss();
+
+                            Log.e(TAG, "UPDATEWITHFILE: "+response.body);
+                            Log.e(TAG, "UPDATEWITHFILE: "+response.requestMethod);
+                            Log.e(TAG, "UPDATEWITHFILE: ERROR");
+                        }
+                    });
+        }
+
+        Velocity.post(utils.USER_URL+"createProfile/")
+                .withFormData("id", usrHelper.getUserId())
+                .withFormData("firstname", firstname)
+                .withFormData("lastname", lastname)
+                .withFormData("gender", String.valueOf(gender))
+                .withFormData("birthday", birthDate)
+                .withFormData("telephone", telephone)
+                .connect(new Velocity.ResponseListener() {
+                    @Override
+                    public void onVelocitySuccess(Velocity.Response response) {
+                        JsonParser parser = new JsonParser();
+                        JsonObject jsonObject = parser.parse(response.body).getAsJsonObject();
+
+                        boolean status = jsonObject.get("status").getAsBoolean();
+                        if(status){
+                            startMainActivity();
+                        }else{
+                            if(!hasfile){
+                                createSnackbar(mainView, "Failed to create profile. Please try again later.");
+                                md.dismiss();
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onVelocityFailed(Velocity.Response response) {
+                        createSnackbar(mainView, getResources().getString(R.string.no_internet_connection));
+                        md.dismiss();
+                    }
+                });
+    }
+
+    private void startMainActivity() {
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
+    private void validateForm() {
+
     }
 
     @Override
@@ -170,6 +347,7 @@ public class CreateProfileActivity extends AppCompatActivity {
             @Override
             public void onImagePicked(File imageFile, EasyImage.ImageSource source, int type) {
                 Glide.with(CreateProfileActivity.this).load(imageFile).into(profilePic);
+                newProfilePic = imageFile;
             }
         });
     }
