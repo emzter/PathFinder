@@ -237,7 +237,10 @@ public class CreateProfileActivity extends AppCompatActivity {
                 .cancelable(false)
                 .show();
 
-        validateForm();
+        if(!validateForm()){
+            md.dismiss();
+            return;
+        }
 
         String firstname = nameEt.getText().toString();
         String lastname = lastNameEt.getText().toString();
@@ -253,7 +256,6 @@ public class CreateProfileActivity extends AppCompatActivity {
         }
 
         if(newProfilePic != null){
-            //TODO: Add Upload Profile Link
             String fileName = newProfilePic.getName();
             Log.d(TAG, "UPDATEWITHFILE: "+fileName);
 
@@ -308,7 +310,7 @@ public class CreateProfileActivity extends AppCompatActivity {
                         boolean status = jsonObject.get("status").getAsBoolean();
                         if(status){
                             if(!hasfile) {
-//                                startMainActivity();
+                                startMainActivity();
                             }
                         }else{
                             if(!hasfile){
@@ -332,8 +334,40 @@ public class CreateProfileActivity extends AppCompatActivity {
         finish();
     }
 
-    private void validateForm() {
-        //TODO: Validate Form
+    private boolean validateForm() {
+        boolean valid = true;
+
+        if(nameEt.getText().toString().trim().length() <= 0) {
+            nameEt.setError("Please enter your name");
+            valid = false;
+        }
+
+        if(lastNameEt.getText().toString().trim().length() <= 0) {
+            lastNameEt.setError("Please enter your last name");
+            valid = false;
+        }
+
+        if(birthdateEt.getText().toString().trim().length() <= 0) {
+            birthdateEt.setError("Please select your birthdate");
+            valid = false;
+        }
+
+        if(disabilityEt.getText().toString().trim().length() <= 0){
+            disabilityEt.setError("Please describe your disability");
+            valid = false;
+        }
+
+        if(genderEt.getText().toString().trim().length() <= 0) {
+            genderEt.setError("Please select your gender");
+            valid = false;
+        }
+
+        if(telephoneEt.getText().toString().trim().length() <= 0){
+            telephoneEt.setError("Please enter your phone number");
+            valid = false;
+        }
+
+        return valid;
     }
 
     @Override
