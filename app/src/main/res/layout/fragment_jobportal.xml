@@ -28,6 +28,12 @@
                     android:layout_marginBottom="16dp"/>
 
                 <include
+                    layout="@layout/card_recommend_job"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"/>
+
+                <include
                     layout="@layout/card_featured_employer"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />

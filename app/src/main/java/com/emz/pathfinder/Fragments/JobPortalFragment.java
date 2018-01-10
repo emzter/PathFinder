@@ -29,16 +29,19 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.concurrent.LinkedBlockingDeque;
 
 public class JobPortalFragment extends Fragment{
     private static final String TAG = "JobPortalFragment";
 
     private LinkedHashMap<Integer, Employer> empList;
     private List<Employer> featuredEmpList;
-    private List<Jobs> jobList;
+    private List<Jobs> jobList, recommendJobList;
 
-    private RecyclerView jobRecyclerView, empRecyclerView;
-    private FeaturedJobAdapter jobAdapter;
+    private RecyclerView jobRecyclerView, empRecyclerView, rcmJobRecyclerView;
+    private FeaturedJobAdapter jobAdapter, rcmJobAdapter;
     private FeaturedEmpAdapter empAdapter;
 
     private Utils utils;
@@ -55,6 +58,7 @@ public class JobPortalFragment extends Fragment{
         utils = new Utils(getContext());
         empList = new LinkedHashMap<>();
         jobList = new ArrayList<>();
+        recommendJobList = new ArrayList<>();
         featuredEmpList = new ArrayList<>();
 
         usrHelper = new UserHelper(getContext());
@@ -66,6 +70,9 @@ public class JobPortalFragment extends Fragment{
                 refreshItems();
             }
         });
+
+        rcmJobRecyclerView = rootView.findViewById(R.id.rcmJobRecyclerView);
+        rcmJobRecyclerView.setHasFixedSize(true);
 
         jobRecyclerView = rootView.findViewById(R.id.catRecyclerView);
         jobRecyclerView.setHasFixedSize(true);
@@ -80,9 +87,17 @@ public class JobPortalFragment extends Fragment{
             }
         };
 
+        RecyclerView.LayoutManager rcmJobLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false){
+            @Override
+            public boolean canScrollVertically() {
+                return false;
+            }
+        };
+
         RecyclerView.LayoutManager empLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
 
         jobRecyclerView.setLayoutManager(jobLayoutManager);
+        rcmJobRecyclerView.setLayoutManager(rcmJobLayoutManager);
         empRecyclerView.setLayoutManager(empLayoutManager);
 
         return rootView;
@@ -104,15 +119,22 @@ public class JobPortalFragment extends Fragment{
             jobList.clear();
         }
 
-        Velocity.post(utils.UTILITIES_URL+"getJobDetail")
-                .withFormData("uid", usrHelper.getUserId())
-                .connect(new Velocity.ResponseListener() {
-                    @Override
-                    public void onVelocitySuccess(Velocity.Response response) {
-                        if (response.body != "") {
+        if(recommendJobList.size() > 0){
+            recommendJobList.clear();
+        }
+
+        Velocity.post(utils.UTILITIES_URL+"getJobDetail").withFormData("uid", usrHelper.getUserId()).queue(0);
+        Velocity.get(utils.UTILITIES_URL+"getRecommendJob/"+usrHelper.getUserId()+"/3").queue(1);
+
+        Velocity.executeQueue(new Velocity.MultiResponseListener() {
+            @Override
+            public void onVelocityMultiResponseSuccess(HashMap<Integer, Velocity.Response> hashMap) {
+                for (Map.Entry<Integer, Velocity.Response> entry : hashMap.entrySet()) {
+                    if(entry.getKey() == 0){
+                        if (!Objects.equals(entry.getValue().body, "")) {
                             Gson gson = new Gson();
                             JsonParser parser = new JsonParser();
-                            JsonArray jsonArray = parser.parse(response.body).getAsJsonArray();
+                            JsonArray jsonArray = parser.parse(entry.getValue().body).getAsJsonArray();
 
                             for (int i = 0; i < jsonArray.size(); i++) {
                                 JsonElement mJson = jsonArray.get(i);
@@ -132,13 +154,42 @@ public class JobPortalFragment extends Fragment{
                         }else{
                             mSwipeRefreshLayout.setRefreshing(false);
                         }
-                    }
+                    }else{
+                        if (!Objects.equals(entry.getValue().body, "")) {
+                            Gson gson = new Gson();
+                            JsonParser parser = new JsonParser();
+                            JsonArray jsonArray = parser.parse(entry.getValue().body).getAsJsonArray();
 
-                    @Override
-                    public void onVelocityFailed(Velocity.Response response) {
-                        Log.e("LOADJOB", String.valueOf(R.string.no_internet_connection));
+                            for (int i = 0; i < jsonArray.size(); i++) {
+                                JsonElement mJson = jsonArray.get(i);
+                                Jobs job = gson.fromJson(mJson, Jobs.class);
+                                recommendJobList.add(job);
+                            }
+
+                            if(rcmJobRecyclerView.getAdapter() == null){
+                                Log.d(TAG, "ADAPTER SET");
+                                rcmJobAdapter = new FeaturedJobAdapter(getContext(), recommendJobList, empList, rcmJobRecyclerView);
+                                rcmJobRecyclerView.setAdapter(rcmJobAdapter);
+                            }else{
+                                Log.d(TAG, "POST REFRESHED");
+                                rcmJobAdapter.notifyDataSetChanged();
+                                mSwipeRefreshLayout.setRefreshing(false);
+                            }
+                        }else{
+                            mSwipeRefreshLayout.setRefreshing(false);
+                        }
                     }
-                });
+                }
+            }
+
+            @Override
+            public void onVelocityMultiResponseError(HashMap<Integer, Velocity.Response> hashMap) {
+                for (Map.Entry<Integer, Velocity.Response> entry : hashMap.entrySet()) {
+                    Log.e(TAG, "KEY"+entry.getKey().toString());
+                    Log.e(TAG, "VALUE"+entry.getValue().body);
+                }
+            }
+        });
     }
 
     private void loadAllEmp(){
