@@ -137,9 +137,15 @@
             android:name=".FavJobActivity"
             android:label="My Favorite Jobs"
             android:parentActivityName=".MainActivity" />
-        <activity android:name=".CreateProfileActivity"
+        <activity
+            android:name=".CreateProfileActivity"
             android:label=" "
-            android:theme="@style/AppTheme.Dark"/>
+            android:theme="@style/AppTheme.Dark" />
+        <activity android:name=".ImageCropperActivity"></activity>
+        <activity
+            android:name="com.yalantis.ucrop.UCropActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
     </application>
 
 </manifest>

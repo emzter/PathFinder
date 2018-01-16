@@ -2,6 +2,7 @@ package com.emz.pathfinder;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.net.Uri;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -22,6 +23,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.rw.velocity.Velocity;
+import com.yalantis.ucrop.UCrop;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -39,8 +41,10 @@ import static com.emz.pathfinder.Utils.Ui.createSnackbar;
 
 public class CreateProfileActivity extends AppCompatActivity {
 
-    private static final String FRAG_TAG_DATE_PICKER = "DATEPICKER";
+    private static final String CROPPED_IMAGE = "profile_image";
     private static final String TAG = CreateProfileActivity.class.getSimpleName();
+    private static final int RESULT_IMAGE_CROPPER = 5;
+    private static final int REQUEST_SELECT_PICTURE = 0x01;
 
     private CircleImageView profilePic;
     private ImageView cameraIcon;
@@ -374,6 +378,14 @@ public class CreateProfileActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
+        if(requestCode == UCrop.REQUEST_CROP){
+            if(resultCode == RESULT_OK){
+                Log.d(TAG, "GETPHOTO: "+String.valueOf(UCrop.getOutput(data)));
+                newProfilePic = new File(UCrop.getOutput(data).getPath());
+                Glide.with(this).load(newProfilePic).into(profilePic);
+            }
+        }
+
         EasyImage.handleActivityResult(requestCode, resultCode, data, this, new DefaultCallback() {
             @Override
             public void onImagePickerError(Exception e, EasyImage.ImageSource source, int type) {
@@ -382,8 +394,13 @@ public class CreateProfileActivity extends AppCompatActivity {
 
             @Override
             public void onImagePicked(File imageFile, EasyImage.ImageSource source, int type) {
-                Glide.with(CreateProfileActivity.this).load(imageFile).into(profilePic);
-                newProfilePic = imageFile;
+                String fileExt = imageFile.getAbsolutePath().substring(imageFile.getAbsolutePath().lastIndexOf("."));
+                String destinationFileName = CROPPED_IMAGE+fileExt;
+
+                UCrop.of(Uri.fromFile(imageFile), Uri.fromFile(new File(getCacheDir(), destinationFileName)))
+                        .withAspectRatio(1, 1)
+                        .withMaxResultSize(500, 500)
+                        .start(CreateProfileActivity.this);
             }
         });
     }
