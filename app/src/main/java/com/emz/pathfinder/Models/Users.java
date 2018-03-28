@@ -7,8 +7,6 @@ import java.io.Serializable;
 public class Users implements Serializable {
     @SerializedName("id")
     private int id;
-    @SerializedName("guid")
-    private String guid;
     @SerializedName("email")
     private String email;
     @SerializedName("user_group")
@@ -46,9 +44,8 @@ public class Users implements Serializable {
     @SerializedName("friend_count")
     private int friendCount;
 
-    public Users(int id, String guid, String email, String group, int status, int onOnder, String validate, String proPic, String headerPic, String fname, String lname, int sex, String birthdate, String telephone, String facebook, String twitter, String line, String otherlink, int friendStatus, int friendCount) {
+    public Users(int id, String email, String group, int status, int onOnder, String validate, String proPic, String headerPic, String fname, String lname, int sex, String birthdate, String telephone, String facebook, String twitter, String line, String otherlink, int friendStatus, int friendCount) {
         this.id = id;
-        this.guid = guid;
         this.email = email;
         this.group = group;
         this.status = status;
@@ -75,14 +72,6 @@ public class Users implements Serializable {
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public String getGuid() {
-        return guid;
-    }
-
-    public void setGuid(String guid) {
-        this.guid = guid;
     }
 
     public String getEmail() {

@@ -2,11 +2,13 @@ package com.emz.pathfinder;
 
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.nfc.Tag;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.method.PasswordTransformationMethod;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.MenuItem;
 import android.view.View;
@@ -14,8 +16,11 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.emz.pathfinder.Models.Users;
 import com.emz.pathfinder.Utils.UserHelper;
 import com.emz.pathfinder.Utils.Utils;
+import com.google.gson.Gson;
+import com.google.gson.JsonParser;
 import com.rw.velocity.Velocity;
 
 import java.util.Objects;
@@ -125,19 +130,13 @@ public class LoginActivity extends AppCompatActivity  implements View.OnClickLis
                 .connect(new Velocity.ResponseListener() {
                     @Override
                     public void onVelocitySuccess(Velocity.Response response) {
-                        if(response.body.contains("Success")){
-                            String uid = response.body.replace("Success", "");
-                            onLoginSuccess(uid);
-                        }else if(Objects.equals(response.body, "FailedNoUsers")){
-                            onLoginFailed(2);
-                        }else{
-                            onLoginFailed(0);
-                        }
+                        Users user = response.deserialize(Users.class);
+                        onLoginSuccess(String.valueOf(user.getId()));
                     }
 
                     @Override
                     public void onVelocityFailed(Velocity.Response response) {
-                        onLoginFailed(1);
+                        onLoginFailed(response.responseCode);
                     }
                 });
     }
@@ -155,11 +154,11 @@ public class LoginActivity extends AppCompatActivity  implements View.OnClickLis
 
     private void onLoginFailed(int stage) {
         View view = findViewById(R.id.login_view);
-        if(stage == 0){
+        if(stage == 401){
             createSnackbar(view, getString(R.string.auth_failed));
-        }else if(stage == 1){
+        }else if(stage == 422){
             createSnackbar(view, getString(R.string.connection_error));
-        }else if(stage == 2){
+        }else if(stage == 404){
             createSnackbar(view, getString(R.string.no_user_found));
         }
 

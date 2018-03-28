@@ -373,34 +373,24 @@ public class JobDetailActivity extends AppCompatActivity {
                 .cancelable(false)
                 .show();
 
-        Velocity.post(utils.JOBS_URL+"sendapply")
-                .withFormData("id", String.valueOf(currentJob.getId()))
+        Velocity.post(utils.API_URL+"/applications")
+                .withFormData("user_id", usrHelper.getUserId())
+                .withFormData("job_id", String.valueOf(currentJob.getId()))
                 .withFormData("message", message)
-                .withFormData("uid", usrHelper.getUserId())
                 .connect(new Velocity.ResponseListener() {
                     @Override
                     public void onVelocitySuccess(Velocity.Response response) {
-                        JsonParser parser = new JsonParser();
-                        JsonObject jsonObject = parser.parse(response.body).getAsJsonObject();
-
-                        boolean status = jsonObject.get("success").getAsBoolean();
-                        if(status){
-                            bottomSheetDialog.hide();
-                            currentJob.setApply(true);
-                            setApplyButton();
-                            md.dismiss();
-                            View v = findViewById(R.id.job_detail_main_layout);
-                            createSnackbar(v, getString(R.string.successful_apply_job));
-                        }else{
-                            View v = findViewById(R.id.job_detail_main_layout);
-                            createSnackbar(v, getString(R.string.cant_apply_job));
-                        }
+                        bottomSheetDialog.hide();
+                        currentJob.setApply(true);
+                        setApplyButton();
+                        md.dismiss();
+                        View v = findViewById(R.id.job_detail_main_layout);
                     }
 
                     @Override
                     public void onVelocityFailed(Velocity.Response response) {
                         View v = findViewById(R.id.job_detail_main_layout);
-                        createSnackbar(v, getString(R.string.connection_error));
+                        createSnackbar(v, getString(R.string.cant_apply_job));
                     }
                 });
     }

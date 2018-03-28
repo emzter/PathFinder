@@ -36,9 +36,9 @@ import java.util.Map;
 import java.util.Objects;
 
 public class Utils {
-
-    public final String LOGIN_URL = "https://www.pathfinder.in.th/home/login/";
-    public final String REGISTER_URL = "https://www.pathfinder.in.th/registration/signup/";
+    public final String API_URL = "http://api.pathfinder.in.th";
+    public final String LOGIN_URL = "http://api.pathfinder.in.th/auth/login";
+    public final String REGISTER_URL = "http://api.pathfinder.in.th/auth/register";
     public final String VOLUNTEER_URL = "https://www.pathfinder.in.th/volunteer/";
     public final String JOBS_URL = "https://www.pathfinder.in.th/job/";
     public final String USER_URL = "https://www.pathfinder.in.th/user/";

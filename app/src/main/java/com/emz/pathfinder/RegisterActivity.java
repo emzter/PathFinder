@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.emz.pathfinder.Models.Users;
 import com.emz.pathfinder.Utils.UserHelper;
 import com.emz.pathfinder.Utils.Utils;
 import com.rw.velocity.Velocity;
@@ -140,22 +141,14 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                 .connect(new Velocity.ResponseListener() {
                     @Override
                     public void onVelocitySuccess(Velocity.Response response) {
-                        if(Objects.equals(response.body, "Success")){
-                            Log.d(TAG, response.body);
-                            materialDialog.dismiss();
-                            onRegisterSuccess();
-                        }else if(Objects.equals(response.body, "EMailUsed")){
-                            Log.w(TAG, response.body);
-                            onRegisterFailed(1);
-                        }else{
-                            Log.e(TAG, response.body);
-                            onRegisterFailed(0);
-                        }
+                        Log.d(TAG, response.body);
+                        materialDialog.dismiss();
+                        onRegisterSuccess();
                     }
 
                     @Override
                     public void onVelocityFailed(Velocity.Response response) {
-                        onRegisterFailed(2);
+                        onRegisterFailed(response.responseCode);
                     }
                 });
     }
@@ -167,19 +160,13 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                 .connect(new Velocity.ResponseListener() {
                     @Override
                     public void onVelocitySuccess(Velocity.Response response) {
-                        if(response.body.contains("Success")){
-                            String uid = response.body.replace("Success", "");
-                            onLoginSuccess(uid);
-                        }else if(Objects.equals(response.body, "FailedNoUsers")){
-                            onLoginFailed(1);
-                        }else{
-                            onLoginFailed(0);
-                        }
+                        Users user = response.deserialize(Users.class);
+                        onLoginSuccess(String.valueOf(user.getId()));
                     }
 
                     @Override
                     public void onVelocityFailed(Velocity.Response response) {
-                        onLoginFailed(2);
+                        onLoginFailed(response.responseCode);
                     }
                 });
     }
@@ -238,12 +225,10 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     private void onRegisterFailed(int stage) {
         View view = findViewById(R.id.register_view);
 
-        if(stage == 0){
+        if(stage == 500){
             createSnackbar(view, getString(R.string.something_went_wrong));
-        }else if(stage == 1){
+        }else if(stage == 400){
             createSnackbar(view, getString(R.string.email_already_used));
-        }else if(stage == 2){
-            createSnackbar(view, getString(R.string.connection_error));
         }
 
         registerBtn.setEnabled(true);
@@ -274,12 +259,12 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
     private void onLoginFailed(int stage) {
         View view = findViewById(R.id.login_view);
-        if (stage == 0) {
+        if(stage == 401){
             createSnackbar(view, getString(R.string.auth_failed));
-        } else if (stage == 1) {
-            createSnackbar(view, getString(R.string.no_user_found));
-        } else if (stage == 2) {
+        }else if(stage == 422){
             createSnackbar(view, getString(R.string.connection_error));
+        }else if(stage == 404){
+            createSnackbar(view, getString(R.string.no_user_found));
         }
         materialDialog.dismiss();
         startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
